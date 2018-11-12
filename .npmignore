@@ -1,0 +1,11 @@
+node_modules
+config
+demo
+src
+test
+.editorconfig
+.travis.yml
+CHANGELOG.md
+package-lock.json
+TODO.md
+rename.js
