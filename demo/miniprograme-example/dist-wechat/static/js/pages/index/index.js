@@ -232,7 +232,7 @@ var _axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _axiosMiniprogramAdapter = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module 'axios-miniprogram-adapter'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+var _axiosMiniprogramAdapter = __webpack_require__(/*! axios-miniprogram-adapter */ "./node_modules/axios-miniprogram-adapter/dist/index.esm.js");
 
 var _axiosMiniprogramAdapter2 = _interopRequireDefault(_axiosMiniprogramAdapter);
 
@@ -250,7 +250,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 
-_axios2.default.defaults.adapter = mpadapter;
+_axios2.default.defaults.adapter = _axiosMiniprogramAdapter2.default;
 exports.default = {
   mpType: 'page',
   data: function data() {
