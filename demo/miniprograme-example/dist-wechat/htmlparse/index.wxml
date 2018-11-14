@@ -1,0 +1,951 @@
+<!--基础元素-->
+<template name="octoParseVideo">
+  <!--增加video标签支持，并循环添加-->
+  <view class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+    <video class="{{item.classStr}} octoParse-{{item.tag}}-video" src="{{item.attr.src}}"></video>
+  </view>
+</template>
+
+<template name="octoParseImg">
+  <image data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}" class="{{item.classStr}} octoParse-{{item.tag}}" data-from="{{item.from}}" data-src="{{item.attr.src}}" data-idx="{{item.imgIndex}}" src="{{item.attr.src}}" mode="aspectFit"    style="{{item.styleStr}}"
+  />
+</template>
+
+<template name="WxTextView">
+    <view class="WxTextView octoParse-inline" style="{{item.styleStr}}">
+      {{item.text}}
+    </view>
+</template>
+
+<template name="octoParseBr">
+  <text>\n</text>
+</template>
+<!--入口模版-->
+
+<template name="octoParse">
+  <block wx:for="{{nodes}}" wx:key="{{item.index}}">
+    <template is="octoParse0" data="{{item}}" />
+  </block>
+</template>
+
+
+<!--循环模版-->
+<template name="octoParse0">
+  <!--<template is="octoParse1" data="{{item}}" />-->
+  <!--判断是否是标签节点-->
+  <block wx:if="{{item.node == 'element'}}">
+    <block wx:if="{{item.tag == 'button'}}">
+      <button type="default" size="mini">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse1" data="{{item}}" />
+        </block>
+      </button>
+    </block>
+    <!--li类型-->
+    <block wx:elif="{{item.tag == 'li'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-li" style="{{item.styleStr}}">
+        <view class="{{item.classStr}} octoParse-li-inner">
+          <view class="{{item.classStr}} octoParse-li-text">
+            <view class="{{item.classStr}} octoParse-li-circle"></view>
+          </view>
+          <view class="{{item.classStr}} octoParse-li-text">
+            <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+              <template is="octoParse1" data="{{item}}" />
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--video类型-->
+    <block wx:elif="{{item.tag == 'video'}}">
+      <template is="octoParseVideo" data="{{item}}" />
+    </block>
+
+    <!--img类型-->
+    <block wx:elif="{{item.tag == 'img'}}">
+      <template is="octoParseImg" data="{{item}}" />
+    </block>
+
+    <!--a类型-->
+    <block data-tag="{{item.tag}}" wx:elif="{{item.tag == 'a'}}">
+      <view  data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="octoParse-inline {{item.classStr}} octoParse-{{item.tag}}" data-src="{{item.attr.href}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse1" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+    <block wx:elif="{{item.tag == 'table'}}">
+      <view class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse1" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <block wx:elif="{{item.tag == 'br'}}">
+      <template is="octoParseBr"></template>
+    </block>
+    <!--其他块级标签-->
+    <block data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:elif="{{item.tagType == 'block'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse1" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <!--内联标签-->
+    <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:else class="{{item.classStr}} octoParse-{{item.tag}} octoParse-{{item.tagType}}" style="{{item.styleStr}}">
+      <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+        <template is="octoParse1" data="{{item}}" />
+      </block>
+    </view>
+
+  </block>
+
+  <!--判断是否是文本节点-->
+  <block wx:elif="{{item.node == 'text'}}">
+    <!--如果是，直接进行-->
+    <template is="WxTextView" data="{{item}}" />
+  </block>
+
+</template>
+
+
+
+<!--循环模版-->
+<template name="octoParse1">
+  <!--<template is="octoParse2" data="{{item}}" />-->
+  <!--判断是否是标签节点-->
+  <block wx:if="{{item.node == 'element'}}">
+    <block wx:if="{{item.tag == 'button'}}">
+      <button type="default" size="mini">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse2" data="{{item}}" />
+        </block>
+      </button>
+    </block>
+    <!--li类型-->
+    <block wx:elif="{{item.tag == 'li'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-li" style="{{item.styleStr}}">
+        <view class="{{item.classStr}} octoParse-li-inner">
+          <view class="{{item.classStr}} octoParse-li-text">
+            <view class="{{item.classStr}} octoParse-li-circle"></view>
+          </view>
+          <view class="{{item.classStr}} octoParse-li-text">
+            <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+              <template is="octoParse2" data="{{item}}" />
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--video类型-->
+    <block wx:elif="{{item.tag == 'video'}}">
+      <template is="octoParseVideo" data="{{item}}" />
+    </block>
+
+    <!--img类型-->
+    <block wx:elif="{{item.tag == 'img'}}">
+      <template is="octoParseImg" data="{{item}}" />
+    </block>
+
+    <!--a类型-->
+    <block wx:elif="{{item.tag == 'a'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="octoParse-inline {{item.classStr}} octoParse-{{item.tag}}" data-src="{{item.attr.href}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse2" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <block wx:elif="{{item.tag == 'br'}}">
+      <template is="octoParseBr"></template>
+    </block>
+    <!--其他块级标签-->
+    <block data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:elif="{{item.tagType == 'block'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse2" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <!--内联标签-->
+    <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:else class="{{item.classStr}} octoParse-{{item.tag}} octoParse-{{item.tagType}}" style="{{item.styleStr}}">
+      <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+        <template is="octoParse2" data="{{item}}" />
+      </block>
+    </view>
+
+  </block>
+
+  <!--判断是否是文本节点-->
+  <block wx:elif="{{item.node == 'text'}}">
+    <!--如果是，直接进行-->
+    <template is="WxTextView" data="{{item}}" />
+  </block>
+
+</template>
+
+
+<!--循环模版-->
+<template name="octoParse2">
+  <!--<template is="octoParse3" data="{{item}}" />-->
+  <!--判断是否是标签节点-->
+  <block wx:if="{{item.node == 'element'}}">
+    <block wx:if="{{item.tag == 'button'}}">
+      <button type="default" size="mini">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse3" data="{{item}}" />
+        </block>
+      </button>
+    </block>
+    <!--li类型-->
+    <block wx:elif="{{item.tag == 'li'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-li" style="{{item.styleStr}}">
+        <view class="{{item.classStr}} octoParse-li-inner">
+          <view class="{{item.classStr}} octoParse-li-text">
+            <view class="{{item.classStr}} octoParse-li-circle"></view>
+          </view>
+          <view class="{{item.classStr}} octoParse-li-text">
+            <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+              <template is="octoParse3" data="{{item}}" />
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--video类型-->
+    <block wx:elif="{{item.tag == 'video'}}">
+      <template is="octoParseVideo" data="{{item}}" />
+    </block>
+
+    <!--img类型-->
+    <block wx:elif="{{item.tag == 'img'}}">
+      <template is="octoParseImg" data="{{item}}" />
+    </block>
+
+    <!--a类型-->
+    <block wx:elif="{{item.tag == 'a'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="octoParse-inline {{item.classStr}} octoParse-{{item.tag}}" data-src="{{item.attr.href}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse3" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <block wx:elif="{{item.tag == 'br'}}">
+      <template is="octoParseBr"></template>
+    </block>
+    <!--其他块级标签-->
+    <block data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:elif="{{item.tagType == 'block'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse3" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <!--内联标签-->
+    <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:else class="{{item.classStr}} octoParse-{{item.tag}} octoParse-{{item.tagType}}" style="{{item.styleStr}}">
+      <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+        <template is="octoParse3" data="{{item}}" />
+      </block>
+    </view>
+
+  </block>
+
+  <!--判断是否是文本节点-->
+  <block wx:elif="{{item.node == 'text'}}">
+    <!--如果是，直接进行-->
+    <template is="WxTextView" data="{{item}}" />
+  </block>
+
+</template>
+
+<!--循环模版-->
+<template name="octoParse3">
+  <!--<template is="octoParse4" data="{{item}}" />-->
+  <!--判断是否是标签节点-->
+  <block wx:if="{{item.node == 'element'}}">
+    <block wx:if="{{item.tag == 'button'}}">
+      <button type="default" size="mini">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse4" data="{{item}}" />
+        </block>
+      </button>
+    </block>
+    <!--li类型-->
+    <block wx:elif="{{item.tag == 'li'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-li" style="{{item.styleStr}}">
+        <view class="{{item.classStr}} octoParse-li-inner">
+          <view class="{{item.classStr}} octoParse-li-text">
+            <view class="{{item.classStr}} octoParse-li-circle"></view>
+          </view>
+          <view class="{{item.classStr}} octoParse-li-text">
+            <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+              <template is="octoParse4" data="{{item}}" />
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--video类型-->
+    <block wx:elif="{{item.tag == 'video'}}">
+      <template is="octoParseVideo" data="{{item}}" />
+    </block>
+
+    <!--img类型-->
+    <block wx:elif="{{item.tag == 'img'}}">
+      <template is="octoParseImg" data="{{item}}" />
+    </block>
+
+    <!--a类型-->
+    <block wx:elif="{{item.tag == 'a'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}" data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="octoParse-inline {{item.classStr}} octoParse-{{item.tag}}" data-src="{{item.attr.href}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse4" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <block wx:elif="{{item.tag == 'br'}}">
+      <template is="octoParseBr"></template>
+    </block>
+    <!--其他块级标签-->
+    <block data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:elif="{{item.tagType == 'block'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse4" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <!--内联标签-->
+    <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:else class="{{item.classStr}} octoParse-{{item.tag}} octoParse-{{item.tagType}}" style="{{item.styleStr}}">
+      <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+        <template is="octoParse4" data="{{item}}" />
+      </block>
+    </view>
+
+  </block>
+
+  <!--判断是否是文本节点-->
+  <block wx:elif="{{item.node == 'text'}}">
+    <!--如果是，直接进行-->
+    <template is="WxTextView" data="{{item}}" />
+  </block>
+
+</template>
+
+<!--循环模版-->
+<template name="octoParse4">
+  <!--<template is="octoParse5" data="{{item}}" />-->
+  <!--判断是否是标签节点-->
+  <block wx:if="{{item.node == 'element'}}">
+    <block wx:if="{{item.tag == 'button'}}">
+      <button type="default" size="mini">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse5" data="{{item}}" />
+        </block>
+      </button>
+    </block>
+    <!--li类型-->
+    <block wx:elif="{{item.tag == 'li'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-li" style="{{item.styleStr}}">
+        <view class="{{item.classStr}} octoParse-li-inner">
+          <view class="{{item.classStr}} octoParse-li-text">
+            <view class="{{item.classStr}} octoParse-li-circle"></view>
+          </view>
+          <view class="{{item.classStr}} octoParse-li-text">
+            <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+              <template is="octoParse5" data="{{item}}" />
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--video类型-->
+    <block wx:elif="{{item.tag == 'video'}}">
+      <template is="octoParseVideo" data="{{item}}" />
+    </block>
+
+    <!--img类型-->
+    <block wx:elif="{{item.tag == 'img'}}">
+      <template is="octoParseImg" data="{{item}}" />
+    </block>
+
+    <!--a类型-->
+    <block wx:elif="{{item.tag == 'a'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="octoParse-inline {{item.classStr}} octoParse-{{item.tag}}" data-src="{{item.attr.href}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse5" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <block wx:elif="{{item.tag == 'br'}}">
+      <template is="octoParseBr"></template>
+    </block>
+    <!--其他块级标签-->
+    <block wx:elif="{{item.tagType == 'block'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse5" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <!--内联标签-->
+    <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:else class="{{item.classStr}} octoParse-{{item.tag}} octoParse-{{item.tagType}}" style="{{item.styleStr}}">
+      <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+        <template is="octoParse5" data="{{item}}" />
+      </block>
+    </view>
+
+  </block>
+
+  <!--判断是否是文本节点-->
+  <block wx:elif="{{item.node == 'text'}}">
+    <!--如果是，直接进行-->
+    <template is="WxTextView" data="{{item}}" />
+  </block>
+
+</template>
+
+<!--循环模版-->
+<template name="octoParse5">
+  <!--<template is="octoParse6" data="{{item}}" />-->
+  <!--判断是否是标签节点-->
+  <block wx:if="{{item.node == 'element'}}">
+    <block wx:if="{{item.tag == 'button'}}">
+      <button type="default" size="mini">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse6" data="{{item}}" />
+        </block>
+      </button>
+    </block>
+    <!--li类型-->
+    <block wx:elif="{{item.tag == 'li'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-li" style="{{item.styleStr}}">
+        <view class="{{item.classStr}} octoParse-li-inner">
+          <view class="{{item.classStr}} octoParse-li-text">
+            <view class="{{item.classStr}} octoParse-li-circle"></view>
+          </view>
+          <view class="{{item.classStr}} octoParse-li-text">
+            <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+              <template is="octoParse6" data="{{item}}" />
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--video类型-->
+    <block wx:elif="{{item.tag == 'video'}}">
+      <template is="octoParseVideo" data="{{item}}" />
+    </block>
+
+    <!--img类型-->
+    <block wx:elif="{{item.tag == 'img'}}">
+      <template is="octoParseImg" data="{{item}}" />
+    </block>
+
+    <!--a类型-->
+    <block wx:elif="{{item.tag == 'a'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="octoParse-inline {{item.classStr}} octoParse-{{item.tag}}" data-src="{{item.attr.href}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse6" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <block wx:elif="{{item.tag == 'br'}}">
+      <template is="octoParseBr"></template>
+    </block>
+    <!--其他块级标签-->
+    <block wx:elif="{{item.tagType == 'block'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse6" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <!--内联标签-->
+    <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:else class="{{item.classStr}} octoParse-{{item.tag}} octoParse-{{item.tagType}}" style="{{item.styleStr}}">
+      <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+        <template is="octoParse6" data="{{item}}" />
+      </block>
+    </view>
+
+  </block>
+
+  <!--判断是否是文本节点-->
+  <block wx:elif="{{item.node == 'text'}}">
+    <!--如果是，直接进行-->
+    <template is="WxTextView" data="{{item}}" />
+  </block>
+
+</template>
+
+<!--循环模版-->
+<template name="octoParse6">
+  <!--<template is="octoParse7" data="{{item}}" />-->
+  <!--判断是否是标签节点-->
+  <block wx:if="{{item.node == 'element'}}">
+    <block wx:if="{{item.tag == 'button'}}">
+      <button type="default" size="mini">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse7" data="{{item}}" />
+        </block>
+      </button>
+    </block>
+    <!--li类型-->
+    <block wx:elif="{{item.tag == 'li'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-li" style="{{item.styleStr}}">
+        <view class="{{item.classStr}} octoParse-li-inner">
+          <view class="{{item.classStr}} octoParse-li-text">
+            <view class="{{item.classStr}} octoParse-li-circle"></view>
+          </view>
+          <view class="{{item.classStr}} octoParse-li-text">
+            <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+              <template is="octoParse7" data="{{item}}" />
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--video类型-->
+    <block wx:elif="{{item.tag == 'video'}}">
+      <template is="octoParseVideo" data="{{item}}" />
+    </block>
+
+    <!--img类型-->
+    <block wx:elif="{{item.tag == 'img'}}">
+      <template is="octoParseImg" data="{{item}}" />
+    </block>
+
+    <!--a类型-->
+    <block wx:elif="{{item.tag == 'a'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="octoParse-inline {{item.classStr}} octoParse-{{item.tag}}" data-src="{{item.attr.href}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse7" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <block wx:elif="{{item.tag == 'br'}}">
+      <template is="octoParseBr"></template>
+    </block>
+    <!--其他块级标签-->
+    <block wx:elif="{{item.tagType == 'block'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse7" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <!--内联标签-->
+    <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:else class="{{item.classStr}} octoParse-{{item.tag}} octoParse-{{item.tagType}}" style="{{item.styleStr}}">
+      <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+        <template is="octoParse7" data="{{item}}" />
+      </block>
+    </view>
+
+  </block>
+
+  <!--判断是否是文本节点-->
+  <block wx:elif="{{item.node == 'text'}}">
+    <!--如果是，直接进行-->
+    <template is="WxTextView" data="{{item}}" />
+  </block>
+
+</template>
+<!--循环模版-->
+<template name="octoParse7">
+  <!--<template is="octoParse8" data="{{item}}" />-->
+  <!--判断是否是标签节点-->
+  <block wx:if="{{item.node == 'element'}}">
+    <block wx:if="{{item.tag == 'button'}}">
+      <button type="default" size="mini">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse8" data="{{item}}" />
+        </block>
+      </button>
+    </block>
+    <!--li类型-->
+    <block wx:elif="{{item.tag == 'li'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-li" style="{{item.styleStr}}">
+        <view class="{{item.classStr}} octoParse-li-inner">
+          <view class="{{item.classStr}} octoParse-li-text">
+            <view class="{{item.classStr}} octoParse-li-circle"></view>
+          </view>
+          <view class="{{item.classStr}} octoParse-li-text">
+            <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+              <template is="octoParse8" data="{{item}}" />
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--video类型-->
+    <block wx:elif="{{item.tag == 'video'}}">
+      <template is="octoParseVideo" data="{{item}}" />
+    </block>
+
+    <!--img类型-->
+    <block wx:elif="{{item.tag == 'img'}}">
+      <template is="octoParseImg" data="{{item}}" />
+    </block>
+
+    <!--a类型-->
+    <block wx:elif="{{item.tag == 'a'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="octoParse-inline {{item.classStr}} octoParse-{{item.tag}}" data-src="{{item.attr.href}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse8" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <block wx:elif="{{item.tag == 'br'}}">
+      <template is="octoParseBr"></template>
+    </block>
+    <!--其他块级标签-->
+    <block wx:elif="{{item.tagType == 'block'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse8" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <!--内联标签-->
+    <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:else class="{{item.classStr}} octoParse-{{item.tag}} octoParse-{{item.tagType}}" style="{{item.styleStr}}">
+      <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+        <template is="octoParse8" data="{{item}}" />
+      </block>
+    </view>
+
+  </block>
+
+  <!--判断是否是文本节点-->
+  <block wx:elif="{{item.node == 'text'}}">
+    <!--如果是，直接进行-->
+    <template is="WxTextView" data="{{item}}" />
+  </block>
+
+</template>
+
+<!--循环模版-->
+<template name="octoParse8">
+  <!--<template is="octoParse9" data="{{item}}" />-->
+  <!--判断是否是标签节点-->
+  <block wx:if="{{item.node == 'element'}}">
+    <block wx:if="{{item.tag == 'button'}}">
+      <button type="default" size="mini">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse9" data="{{item}}" />
+        </block>
+      </button>
+    </block>
+    <!--li类型-->
+    <block wx:elif="{{item.tag == 'li'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-li" style="{{item.styleStr}}">
+        <view class="{{item.classStr}} octoParse-li-inner">
+          <view class="{{item.classStr}} octoParse-li-text">
+            <view class="{{item.classStr}} octoParse-li-circle"></view>
+          </view>
+          <view class="{{item.classStr}} octoParse-li-text">
+            <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+              <template is="octoParse9" data="{{item}}" />
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--video类型-->
+    <block wx:elif="{{item.tag == 'video'}}">
+      <template is="octoParseVideo" data="{{item}}" />
+    </block>
+
+    <!--img类型-->
+    <block wx:elif="{{item.tag == 'img'}}">
+      <template is="octoParseImg" data="{{item}}" />
+    </block>
+
+    <!--a类型-->
+    <block wx:elif="{{item.tag == 'a'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="octoParse-inline {{item.classStr}} octoParse-{{item.tag}}" data-src="{{item.attr.href}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse9" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <block wx:elif="{{item.tag == 'br'}}">
+      <template is="octoParseBr"></template>
+    </block>
+    <!--其他块级标签-->
+    <block wx:elif="{{item.tagType == 'block'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse9" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <!--内联标签-->
+    <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:else class="{{item.classStr}} octoParse-{{item.tag}} octoParse-{{item.tagType}}" style="{{item.styleStr}}">
+      <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+        <template is="octoParse9" data="{{item}}" />
+      </block>
+    </view>
+
+  </block>
+
+  <!--判断是否是文本节点-->
+  <block wx:elif="{{item.node == 'text'}}">
+    <!--如果是，直接进行-->
+    <template is="WxTextView" data="{{item}}" />
+  </block>
+
+</template>
+
+<!--循环模版-->
+<template name="octoParse9">
+  <!--<template is="octoParse10" data="{{item}}" />-->
+  <!--判断是否是标签节点-->
+  <block wx:if="{{item.node == 'element'}}">
+    <block wx:if="{{item.tag == 'button'}}">
+      <button type="default" size="mini">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse10" data="{{item}}" />
+        </block>
+      </button>
+    </block>
+    <!--li类型-->
+    <block wx:elif="{{item.tag == 'li'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-li" style="{{item.styleStr}}">
+        <view class="{{item.classStr}} octoParse-li-inner">
+          <view class="{{item.classStr}} octoParse-li-text">
+            <view class="{{item.classStr}} octoParse-li-circle"></view>
+          </view>
+          <view class="{{item.classStr}} octoParse-li-text">
+            <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+              <template is="octoParse10" data="{{item}}" />
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--video类型-->
+    <block wx:elif="{{item.tag == 'video'}}">
+      <template is="octoParseVideo" data="{{item}}" />
+    </block>
+
+    <!--img类型-->
+    <block wx:elif="{{item.tag == 'img'}}">
+      <template is="octoParseImg" data="{{item}}" />
+    </block>
+
+    <!--a类型-->
+    <block wx:elif="{{item.tag == 'a'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="octoParse-inline {{item.classStr}} octoParse-{{item.tag}}" data-src="{{item.attr.href}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse10" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <block wx:elif="{{item.tag == 'br'}}">
+      <template is="octoParseBr"></template>
+    </block>
+    <!--其他块级标签-->
+    <block wx:elif="{{item.tagType == 'block'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse10" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <!--内联标签-->
+    <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:else class="{{item.classStr}} octoParse-{{item.tag}} octoParse-{{item.tagType}}" style="{{item.styleStr}}">
+      <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+        <template is="octoParse10" data="{{item}}" />
+      </block>
+    </view>
+
+  </block>
+
+  <!--判断是否是文本节点-->
+  <block wx:elif="{{item.node == 'text'}}">
+    <!--如果是，直接进行-->
+    <template is="WxTextView" data="{{item}}" />
+  </block>
+
+</template>
+
+<!--循环模版-->
+<template name="octoParse10">
+  <!--<template is="octoParse11" data="{{item}}" />-->
+  <!--判断是否是标签节点-->
+  <block wx:if="{{item.node == 'element'}}">
+    <block wx:if="{{item.tag == 'button'}}">
+      <button type="default" size="mini">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse11" data="{{item}}" />
+        </block>
+      </button>
+    </block>
+    <!--li类型-->
+    <block wx:elif="{{item.tag == 'li'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-li" style="{{item.styleStr}}">
+        <view class="{{item.classStr}} octoParse-li-inner">
+          <view class="{{item.classStr}} octoParse-li-text">
+            <view class="{{item.classStr}} octoParse-li-circle"></view>
+          </view>
+          <view class="{{item.classStr}} octoParse-li-text">
+            <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+              <template is="octoParse11" data="{{item}}" />
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--video类型-->
+    <block wx:elif="{{item.tag == 'video'}}">
+      <template is="octoParseVideo" data="{{item}}" />
+    </block>
+
+    <!--img类型-->
+    <block wx:elif="{{item.tag == 'img'}}">
+      <template is="octoParseImg" data="{{item}}" />
+    </block>
+
+    <!--a类型-->
+    <block wx:elif="{{item.tag == 'a'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="octoParse-inline {{item.classStr}} octoParse-{{item.tag}}" data-src="{{item.attr.href}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse11" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <block wx:elif="{{item.tag == 'br'}}">
+      <template is="octoParseBr"></template>
+    </block>
+    <!--其他块级标签-->
+    <block wx:elif="{{item.tagType == 'block'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse11" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <!--内联标签-->
+    <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:else class="{{item.classStr}} octoParse-{{item.tag}} octoParse-{{item.tagType}}" style="{{item.styleStr}}">
+      <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+        <template is="octoParse11" data="{{item}}" />
+      </block>
+    </view>
+
+  </block>
+
+  <!--判断是否是文本节点-->
+  <block wx:elif="{{item.node == 'text'}}">
+    <!--如果是，直接进行-->
+    <template is="WxTextView" data="{{item}}" />
+  </block>
+
+</template>
+
+<!--循环模版-->
+<template name="octoParse11">
+  <!--<template is="octoParse12" data="{{item}}" />-->
+  <!--判断是否是标签节点-->
+  <block wx:if="{{item.node == 'element'}}">
+    <block wx:if="{{item.tag == 'button'}}">
+      <button type="default" size="mini">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse12" data="{{item}}" />
+        </block>
+      </button>
+    </block>
+    <!--li类型-->
+    <block wx:elif="{{item.tag == 'li'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-li" style="{{item.styleStr}}">
+        <view class="{{item.classStr}} octoParse-li-inner">
+          <view class="{{item.classStr}} octoParse-li-text">
+            <view class="{{item.classStr}} octoParse-li-circle"></view>
+          </view>
+          <view class="{{item.classStr}} octoParse-li-text">
+            <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+              <template is="octoParse12" data="{{item}}" />
+            </block>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--video类型-->
+    <block wx:elif="{{item.tag == 'video'}}">
+      <template is="octoParseVideo" data="{{item}}" />
+    </block>
+
+    <!--img类型-->
+    <block wx:elif="{{item.tag == 'img'}}">
+      <template is="octoParseImg" data="{{item}}" />
+    </block>
+
+    <!--a类型-->
+    <block wx:elif="{{item.tag == 'a'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="octoParse-inline {{item.classStr}} octoParse-{{item.tag}}" data-src="{{item.attr.href}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse12" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <block wx:elif="{{item.tag == 'br'}}">
+      <template is="octoParseBr"></template>
+    </block>
+    <!--其他块级标签-->
+    <block wx:elif="{{item.tagType == 'block'}}">
+      <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  class="{{item.classStr}} octoParse-{{item.tag}}" style="{{item.styleStr}}">
+        <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+          <template is="octoParse12" data="{{item}}" />
+        </block>
+      </view>
+    </block>
+
+    <!--内联标签-->
+    <view data-tag="{{item.tag}}" data-class="{{item.classStr}}" data-id="{{item.attr.id}}"  wx:else class="{{item.classStr}} octoParse-{{item.tag}} octoParse-{{item.tagType}}" style="{{item.styleStr}}">
+      <block wx:for="{{item.nodes}}" wx:for-item="item" wx:key="">
+        <template is="octoParse12" data="{{item}}" />
+      </block>
+    </view>
+
+  </block>
+
+  <!--判断是否是文本节点-->
+  <block wx:elif="{{item.node == 'text'}}">
+    <!--如果是，直接进行-->
+    <template is="WxTextView" data="{{item}}" />
+  </block>
+
+</template>

@@ -27,6 +27,13 @@
   "bugs": {
     "url": "https://github.com/bigMeow/axios-miniprogram-adapter/issues"
   },
+  "keywords": [
+    "axios",
+    "adapter",
+    "wechat",
+    "miniprogram",
+    "微信小程序"
+  ],
   "devDependencies": {
     "@vue/eslint-config-standard": "^4.0.0",
     "@vue/eslint-config-typescript": "^3.1.1",
