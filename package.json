@@ -15,6 +15,7 @@
     "build:aio": "rollup -c config/rollup.config.aio.js",
     "build": "npm run clean && npm run build:self && npm run build:esm &&  npm run build:aio",
     "test": "npm run lint && npm run build && mocha",
+    "mocha": "mocha",
     "release": "npm test && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags"
   },
   "author": "bigMeow(lizong9527@gmail.com)",
@@ -33,7 +34,7 @@
     "eslint": "^5.9.0",
     "eslint-plugin-vue": "^4.7.1",
     "expect.js": "^0.3.1",
-    "mocha": "3.5.3",
+    "mocha": "^5.2.0",
     "rimraf": "2.6.2",
     "rollup": "^0.67.0",
     "rollup-plugin-commonjs": "^9.2.0",
