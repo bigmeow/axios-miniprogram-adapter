@@ -66,10 +66,18 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
 
     // Add headers to the request
     utils.forEach(requestHeaders, function setRequestHeader (val: any, key: string) {
-      if ((typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') || key.toLowerCase() === 'referer') {
+      const _header = key.toLowerCase()
+      if ((typeof requestData === 'undefined' && _header === 'content-type') || _header === 'referer') {
         // Remove Content-Type if data is undefined
-        // and the miniprogram document said that '设置请求的 header，header 中不能设置 Referer'
+        // And the miniprogram document said that '设置请求的 header，header 中不能设置 Referer'
         delete requestHeaders[key]
+      } else if (typeof requestData === 'string' && _header === 'content-type' && val === 'application/x-www-form-urlencoded') {
+        // Wechat miniprograme document:对于 POST 方法且 header['content-type'] 为 application/x-www-form-urlencoded 的数据，小程序会将数据转换成 query string （encodeURIComponent(k)=encodeURIComponent(v)&encodeURIComponent(k)=encodeURIComponent(v)...
+        // Specialized processing of wechat,jsut pass the object parameters
+        try {
+          requestData = JSON.parse(requestData)
+        } catch (error) {
+        }
       }
     })
     mpRequestOption.header = requestHeaders
