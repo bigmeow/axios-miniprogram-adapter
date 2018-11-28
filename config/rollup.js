@@ -1,10 +1,11 @@
-var pkg = require('../package.json')
+import typescript from 'rollup-plugin-typescript2'
+import pkg from '../package.json'
 
 // 兼容 axios-miniprogram-adapter 和 @bigMeow/axios-miniprogram-adapter
-var name = pkg.name.split('/').pop()
-var version = pkg.version
+const name = pkg.name.split('/').pop()
+const version = pkg.version
 
-var banner =
+const banner =
 `/*!
  * axios-miniprogram-adapter ${version} (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
@@ -13,5 +14,20 @@ var banner =
  */
 `
 
-exports.name = name
-exports.banner = banner
+function getCompiler (opt) {
+  return typescript(opt)
+}
+
+const external = [
+  'axios/lib/helpers/buildURL',
+  'axios/lib/utils',
+  'axios/lib/core/settle',
+  'axios/lib/core/createError'
+]
+
+export default {
+  name,
+  banner,
+  getCompiler,
+  external
+}

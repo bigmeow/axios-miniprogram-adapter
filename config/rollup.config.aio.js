@@ -1,27 +1,24 @@
 // rollup.config.js
 
-const nodeResolve = require('rollup-plugin-node-resolve')
-const commonjs = require('rollup-plugin-commonjs')
-const typescript = require('rollup-plugin-typescript')
+// const uglify = require('rollup-plugin-uglify')
+import common from './rollup'
+import { uglify } from 'rollup-plugin-uglify'
+import nodeResolve from 'rollup-plugin-node-resolve'
+import commonjs from 'rollup-plugin-commonjs'
 
-const common = require('./rollup.js')
+const isProd = process.env.NODE_ENV === 'production'
 
 export default {
   input: 'src/index.ts',
   output: {
-    file: 'dist/index.aio.js',
+    file: isProd ? 'dist/index.aio.min.js' : 'dist/index.aio.js',
     format: 'umd',
     // 如果不同时使用 export 与 export default 可打开legacy
     // legacy: true,
     name: common.name,
     banner: common.banner
   },
-  external: [
-    'axios/lib/helpers/buildURL',
-    'axios/lib/utils',
-    'axios/lib/core/settle',
-    'axios/lib/core/createError'
-  ],
+  external: common.external,
   plugins: [
     nodeResolve({
       main: true,
@@ -30,9 +27,7 @@ export default {
     commonjs({
       include: 'node_modules/**'
     }),
-    typescript({
-      typescript: require('typescript'),
-      exclude: 'node_modules/**'
-    })
+    common.getCompiler(),
+    (isProd && uglify())
   ]
 }

@@ -1,7 +1,17 @@
-import config from './rollup.config'
+import common from './rollup'
 
-// ES output
-config.output.format = 'es'
-config.output.file = 'dist/index.esm.js'
-
-export default config
+export default {
+  input: 'src/index.ts',
+  output: {
+    file: 'dist/index.esm.js',
+    format: 'es',
+    legacy: true,
+    // When export and export default are not used at the same time, set legacy to true.
+    // legacy: true,
+    banner: common.banner
+  },
+  external: common.external,
+  plugins: [
+    common.getCompiler()
+  ]
+}

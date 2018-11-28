@@ -1,8 +1,7 @@
 // rollup.config.js
 
-const common = require('./rollup.js')
-const nodeResolve = require('rollup-plugin-node-resolve')
-const typescript = require('rollup-plugin-typescript')
+import common from './rollup'
+import nodeResolve from 'rollup-plugin-node-resolve'
 export default {
   input: 'src/index.ts',
   output: {
@@ -12,20 +11,15 @@ export default {
     // legacy: true,
     banner: common.banner
   },
-  external: [
-    'axios/lib/helpers/buildURL',
-    'axios/lib/utils',
-    'axios/lib/core/settle',
-    'axios/lib/core/createError'
-  ],
+  external: common.external,
   plugins: [
     nodeResolve({
       main: true,
       extensions: [ '.ts', '.js' ]
     }),
-    typescript({
-      typescript: require('typescript'),
-      exclude: 'node_modules/**'
+    common.getCompiler({
+      tsconfigOverride: { compilerOptions: { declaration: true } },
+      useTsconfigDeclarationDir: true
     })
   ]
 }

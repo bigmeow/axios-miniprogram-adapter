@@ -7,8 +7,8 @@
         "es2015",
         "es2015.promise"
       ],
+      "declarationDir": ".",
       "strict": true,
-      "allowJs": true,
       "noImplicitAny": false,
       "noUnusedLocals": true,
       "noUnusedParameters": false,
