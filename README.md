@@ -40,6 +40,12 @@ import mpAdapter from 'axios-miniprogram-adapter'
 axios.defaults.adapter = mpAdapter
 ```
 
+如果你没有使用任何脚手架工具，直接使用小程序开发工具自带的[```构建npm```](https://developers.weixin.qq.com/miniprogram/dev/devtools/npm.html)，那么很遗憾你暂时不能使用本库，因为小程序自带的npm不支持解析node_modules中的库再有外部依赖：例如本库中依赖了```axios```库的某些工具包，在源码中有下面的代码：
+```js
+import utils from 'axios/lib/utils'
+```
+在小程序开发工具中会报错，找不到此依赖。当然，我也有解决办法，可以将依赖打包到一起，但是那样会让本库显得臃肿，本来100多行代码的事情，打包后增加到500多行，基于此，强烈推荐你使用类似于webpack的脚手架工具开发
+
 ## 文档
 - 同axios官方仓库一致
 - [与官方API的差异](https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md)

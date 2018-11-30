@@ -1,7 +1,13 @@
 # 文档
 由于小程序特性限制，下面的配置在小程序环境下将会自动被忽略
 
-TODO
+- timeout
+- withCredentials
+- xsrfCookieName
+- xsrfHeaderName
+- onUploadProgress
+- onDownloadProgress
+
 
 
 # 注意
