@@ -3907,10 +3907,10 @@ media-typer@0.3.0:
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
   integrity sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=
 
-megalo@^0.1.3-1:
-  version "0.1.3-1"
-  resolved "https://registry.yarnpkg.com/megalo/-/megalo-0.1.3-1.tgz#1c03f78a4cd84d6126bdd69d6606bb89dfdddd5a"
-  integrity sha512-hedkvJmBZ5RYwe/ybWjEaT6+iTmxpVLWBW9Zp9BjSPfI/NpJnIkhRSan5d4/SeVyj7/D1dKqUlsYUeRxm3/K1A==
+megalo@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/megalo/-/megalo-0.5.3.tgz#aeaeb3ac6f98718dc7451266a5ba773213c45e94"
+  integrity sha512-7DDkHYtkleLLWABKxBpxZT13a0albgr/kBQQMCqA7kDpOk55s56vtbbdw3h3BjO4cZEJYtVia9869+OPsBtagA==
 
 mem@^4.0.0:
   version "4.0.0"

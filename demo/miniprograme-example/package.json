@@ -41,7 +41,7 @@
     "@megalo/vhtml-plugin": "^0.1.0",
     "axios": "^0.18.0",
     "axios-miniprogram-adapter": "^0.1.1",
-    "megalo": "^0.1.3-1",
+    "megalo": "^0.5.3",
     "octoparse": "^0.2.0"
   }
 }

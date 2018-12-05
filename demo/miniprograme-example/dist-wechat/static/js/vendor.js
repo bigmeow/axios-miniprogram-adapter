@@ -33,7 +33,7 @@ var _createError2 = _interopRequireDefault(_createError);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /*!
- * axios-miniprogram-adapter 0.1.0 (https://github.com/bigMeow/axios-miniprogram-adapter)
+ * axios-miniprogram-adapter 0.1.1 (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
  * Copyright 2018-2018 bigMeow. All Rights Reserved
  * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
@@ -123,10 +123,17 @@ function mpAdapter(config) {
         }
         // Add headers to the request
         _utils2.default.forEach(requestHeaders, function setRequestHeader(val, key) {
-            if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type' || key.toLowerCase() === 'referer') {
+            var _header = key.toLowerCase();
+            if (typeof requestData === 'undefined' && _header === 'content-type' || _header === 'referer') {
                 // Remove Content-Type if data is undefined
-                // and the miniprogram document said that '设置请求的 header，header 中不能设置 Referer'
+                // And the miniprogram document said that '设置请求的 header，header 中不能设置 Referer'
                 delete requestHeaders[key];
+            } else if (typeof requestData === 'string' && _header === 'content-type' && val === 'application/x-www-form-urlencoded') {
+                // Wechat miniprograme document:对于 POST 方法且 header['content-type'] 为 application/x-www-form-urlencoded 的数据，小程序会将数据转换成 query string （encodeURIComponent(k)=encodeURIComponent(v)&encodeURIComponent(k)=encodeURIComponent(v)...
+                // Specialized processing of wechat,jsut pass the object parameters
+                try {
+                    requestData = JSON.parse(requestData);
+                } catch (error) {}
             }
         });
         mpRequestOption.header = requestHeaders;
@@ -2339,7 +2346,7 @@ try {
     _Set = Set;
   } else {
     // a non-standard Set polyfill that only works with primitive keys.
-    _Set = /*@__PURE__*/function () {
+    _Set = function () {
       function Set() {
         this.set = Object.create(null);
       }
@@ -3702,10 +3709,12 @@ try {
   function eventsMixin(Vue) {
     var hookRE = /^hook:/;
     Vue.prototype.$on = function (event, fn) {
+      var this$1 = this;
+
       var vm = this;
       if (Array.isArray(event)) {
         for (var i = 0, l = event.length; i < l; i++) {
-          this.$on(event[i], fn);
+          this$1.$on(event[i], fn);
         }
       } else {
         (vm._events[event] || (vm._events[event] = [])).push(fn);
@@ -3730,6 +3739,8 @@ try {
     };
 
     Vue.prototype.$off = function (event, fn) {
+      var this$1 = this;
+
       var vm = this;
       // all
       if (!arguments.length) {
@@ -3739,7 +3750,7 @@ try {
       // array of events
       if (Array.isArray(event)) {
         for (var i = 0, l = event.length; i < l; i++) {
-          this.$off(event[i], fn);
+          this$1.$off(event[i], fn);
         }
         return vm;
       }
@@ -4316,11 +4327,13 @@ try {
    * Clean up for dependency collection.
    */
   Watcher.prototype.cleanupDeps = function cleanupDeps() {
+    var this$1 = this;
+
     var i = this.deps.length;
     while (i--) {
-      var dep = this.deps[i];
-      if (!this.newDepIds.has(dep.id)) {
-        dep.removeSub(this);
+      var dep = this$1.deps[i];
+      if (!this$1.newDepIds.has(dep.id)) {
+        dep.removeSub(this$1);
       }
     }
     var tmp = this.depIds;
@@ -4389,9 +4402,11 @@ try {
    * Depend on all deps collected by this watcher.
    */
   Watcher.prototype.depend = function depend() {
+    var this$1 = this;
+
     var i = this.deps.length;
     while (i--) {
-      this.deps[i].depend();
+      this$1.deps[i].depend();
     }
   };
 
@@ -4399,6 +4414,8 @@ try {
    * Remove self from all dependencies' subscriber list.
    */
   Watcher.prototype.teardown = function teardown() {
+    var this$1 = this;
+
     if (this.active) {
       // remove self from vm's watcher list
       // this is a somewhat expensive operation so we skip it
@@ -4408,7 +4425,7 @@ try {
       }
       var i = this.deps.length;
       while (i--) {
-        this.deps[i].removeSub(this);
+        this$1.deps[i].removeSub(this$1);
       }
       this.active = false;
     }
@@ -5741,8 +5758,10 @@ try {
     },
 
     destroyed: function destroyed() {
-      for (var key in this.cache) {
-        pruneCacheEntry(this.cache, key, this.keys);
+      var this$1 = this;
+
+      for (var key in this$1.cache) {
+        pruneCacheEntry(this$1.cache, key, this$1.keys);
       }
     },
 
@@ -5868,63 +5887,93 @@ try {
     value: FunctionalRenderContext
   });
 
-  Vue.version = '0.1.3-1';
+  Vue.version = '0.5.3';
 
-  function getHid(vm, vnode) {
-    if (vnode === void 0) vnode = {};
+  /*  */
 
-    var data = vnode.data;if (data === void 0) data = {};
-    return data._hid || data.attrs && data.attrs._hid;
+  function genClassForVnode(vnode) {
+    var data = vnode.data;
+    // let parentNode = vnode
+    // let childNode = vnode
+    // while (isDef(childNode.componentInstance)) {
+    //   childNode = childNode.componentInstance._vnode
+    //   if (childNode && childNode.data) {
+    // data = mergeClassData(childNode.data, data)
+    // }
+    // }
+    // while (isDef(parentNode = parentNode.parent)) {
+    // if (parentNode && parentNode.data) {
+    // data = mergeClassData(data, parentNode.data)
+    // }
+    // }
+    // mp: no need to update static class
+    return renderClass(data.class);
   }
 
-  function getVM(vm, id) {
-    if (vm === void 0) vm = {};
-
-    var res;
-    if (getVMId(vm) === "" + id) {
-      return vm;
-    }
-    var $children = vm.$children;
-    for (var i = 0; i < $children.length; ++i) {
-      res = getVM($children[i], id);
-      /* istanbul ignore else */
-      if (res) {
-        return res;
-      }
-    }
-  }
-
-  function getVMMarker(vm) {
-    return vm && vm.$attrs && vm.$attrs['_cid'] ? vm.$attrs['_cid'] : '0';
-  }
-
-  function getVMId(vm) {
-    var res = [];
-    var cursor = vm;
-    var prev;
-    while (cursor) {
-      if (cursor === vm || !isSlotParent(cursor, prev)) {
-        res.unshift(getVMMarker(cursor));
-      }
-      prev = cursor;
-      cursor = cursor.$parent;
-    }
-    return res.join(',');
-  }
-
-  function isSlotParent(parent, child) {
-    var ref = child || {};
-    var $vnode = ref.$vnode;if ($vnode === void 0) $vnode = {};
-    var childSlotParentUId = $vnode._mpSlotParentUId;
-    return isDef(childSlotParentUId) && childSlotParentUId === parent._uid;
-  }
-
-  // export function getVMParentId (vm) {
-  //   if (vm.$parent) {
-  //     return getVMId(vm.$parent)
+  // function mergeClassData (child: VNodeData, parent: VNodeData): {
+  //   staticClass: string,
+  //   class: any
+  // } {
+  //   return {
+  //     staticClass: concat(child.staticClass, parent.staticClass),
+  //     class: isDef(child.class)
+  //       ? [child.class, parent.class]
+  //       : parent.class
   //   }
-  //   return ''
   // }
+
+  function renderClass(dynamicClass) {
+    if (isDef(dynamicClass)) {
+      return concat(stringifyClass(dynamicClass));
+    }
+    /* istanbul ignore next */
+    return '';
+  }
+
+  function concat(a, b) {
+    return a ? b ? a + ' ' + b : a : b || '';
+  }
+
+  function stringifyClass(value) {
+    if (Array.isArray(value)) {
+      return stringifyArray(value);
+    }
+    if (isObject(value)) {
+      return stringifyObject(value);
+    }
+    if (typeof value === 'string') {
+      return value;
+    }
+    /* istanbul ignore next */
+    return '';
+  }
+
+  function stringifyArray(value) {
+    var res = '';
+    var stringified;
+    for (var i = 0, l = value.length; i < l; i++) {
+      if (isDef(stringified = stringifyClass(value[i])) && stringified !== '') {
+        if (res) {
+          res += ' ';
+        }
+        res += stringified;
+      }
+    }
+    return res;
+  }
+
+  function stringifyObject(value) {
+    var res = '';
+    for (var key in value) {
+      if (value[key]) {
+        if (res) {
+          res += ' ';
+        }
+        res += key;
+      }
+    }
+    return res;
+  }
 
   /**
    * 频率控制 返回函数连续调用时，func 执行频率限定为 次 / wait
@@ -5995,6 +6044,32 @@ try {
     };
   }
 
+  function aop(fn, options) {
+    if (options === void 0) options = {};
+
+    var before = options.before;
+    var after = options.after;
+    return function () {
+      var args = [],
+          len = arguments.length;
+      while (len--) {
+        args[len] = arguments[len];
+      }var self = this;
+
+      if (before) {
+        before.call.apply(before, [self, args].concat(args));
+      }
+
+      var ret = fn.call.apply(fn, [self].concat(args));
+
+      if (after) {
+        after.call.apply(after, [self, ret].concat(args, [ret]));
+      }
+
+      return ret;
+    };
+  }
+
   var Buffer = function Buffer() {
     this.buff = {};
   };
@@ -6009,194 +6084,69 @@ try {
     return data;
   };
 
-  function isEmptyObj(obj) {
-    if (obj === void 0) obj = {};
+  Buffer.prototype.isEqual = function isEqual(key, value) {
+    return this.buff[key] !== undefined && this.buff[key] === value;
+  };
 
-    return Object.keys(obj).length === 0;
-  }
-
-  function initVMToMP(vm) {
-    var obj;
-
-    vm = vm || this;
-    var cid = getVMId(vm);
-    var info = {
-      cid: cid,
-      cpath: cid + ","
-    };
-
-    vm.$mp.update((obj = {}, obj["$root." + cid + ".c"] = info.cid, obj["$root." + cid + ".cp"] = info.cpath, obj));
-  }
-
-  function updateSlotId(vm, sid) {
-    var obj;
-
-    vm = vm || this;
-    var vmId = getVMId(vm);
-
-    /* istanbul ignore else */
-    if (isDef(sid)) {
-      vm.$mp.update((obj = {}, obj["$root." + vmId + ".s"] = sid, obj));
-    }
-  }
-
-  function updateMPData(type, data, vnode) {
-    var obj;
-
-    if (type === void 0) type = 't';
-    var vm = this;
-    var vmId = getVMId(vm);
-    var hid = getHid(vm, vnode);
-
-    /* istanbul ignore else */
-    if (isDef(hid)) {
-      vm.$mp.update((obj = {}, obj["$root." + vmId + "._h." + hid + "." + type] = data, obj));
-    }
-  }
-
-  function createUpdateFn(page) {
-    var buffer = new Buffer();
-    var throttleSetData = throttle(function () {
-      var data = buffer.pop();
-
-      if (!isEmptyObj(data) && page.setData) {
-        page.setData(data);
+  function getMPPlatform() {
+    var platform = '';
+    try {
+      /* eslint-disable */
+      if (!platform && wx) {
+        platform = 'wechat';
       }
-    }, 50, { leadingDelay: 0 });
-
-    return function update(data) {
-      buffer.push(data);
-      throttleSetData();
-    };
-  }
-
-  function updateVnodeToMP(vnode, key, value) {
-    if (key === void 0) key = 't';
-
-    var context = vnode.context;
-    var slotContext = vnode.slotContext;
-    var realContext = slotContext || context;
-    realContext && realContext.$updateMPData(key, value, vnode);
-
-    /* istanbul ignore if */
-    if (!realContext) {
-      console.warn('update text with no context', key, value, vnode);
-    }
-  }
-
-  /*  */
-
-  function genClassForVnode(vnode) {
-    var data = vnode.data;
-    var parentNode = vnode;
-    var childNode = vnode;
-    while (isDef(childNode.componentInstance)) {
-      childNode = childNode.componentInstance._vnode;
-      if (childNode && childNode.data) {
-        data = mergeClassData(childNode.data, data);
+      /* eslint-enable */
+    } catch (e) {}
+    try {
+      /* eslint-disable */
+      if (!platform && my) {
+        platform = 'alipay';
       }
-    }
-    while (isDef(parentNode = parentNode.parent)) {
-      if (parentNode && parentNode.data) {
-        data = mergeClassData(data, parentNode.data);
+      /* eslint-enable */
+    } catch (e) {}
+    try {
+      /* eslint-disable */
+      if (!platform && swan) {
+        platform = 'swan';
       }
-    }
-    // mp: no need to update static class
-    return renderClass(data.class);
+      /* eslint-enable */
+    } catch (e) {}
+    return platform || 'unknown';
   }
 
-  function mergeClassData(child, parent) {
-    return {
-      staticClass: concat(child.staticClass, parent.staticClass),
-      class: isDef(child.class) ? [child.class, parent.class] : parent.class
-    };
-  }
+  var ROOT_DATA_VAR = '$root';
+  var HOLDER_VAR = 'h';
 
-  function renderClass(dynamicClass) {
-    if (isDef(dynamicClass)) {
-      return concat(stringifyClass(dynamicClass));
-    }
-    /* istanbul ignore next */
-    return '';
-  }
+  var VM_ID_VAR = 'c';
+  var VM_ID_PREFIX = 'cp';
 
-  function concat(a, b) {
-    return a ? b ? a + ' ' + b : a : b || '';
-  }
+  var VM_ID_SEP = 'v';
 
-  function stringifyClass(value) {
-    if (Array.isArray(value)) {
-      return stringifyArray(value);
-    }
-    if (isObject(value)) {
-      return stringifyObject(value);
-    }
-    if (typeof value === 'string') {
-      return value;
-    }
-    /* istanbul ignore next */
-    return '';
-  }
+  var SLOT_CONTEXT_ID_VAR = 's';
 
-  function stringifyArray(value) {
-    var res = '';
-    var stringified;
-    for (var i = 0, l = value.length; i < l; i++) {
-      if (isDef(stringified = stringifyClass(value[i])) && stringified !== '') {
-        if (res) {
-          res += ' ';
-        }
-        res += stringified;
-      }
-    }
-    return res;
-  }
+  var LIST_TAIL_SEPS = {
+    swan: '_',
+    wechat: '-',
+    alipay: '-'
+  };
 
-  function stringifyObject(value) {
-    var res = '';
-    for (var key in value) {
-      if (value[key]) {
-        if (res) {
-          res += ' ';
-        }
-        res += key;
-      }
-    }
-    return res;
-  }
+  var HOLDER_TYPE_VARS = {
+    text: 't',
+    vtext: 'vt',
+    if: '_if',
+    for: 'li',
+    class: 'cl',
+    rootClass: 'rcl',
+    style: 'st',
+    value: 'value',
+    vhtml: 'html',
+    vshow: 'vs',
+    slot: 'slot'
+  };
 
-  function aop(fn, options) {
-    if (options === void 0) options = {};
-
-    var before = options.before;
-    var after = options.after;
-    var argsCount = options.argsCount;
-    return function () {
-      var args = [],
-          len = arguments.length;
-      while (len--) {
-        args[len] = arguments[len];
-      }var self = this;
-      var ag = new Array(argsCount || 0);
-      Object.assign(ag, args);
-
-      if (argsCount !== undefined) {
-        ag = ag.slice(0, argsCount);
-      }
-
-      if (before) {
-        before.call.apply(before, [self].concat(ag, [ag]));
-      }
-
-      var ret = fn.call.apply(fn, [self].concat(ag, [ag]));
-
-      if (after) {
-        after.call.apply(after, [self].concat(ag, [ret]));
-      }
-
-      return ret;
-    };
-  }
+  var notEmpty = function notEmpty(e) {
+    return !!e;
+  };
 
   var isReservedTag = makeMap('template,script,style,element,content,slot,link,meta,svg,view,' + 'a,div,img,image,text,span,richtext,input,switch,textarea,spinner,select,' + 'slider,slider-neighbor,indicator,trisition,trisition-group,canvas,' + 'list,cell,header,loading,loading-indicator,refresh,scrollable,scroller,' + 'video,web,embed,tabbar,tabheader,datepicker,timepicker,marquee,countdown', true);
 
@@ -6212,26 +6162,248 @@ try {
 
   function mustUseProp() {/* console.log('mustUseProp') */}
   function getTagNamespace() {/* console.log('getTagNamespace') */}
-  function isUnknownElement() {} /* console.log('isUnknownElement') */
+  function isUnknownElement() {/* console.log('isUnknownElement') */}
 
-  // 用于小程序的 event type 到 web 的 event
   var eventTypeMap = {
-    tap: ['tap', 'click'],
-    touchstart: ['touchstart'],
-    touchmove: ['touchmove'],
-    touchcancel: ['touchcancel'],
-    touchend: ['touchend'],
-    longtap: ['longtap'],
-    input: ['input'],
-    blur: ['change', 'blur'],
-    submit: ['submit'],
-    focus: ['focus'],
-    scrolltoupper: ['scrolltoupper'],
-    scrolltolower: ['scrolltolower'],
-    scroll: ['scroll']
+    tap: ['tap', 'click']
   };
 
+  function getValue(obj, path) {
+    if (obj === void 0) obj = {};
+    if (path === void 0) path = '';
+
+    var paths = typeof path === 'string' ? path.split('.') : path;
+    return paths.reduce(function (prev, k) {
+      /* istanbul ignore if */
+      if (prev && isDef(prev)) {
+        prev = prev[k];
+      }
+      return prev;
+    }, obj);
+  }
+
+  function deepEqual(a, b) {
+    var aType = typeof a === 'undefined' ? 'undefined' : _typeof(a);
+    var bType = typeof b === 'undefined' ? 'undefined' : _typeof(b);
+    if (aType !== 'object' || bType !== 'object' || aType !== bType) {
+      return a === b || a === '' && b === undefined || a === undefined && b === '';
+    } else {
+      if (Array.isArray(a)) {
+        if (a.length !== b.length) {
+          return false;
+        }
+      }
+      for (var k in a) {
+        if (!deepEqual(a[k], b[k])) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function getHid(vm, vnode) {
+    if (vnode === void 0) vnode = {};
+
+    var sep = LIST_TAIL_SEPS[vm.$mp.platform] || LIST_TAIL_SEPS.wechat;
+    var data = vnode.data;if (data === void 0) data = {};
+    var _hid = isDef(data._hid) ? data._hid : data.attrs && data.attrs._hid;
+    var _fid = isDef(data._fid) ? data._fid : data.attrs && data.attrs._fid;
+    if (isDef(_fid)) {
+      return "" + _hid + sep + _fid;
+    }
+    return _hid;
+  }
+
+  function getVM(vm, id) {
+    if (vm === void 0) vm = {};
+
+    var res;
+    if (getVMId(vm) === "" + id) {
+      return vm;
+    }
+    var $children = vm.$children;
+    for (var i = 0; i < $children.length; ++i) {
+      res = getVM($children[i], id);
+      /* istanbul ignore else */
+      if (res) {
+        return res;
+      }
+    }
+  }
+
+  function getCid(vm) {
+    var $vnode = vm.$vnode;
+    var cid = $vnode && $vnode.data && $vnode.data.attrs._cid;
+    cid = cid || '0';
+    return cid;
+  }
+
+  function getFid(vm) {
+    var $vnode = vm.$vnode;
+    var fid = $vnode && $vnode.data && $vnode.data.attrs._fid;
+    return fid;
+  }
+
+  function getVMId(vm) {
+    var sep = LIST_TAIL_SEPS[vm.$mp.platform] || LIST_TAIL_SEPS.wechat;
+    var res = [];
+    var cursor = vm;
+    var prev;
+    while (cursor) {
+      if (cursor === vm || !isSlotParent(cursor, prev)) {
+        res.unshift(getCid(cursor));
+      }
+      prev = cursor;
+      cursor = cursor.$parent;
+    }
+    var vmId = res.join(VM_ID_SEP);
+    var fid = getFid(vm);
+    if (isDef(fid)) {
+      return "" + vmId + sep + fid;
+    }
+    return vmId;
+  }
+
+  function isSlotParent(parent, child) {
+    var ref = child || {};
+    var $vnode = ref.$vnode;if ($vnode === void 0) $vnode = {};
+    var childSlotParentUId = $vnode._mpSlotParentUId;
+    return isDef(childSlotParentUId) && childSlotParentUId === parent._uid;
+  }
+
+  // export function getVMParentId (vm) {
+  //   if (vm.$parent) {
+  //     return getVMId(vm.$parent)
+  //   }
+  //   return ''
+  // }
+
+  function isEmptyObj(obj) {
+    if (obj === void 0) obj = {};
+
+    return Object.keys(obj).length === 0;
+  }
+
+  function initVMToMP(vm) {
+    var obj;
+
+    var sep = LIST_TAIL_SEPS[vm.$mp.platform] || LIST_TAIL_SEPS.wechat;
+
+    vm = vm || this;
+    // const cid = getVMId(vm)
+    var vmId = getVMId(vm);
+    // console.log(vmId)
+    var i = vmId.indexOf(sep);
+    var cid = i > -1 ? vmId.slice(0, i) : vmId;
+    var info = {
+      cid: vmId,
+      cpath: "" + cid + VM_ID_SEP
+    };
+
+    var prefix = ROOT_DATA_VAR + "." + vmId;
+
+    vm.$mp._update((obj = {}, obj[prefix + "." + VM_ID_VAR] = info.cid, obj[prefix + "." + VM_ID_PREFIX] = info.cpath, obj));
+  }
+
+  function updateSlotId(vm, sid) {
+    var obj;
+
+    vm = vm || this;
+    var vmId = getVMId(vm);
+    var dataPaths = [ROOT_DATA_VAR, vmId, SLOT_CONTEXT_ID_VAR];
+    var curValue = getValue(vm.$mp.page.data, dataPaths);
+    var dataPathStr = dataPaths.join('.');
+
+    /* istanbul ignore else */
+    if (isDef(sid) && curValue !== sid) {
+      vm.$mp._update((obj = {}, obj[dataPathStr] = sid, obj));
+    }
+  }
+
+  function updateMPData(type, data, vnode) {
+    var obj;
+
+    if (type === void 0) type = HOLDER_TYPE_VARS.text;
+    var vm = this;
+    var vmId = getVMId(vm);
+    var hid = getHid(vm, vnode);
+    var dataPaths = [ROOT_DATA_VAR, vmId, HOLDER_VAR, hid, type];
+    var dataPathStr = dataPaths.join('.');
+
+    var curValue = getValue(vm.$mp.page.data, dataPaths);
+    var isDeepEqual = deepEqual(curValue, data);
+
+    /* istanbul ignore else */
+    if (isDef(hid)) {
+      if (vm.$mp.platform === 'swan' && /[^A-Za-z0-9_]/.test(type)) {
+        dataPathStr = dataPathStr.replace(/\.[^\.]*$/, "['" + type + "']");
+      }
+
+      if (!isDeepEqual || !vm.$mp._isEqualToBuffer(dataPathStr, data)) {
+        vm.$mp._update((obj = {}, obj[dataPathStr] = data, obj));
+      }
+    }
+  }
+
+  function createUpdateFn(page) {
+    var buffer = new Buffer();
+
+    function doUpdate() {
+      var data = buffer.pop();
+
+      if (!isEmptyObj(data) && page.setData) {
+        page.setData(data);
+      }
+    }
+
+    var throttleSetData = throttle(function () {
+      doUpdate();
+    }, 50, { leadingDelay: 0 });
+
+    return {
+      update: function update(data) {
+        buffer.push(data);
+        throttleSetData();
+      },
+      instantUpdate: function instantUpdate(data) {
+        doUpdate();
+      },
+      isEqualToBuffer: function isEqualToBuffer(key, value) {
+        return buffer.isEqual(key, value);
+      }
+    };
+  }
+
+  function updateVnodeToMP(vnode, key, value) {
+    if (key === void 0) key = HOLDER_TYPE_VARS.text;
+
+    var context = vnode.context;
+    var slotContext = vnode.slotContext;
+    var realContext = slotContext || context;
+    realContext && realContext.$updateMPData(key, value, vnode);
+
+    /* istanbul ignore if */
+    if (!realContext) {
+      console.warn('update text with no context', key, value, vnode);
+    }
+  }
+
+  var sep = '';
+
+  function assertHid(vnode, hid) {
+    var data = vnode.data;if (data === void 0) data = {};
+    var attrs = data.attrs;if (attrs === void 0) attrs = {};
+    var _hid = attrs._hid;
+    var _fid = attrs._fid;
+    var curHid = isDef(_fid) ? "" + _hid + sep + _fid : _hid;
+    return "" + curHid === "" + hid;
+  }
+
   function proxyEvent(rootVM, event) {
+    if (!sep) {
+      sep = LIST_TAIL_SEPS[rootVM.$mp.platform] || LIST_TAIL_SEPS.wechat;
+    }
     var type = event.type;
     var detail = event.detail;if (detail === void 0) detail = {};
     var target = event.currentTarget || event.target;
@@ -6254,11 +6426,9 @@ try {
   function getVnode(vnode, hid) {
     if (vnode === void 0) vnode = {};
 
-    var data = vnode.data;if (data === void 0) data = {};
     var componentInstance = vnode.componentInstance;
     var children = vnode.children;if (children === void 0) children = [];
-    var attrs = data.attrs;if (attrs === void 0) attrs = {};
-    if ("" + attrs._hid === "" + hid) {
+    if (assertHid(vnode, hid)) {
       return vnode;
     }
 
@@ -6284,10 +6454,16 @@ try {
     }
   }
 
-  function getHandlers(vm, type, hid) {
+  // TODO: unit test for @touchstart and @touchStart
+  function getHandlers(vm, rawType, hid) {
+    var type = rawType.toLowerCase();
     var res = [];
 
     var eventTypes = eventTypeMap[type] || [type];
+    if (type !== rawType) {
+      eventTypes.push(rawType);
+    }
+
     /* istanbul ignore if */
     if (!vm) {
       return res;
@@ -6299,13 +6475,11 @@ try {
       return res;
     }
 
-    var data = vnode.data;
     var elm = vnode.elm;
-    var attrs = data.attrs;if (attrs === void 0) attrs = {};
     var on = elm.on;if (on === void 0) on = {};
 
     /* istanbul ignore if */
-    if ('' + attrs._hid !== '' + hid) {
+    if (!assertHid(vnode, hid)) {
       return res;
     }
 
@@ -6329,10 +6503,8 @@ try {
   /**
    * Runtime helper for rendering <slot>
    */
-  function afterRenderSlot(name, fallback, props, bindObject, nodes) {
-    var componentVnode = this.$vnode;
-    var componentCid = componentVnode.data.attrs._cid;
-    var _hid = props._hid;if (_hid === void 0) _hid = '';
+  function afterRenderSlot(nodes, name, fallback, props, bindObject) {
+    var _fid = props._fid;
     // single tag:
     // <CompA><span slot-scope="props">{{ props.msg }}</span></CompA>
     if (nodes && nodes.tag) {
@@ -6350,12 +6522,9 @@ try {
 
     // scopedSlotFn with v-for
     var scopedSlotFn = this.$scopedSlots[name];
-    if (scopedSlotFn && /\-/.test(_hid)) {
-      var tail = _hid.replace(/^\d+/, '');
-      updateNodesHid(nodes, tail);
-    } else if (/\-/.test(componentCid)) {
-      var tail$1 = componentCid.replace(/^\d+/, '');
-      updateNodesHid(nodes, tail$1);
+    // update vnode hid in scoped slot with the slot host's actual fid
+    if (scopedSlotFn && isDef(_fid)) {
+      updateNodesHid(nodes, "-" + _fid);
     }
 
     return nodes;
@@ -6384,32 +6553,26 @@ try {
   }
 
   function markComponents(nodes, parentUId) {
-    return (nodes || []).reduce(function (res, node) {
+    if (nodes === void 0) nodes = [];
+
+    nodes.forEach(function (node) {
       var componentOptions = node.componentOptions;
       if (componentOptions) {
         node._mpSlotParentUId = parentUId;
       }
-      markComponents(node.children);
-      return res;
-    }, []);
+      markComponents(node.children, parentUId);
+    });
   }
 
-  function renderIf() {
-    var args = [],
-        len$1 = arguments.length;
-    while (len$1--) {
-      args[len$1] = arguments[len$1];
-    }for (var i = 0, len = args.length; i < len; i += 2) {
-      var cond = args[i];
-      var _hid = args[i + 1];
-      var cloneVnode = {
-        context: this,
-        data: {
-          attrs: { _hid: _hid }
-        }
-      };
-      updateVnodeToMP(cloneVnode, '_if', cond);
-    }
+  function renderIf(cond, _hid, _fid) {
+    var cloneVnode = {
+      context: this,
+      data: {
+        attrs: { _hid: _hid, _fid: _fid }
+      }
+    };
+    updateVnodeToMP(cloneVnode, HOLDER_TYPE_VARS.if, cond);
+    return cond;
   }
 
   /*  */
@@ -6417,7 +6580,7 @@ try {
   /**
    * Runtime helper for rendering v-for lists.
    */
-  function afterRenderList(val, render, forId, context, ret) {
+  function afterRenderList(ret, val, render, forId, context) {
     updateListToMP(ret, val, forId, context);
   }
 
@@ -6508,34 +6671,43 @@ try {
       });
     }
 
-    updateVnodeToMP(cloneVnode, 'li', list);
+    updateVnodeToMP(cloneVnode, HOLDER_TYPE_VARS.for, list);
   }
 
-  function getValue(obj, path) {
-    if (obj === void 0) obj = {};
-    if (path === void 0) path = '';
+  var app = null;
 
-    var paths = path.split('.');
-    return paths.reduce(function (prev, k) {
-      /* istanbul ignore if */
-      if (prev && isDef(prev)) {
-        prev = prev[k];
-      }
-      return prev;
-    }, obj);
-  }
-
-  function initRootVM(mpVM, opt) {
+  function initRootVM(mpVM, opt, query) {
     if (opt === void 0) opt = {};
+    if (query === void 0) query = {};
 
     var options = opt.options;
     var Component = opt.Component;
+    var platform = opt.platform;
+    var mpType = options.mpType;
+    var mpVMOptions = query;
+    var ref = createUpdateFn(mpVM);
+    var update = ref.update;
+    var instantUpdate = ref.instantUpdate;
+    var isEqualToBuffer = ref.isEqualToBuffer;
     var $mp = {
-      page: mpVM,
+      platform: platform,
       status: 'load',
-      options: mpVM && mpVM.options,
-      update: createUpdateFn(mpVM)
+      query: mpVMOptions,
+      options: mpVMOptions,
+      _update: update,
+      _instantUpdate: instantUpdate,
+      _isEqualToBuffer: isEqualToBuffer
     };
+
+    if (mpType === 'app') {
+      app = mpVM;
+      Object.assign($mp, { app: app });
+    } else {
+      Object.assign($mp, {
+        page: mpVM,
+        app: app
+      });
+    }
 
     Object.assign(options, { $mp: $mp });
 
@@ -6544,217 +6716,76 @@ try {
     return rootVM;
   }
 
-  function walkInTree(vm, fn, options) {
-    if (options === void 0) options = {};
-
-    var result;
-    var bottomToTop = options.bottomToTop;if (bottomToTop === void 0) bottomToTop = false;
-
-    if (!bottomToTop) {
-      result = fn(vm);
-    }
-
-    /* istanbul ignore else */
-    if (vm.$children) {
-      for (var i = vm.$children.length - 1; i >= 0; i--) {
-        var child = vm.$children[i];
-        result = walkInTree(child, fn, options) || result;
-      }
-    }
-
-    if (bottomToTop) {
-      result = fn(vm);
-    }
-
-    return result;
+  /*  */
+  function createElement$1(tagName, vnode) {
+    return {
+      on: {}
+    };
   }
 
-  function callHook$1(vm, hook, options) {
-    /* istanbul ignore if */
-    if (!vm) {
-      return;
-    }
-
-    var result;
-
-    if (hook === 'onReady') {
-      result = walkInTree(vm, function (_vm) {
-        var handler = _vm.$options[hook];
-        handler && handler.call(_vm, options);
-      }, { bottomToTop: true });
-    } else {
-      result = walkInTree(vm, function (_vm) {
-        var handler = _vm.$options[hook];
-        return handler && handler.call(_vm, options);
-      });
-    }
-
-    if (hook === 'onUnload') {
-      var rootVM = vm.$root;
-      rootVM.$destroy();
-    }
-
-    return result;
+  function createElementNS(namespace, tagName) {
+    return {};
   }
 
-  var page = {};
-
-  page.init = function init(opt) {
-    Page({
-      // 生命周期函数--监听页面加载
-      data: {
-        $root: {}
-      },
-      onLoad: function onLoad(options) {
-        var rootVM = this.rootVM = initRootVM(this, opt);
-
-        callHook$1(rootVM, 'onLoad', options);
-      },
-      // 生命周期函数--监听页面初次渲染完成
-      onReady: function onReady(options) {
-        var rootVM = this.rootVM;
-        var mp = rootVM.$mp;
-
-        mp.status = 'ready';
-        rootVM.$mount();
-
-        callHook$1(rootVM, 'onReady', options);
-      },
-      // 生命周期函数--监听页面显示
-      onShow: function onShow(options) {
-        var rootVM = this.rootVM;
-        var mp = rootVM.$mp;
-
-        mp.status = 'show';
-        callHook$1(rootVM, 'onShow', options);
-      },
-      // 生命周期函数--监听页面隐藏
-      onHide: function onHide(options) {
-        var rootVM = this.rootVM;
-        var mp = rootVM.$mp;
-
-        mp.status = 'hide';
-        callHook$1(rootVM, 'onHide', options);
-      },
-      // 生命周期函数--监听页面卸载
-      onUnload: function onUnload(options) {
-        var rootVM = this.rootVM;
-        var mp = rootVM.$mp;
-
-        mp.status = 'unload';
-        callHook$1(rootVM, 'onUnload', options);
-      },
-      // 页面相关事件处理函数--监听用户下拉动作
-      onPullDownRefresh: function onPullDownRefresh(options) {
-        var rootVM = this.rootVM;
-
-        callHook$1(rootVM, 'onPullDownRefresh', options);
-      },
-      // 页面上拉触底事件的处理函数
-      onReachBottom: function onReachBottom(options) {
-        var rootVM = this.rootVM;
-
-        callHook$1(rootVM, 'onReachBottom', options);
-      },
-      // 用户点击右上角转发
-      onShareAppMessage: function onShareAppMessage(options) {
-        var rootVM = this.rootVM;
-
-        return callHook$1(rootVM, 'onShareAppMessage', options);
-      },
-      // 页面滚动触发事件的处理函数
-      onPageScroll: function onPageScroll(options) {
-        var rootVM = this.rootVM;
-
-        callHook$1(rootVM, 'onPageScroll', options);
-      },
-      // 当前是 tab 页时，点击 tab 时触发
-      onTabItemTap: function onTabItemTap(options) {
-        var rootVM = this.rootVM;
-
-        callHook$1(rootVM, 'onTabItemTap', options);
-      },
-      // 支付宝小程序: 标题被点击
-      onTitleClick: function onTitleClick() {
-        var rootVM = this.rootVM;
-
-        callHook$1(rootVM, 'onTitleClick');
-      },
-      _pe: function _pe(e) {
-        this.proxyEvent(e);
-      },
-      proxyEvent: function proxyEvent$1(e) {
-        var rootVM = this.rootVM;
-        proxyEvent(rootVM, e);
-      }
-    });
-  };
-
-  var app = {};
-
-  app.init = function (opt) {
-    var _App;
-
-    try {
-      _App = App;
-    } catch (err) {
-      // 支付宝小程序中 App() 必须在 app.js 里调用，且不能调用多次。
-      _App = my.__megalo.App; // eslint-disable-line
-    }
-
-    _App({
-      data: {
-        $root: {}
-      },
-      //	Function	生命周期函数--监听小程序初始化	当小程序初始化完成时，会触发 onLaunch（全局只触发一次）
-      onLaunch: function onLaunch(options) {
-        var rootVM = this.rootVM = initRootVM(this, opt);
-
-        rootVM.$mount();
-
-        callHook$1(rootVM, 'onLaunch', options);
-      },
-      //	Function	生命周期函数--监听小程序显示	当小程序启动，或从后台进入前台显示，会触发 onShow
-      onShow: function onShow(options) {
-        var rootVM = this.rootVM;
-
-        callHook$1(rootVM, 'onShow', options);
-      },
-      //	Function	生命周期函数--监听小程序隐藏	当小程序从前台进入后台，会触发 onHide
-      onHide: function onHide() {
-        var rootVM = this.rootVM;
-
-        callHook$1(rootVM, 'onHide');
-      },
-      //	Function	错误监听函数	当小程序发生脚本错误，或者 api 调用失败时，会触发 onError 并带上错误信息
-      onError: function onError(msg) {
-        var rootVM = this.rootVM;
-        callHook$1(rootVM, 'onError', msg);
-      },
-      //	Function	页面不存在监听函数	当小程序出现要打开的页面不存在的情况，会带上页面信息回调该函数，详见下文
-      onPageNotFound: function onPageNotFound(options) {
-        var rootVM = this.rootVM;
-        callHook$1(rootVM, 'onPageNotFound', options);
-      }
-    });
-  };
-
-  function initMP(vm, options) {
-    var mpType = options.mpType;if (mpType === void 0) mpType = 'page';
-
-    /* istanbul ignore else */
-    if (mpType === 'app') {
-      app.init({
-        Component: vm.constructor,
-        options: options
-      });
-    } else if (mpType === 'page') {
-      page.init({
-        Component: vm.constructor,
-        options: options
-      });
-    }
+  function createTextNode(text, vnode) {
+    updateVnodeToMP(vnode, HOLDER_TYPE_VARS.text, text);
+    return {
+      text: text
+    };
   }
+
+  function createComment(text) {
+    return {
+      text: text
+    };
+  }
+
+  function insertBefore(parentNode, newNode, referenceNode) {}
+
+  function removeChild(node, child) {}
+
+  function appendChild(node, child) {}
+
+  function parentNode(node) {
+    return {};
+  }
+
+  function nextSibling(node) {
+    return {};
+  }
+
+  function tagName(node) {
+    return '#';
+  }
+
+  function setTextContent(node, text, vnode) {
+    updateVnodeToMP(vnode, HOLDER_TYPE_VARS.text, text);
+    return {};
+  }
+
+  function setStyleScope(node, scopeId, vnode) {
+    return {};
+  }
+
+  function setAttribute(node, scopeId, v, vnode) {
+    return {};
+  }
+
+  var nodeOps = Object.freeze({
+    createElement: createElement$1,
+    createElementNS: createElementNS,
+    createTextNode: createTextNode,
+    createComment: createComment,
+    insertBefore: insertBefore,
+    removeChild: removeChild,
+    appendChild: appendChild,
+    parentNode: parentNode,
+    nextSibling: nextSibling,
+    tagName: tagName,
+    setTextContent: setTextContent,
+    setStyleScope: setStyleScope,
+    setAttribute: setAttribute
+  });
 
   /*  */
 
@@ -7237,7 +7268,7 @@ try {
         } else if (isDef(oldVnode.text)) {
           nodeOps.setTextContent(elm, '', vnode);
         }
-      } else if (oldVnode.text !== vnode.text) {
+      } else if (oldVnode.text !== vnode.text || oldVnode.data && vnode.data && oldVnode.data._hid !== vnode.data._hid) {
         nodeOps.setTextContent(elm, vnode.text, vnode);
       }
       if (isDef(data)) {
@@ -7396,9 +7427,9 @@ try {
 
   /*  */
 
-  function createTextVNode$1(val, _hid) {
+  function createTextVNode$1(val, _hid, _fid) {
     var vnode = new VNode(undefined, {
-      _hid: _hid
+      _hid: _hid, _fid: _fid
     }, undefined, String(val), undefined, this);
 
     return vnode;
@@ -7408,7 +7439,7 @@ try {
 
   // wrapper function for providing a more flexible interface
   // without getting yelled at by flow
-  function beforeCreateElement(context, tag, data, children, normalizationType, alwaysNormalize, args) {
+  function beforeCreateElement(args, context, tag, data, children, normalizationType, alwaysNormalize) {
     var childrenIndex = 3;
     if (Array.isArray(data) || isPrimitive(data)) {
       childrenIndex = 2;
@@ -7416,6 +7447,7 @@ try {
       children = data;
       data = undefined;
     }
+
     args[childrenIndex] = normalizeChildren$1(children);
   }
 
@@ -7433,77 +7465,6 @@ try {
     }
     return res;
   }
-
-  /*  */
-  function createElement$1(tagName, vnode) {
-    return {
-      on: {}
-    };
-  }
-
-  function createElementNS(namespace, tagName) {
-    return {};
-  }
-
-  function createTextNode(text, vnode) {
-    updateVnodeToMP(vnode, 't', text);
-    return {
-      text: text
-    };
-  }
-
-  function createComment(text) {
-    return {
-      text: text
-    };
-  }
-
-  function insertBefore(parentNode, newNode, referenceNode) {}
-
-  function removeChild(node, child) {}
-
-  function appendChild(node, child) {}
-
-  function parentNode(node) {
-    return {};
-  }
-
-  function nextSibling(node) {
-    return {};
-  }
-
-  function tagName(node) {
-    return '#';
-  }
-
-  function setTextContent(node, text, vnode) {
-    updateVnodeToMP(vnode, 't', text);
-    return {};
-  }
-
-  function setStyleScope(node, scopeId, vnode) {
-    return {};
-  }
-
-  function setAttribute(node, scopeId, v, vnode) {
-    return {};
-  }
-
-  var nodeOps = Object.freeze({
-    createElement: createElement$1,
-    createElementNS: createElementNS,
-    createTextNode: createTextNode,
-    createComment: createComment,
-    insertBefore: insertBefore,
-    removeChild: removeChild,
-    appendChild: appendChild,
-    parentNode: parentNode,
-    nextSibling: nextSibling,
-    tagName: tagName,
-    setTextContent: setTextContent,
-    setStyleScope: setStyleScope,
-    setAttribute: setAttribute
-  });
 
   /*  */
 
@@ -7560,14 +7521,14 @@ try {
       dir = newDirs[key];
       if (!oldDir) {
         // new directive, bind
-        callHook$2(dir, 'bind', vnode, oldVnode);
+        callHook$1(dir, 'bind', vnode, oldVnode);
         if (dir.def && dir.def.inserted) {
           dirsWithInsert.push(dir);
         }
       } else {
         // existing directive, update
         dir.oldValue = oldDir.value;
-        callHook$2(dir, 'update', vnode, oldVnode);
+        callHook$1(dir, 'update', vnode, oldVnode);
         if (dir.def && dir.def.componentUpdated) {
           dirsWithPostpatch.push(dir);
         }
@@ -7577,7 +7538,7 @@ try {
     if (dirsWithInsert.length) {
       var callInsert = function callInsert() {
         for (var i = 0; i < dirsWithInsert.length; i++) {
-          callHook$2(dirsWithInsert[i], 'inserted', vnode, oldVnode);
+          callHook$1(dirsWithInsert[i], 'inserted', vnode, oldVnode);
         }
       };
       if (isCreate) {
@@ -7590,7 +7551,7 @@ try {
     if (dirsWithPostpatch.length) {
       mergeVNodeHook(vnode, 'postpatch', function () {
         for (var i = 0; i < dirsWithPostpatch.length; i++) {
-          callHook$2(dirsWithPostpatch[i], 'componentUpdated', vnode, oldVnode);
+          callHook$1(dirsWithPostpatch[i], 'componentUpdated', vnode, oldVnode);
         }
       });
     }
@@ -7599,7 +7560,7 @@ try {
       for (key in oldDirs) {
         if (!newDirs[key]) {
           // no longer present, unbind
-          callHook$2(oldDirs[key], 'unbind', oldVnode, oldVnode, isDestroy);
+          callHook$1(oldDirs[key], 'unbind', oldVnode, oldVnode, isDestroy);
         }
       }
     }
@@ -7631,7 +7592,7 @@ try {
     return dir.rawName || dir.name + "." + Object.keys(dir.modifiers || {}).join('.');
   }
 
-  function callHook$2(dir, hook, vnode, oldVnode, isDestroy) {
+  function callHook$1(dir, hook, vnode, oldVnode, isDestroy) {
     var fn = dir.def && dir.def[hook];
     if (fn) {
       try {
@@ -7646,7 +7607,7 @@ try {
 
   /*  */
 
-  var ignoreKeys = ['_hid', '_fk', '_cid'];
+  var ignoreKeys = ['_hid', '_fk', '_cid', '_batrs'];
 
   function isIgnoreKey(key) {
     return ignoreKeys.indexOf(key) > -1 || /^_if_/.test(key);
@@ -7663,6 +7624,7 @@ try {
     var key, cur, old;
     var oldAttrs = oldVnode.data.attrs || {};
     var attrs = vnode.data.attrs || {};
+    var bindingAttrs = (attrs._batrs || '').split(',');
     // clone observed objects, as the user probably wants to mutate it
     if (isDef(attrs.__ob__)) {
       attrs = vnode.data.attrs = extend({}, attrs);
@@ -7674,7 +7636,9 @@ try {
       }
       cur = attrs[key];
       old = oldAttrs[key];
-      if (old !== cur) {
+
+      // only update daynamic attrs in runtime
+      if (old !== cur && (bindingAttrs.indexOf(key) > -1 || key === 'slot')) {
         updateVnodeToMP(vnode, key, cur);
       }
     }
@@ -7694,10 +7658,26 @@ try {
       return;
     }
 
-    var elm = vnode.elm;if (elm === void 0) elm = {};
     var cls = genClassForVnode(vnode);
-    if (isDef(cls) && elm.class !== cls) {
-      updateVnodeToMP(vnode, 'cl', cls);
+    var rootClass = null;
+    var rootVnode = null;
+
+    if (isDef(cls) && isDef(vnode.componentInstance)) {
+      var ref = vnode.data;
+      var staticClass = ref.staticClass;if (staticClass === void 0) staticClass = '';
+      var rootClassList = cls.split(/\s+/).concat(staticClass.split(/\s+/));
+      rootVnode = vnode.componentInstance._vnode;
+      rootClass = rootClassList.join(' ');
+      cls = undefined;
+    }
+
+    if (isDef(cls)) {
+      vnode.elm.class = cls;
+      updateVnodeToMP(vnode, HOLDER_TYPE_VARS.class, cls);
+    }
+
+    if (isDef(rootClass)) {
+      updateVnodeToMP(rootVnode, HOLDER_TYPE_VARS.rootClass, rootClass);
     }
   }
 
@@ -7737,21 +7717,19 @@ try {
         if (cur === oldProps[key]) {
           continue;
         }
-        // #6601 work around Chrome version <= 55 bug where single textNode
-        // replaced by innerHTML/textContent retains its parentNode property
-        // if (elm.childNodes.length === 1) {
-        //   elm.removeChild(elm.childNodes[0])
-        // }
         /* istanbul ignore else */
         if (key === 'innerHTML') {
           var ref = vnode.context;
           var $htmlParse = ref.$htmlParse;
           if ($htmlParse) {
             var htmlNodes = $htmlParse(cur);
-            updateVnodeToMP(vnode, 'html', htmlNodes);
+            updateVnodeToMP(vnode, HOLDER_TYPE_VARS.vhtml, htmlNodes);
           } else {
-            updateVnodeToMP(vnode, 'html', cur);
+            updateVnodeToMP(vnode, HOLDER_TYPE_VARS.vhtml, cur);
           }
+          return;
+        } else if (key === 'textContent') {
+          updateVnodeToMP(vnode, HOLDER_TYPE_VARS.vtext, cur);
           return;
         }
       }
@@ -7763,10 +7741,12 @@ try {
         // avoid resetting cursor position when value is the same
         var strCur = isUndef(cur) ? '' : String(cur);
         if (shouldUpdateValue(elm, strCur)) {
-          elm.value = strCur;
-          updateVnodeToMP(vnode, key, strCur);
+          if (elm.value !== strCur) {
+            elm.value = strCur;
+            updateVnodeToMP(vnode, key, strCur);
+          }
         }
-      } else {
+      } else if (elm[key] !== cur) {
         elm[key] = cur;
         updateVnodeToMP(vnode, key, cur);
       }
@@ -7984,11 +7964,9 @@ try {
         }
       }
       return res;
-    }, res).filter(function (e) {
-      return e;
-    }).join('; ');
+    }, res).filter(notEmpty).join('; ');
 
-    updateVnodeToMP(vnode, 'st', cur);
+    updateVnodeToMP(vnode, HOLDER_TYPE_VARS.style, cur);
   }
 
   var style = {
@@ -8022,6 +8000,9 @@ try {
   }
 
   function remove$2(event, handler, capture, _target) {
+    if (!handler) {
+      return;
+    }
     var realTarget = _target || target$1;
     var realHanlder = handler._withTask || handler;
     /* istanbul ignore else */
@@ -8060,6 +8041,227 @@ try {
 
   var patch = createPatchFunction({ nodeOps: nodeOps, modules: modules });
 
+  function walkInTree(vm, fn, options) {
+    if (options === void 0) options = {};
+
+    var result;
+    var bottomToTop = options.bottomToTop;if (bottomToTop === void 0) bottomToTop = false;
+
+    if (!bottomToTop) {
+      result = fn(vm);
+    }
+
+    /* istanbul ignore else */
+    if (vm.$children) {
+      for (var i = vm.$children.length - 1; i >= 0; i--) {
+        var child = vm.$children[i];
+        result = walkInTree(child, fn, options) || result;
+      }
+    }
+
+    if (bottomToTop) {
+      result = fn(vm);
+    }
+
+    return result;
+  }
+
+  function callHook$2(vm, hook, options) {
+    /* istanbul ignore if */
+    if (!vm) {
+      return;
+    }
+
+    var result;
+
+    if (hook === 'onReady') {
+      result = walkInTree(vm, function (_vm) {
+        var handler = _vm.$options[hook];
+        handler && handler.call(_vm, options);
+      }, { bottomToTop: true });
+    } else {
+      result = walkInTree(vm, function (_vm) {
+        var handler = _vm.$options[hook];
+        return handler && handler.call(_vm, options);
+      });
+    }
+
+    if (hook === 'onUnload') {
+      var rootVM = vm.$root;
+      rootVM.$destroy();
+    }
+
+    return result;
+  }
+
+  var page = {};
+
+  page.init = function init(opt) {
+    var obj;
+
+    Page({
+      // 生命周期函数--监听页面加载
+      data: (obj = {}, obj[ROOT_DATA_VAR] = {}, obj),
+      onLoad: function onLoad(options) {
+        var rootVM = this.rootVM = initRootVM(this, opt, options);
+
+        callHook$2(rootVM, 'onLoad', options);
+
+        rootVM.$mount();
+
+        rootVM.$mp._instantUpdate();
+      },
+      // 生命周期函数--监听页面初次渲染完成
+      onReady: function onReady(options) {
+        var rootVM = this.rootVM;
+        var mp = rootVM.$mp;
+
+        mp.status = 'ready';
+
+        callHook$2(rootVM, 'onReady', options);
+      },
+      // 生命周期函数--监听页面显示
+      onShow: function onShow(options) {
+        var rootVM = this.rootVM;
+        var mp = rootVM.$mp;
+
+        mp.status = 'show';
+        callHook$2(rootVM, 'onShow', options);
+      },
+      // 生命周期函数--监听页面隐藏
+      onHide: function onHide(options) {
+        var rootVM = this.rootVM;
+        var mp = rootVM.$mp;
+
+        mp.status = 'hide';
+        callHook$2(rootVM, 'onHide', options);
+      },
+      // 生命周期函数--监听页面卸载
+      onUnload: function onUnload(options) {
+        var rootVM = this.rootVM;
+        var mp = rootVM.$mp;
+
+        mp.status = 'unload';
+        callHook$2(rootVM, 'onUnload', options);
+      },
+      // 页面相关事件处理函数--监听用户下拉动作
+      onPullDownRefresh: function onPullDownRefresh(options) {
+        var rootVM = this.rootVM;
+
+        callHook$2(rootVM, 'onPullDownRefresh', options);
+      },
+      // 页面上拉触底事件的处理函数
+      onReachBottom: function onReachBottom(options) {
+        var rootVM = this.rootVM;
+
+        callHook$2(rootVM, 'onReachBottom', options);
+      },
+      // 用户点击右上角转发
+      onShareAppMessage: function onShareAppMessage(options) {
+        var rootVM = this.rootVM;
+
+        return callHook$2(rootVM, 'onShareAppMessage', options);
+      },
+      // 页面滚动触发事件的处理函数
+      onPageScroll: function onPageScroll(options) {
+        var rootVM = this.rootVM;
+
+        callHook$2(rootVM, 'onPageScroll', options);
+      },
+      // 当前是 tab 页时，点击 tab 时触发
+      onTabItemTap: function onTabItemTap(options) {
+        var rootVM = this.rootVM;
+
+        callHook$2(rootVM, 'onTabItemTap', options);
+      },
+      // 支付宝小程序: 标题被点击
+      onTitleClick: function onTitleClick() {
+        var rootVM = this.rootVM;
+
+        callHook$2(rootVM, 'onTitleClick');
+      },
+      _pe: function _pe(e) {
+        this.proxyEvent(e);
+      },
+      proxyEvent: function proxyEvent$1(e) {
+        var rootVM = this.rootVM;
+        proxyEvent(rootVM, e);
+      }
+    });
+  };
+
+  var app$1 = {};
+
+  app$1.init = function (opt) {
+    var obj;
+
+    var _App;
+
+    try {
+      _App = App;
+    } catch (err) {
+      // 支付宝小程序中 App() 必须在 app.js 里调用，且不能调用多次。
+      _App = my.__megalo.App; // eslint-disable-line
+    }
+
+    _App({
+      data: (obj = {}, obj[ROOT_DATA_VAR] = {}, obj),
+      //	Function	生命周期函数--监听小程序初始化	当小程序初始化完成时，会触发 onLaunch（全局只触发一次）
+      onLaunch: function onLaunch(options) {
+        if (options === void 0) options = {};
+
+        var rootVM = this.rootVM = initRootVM(this, opt, options.query);
+        var ref = rootVM.$options;
+        var globalData = ref.globalData;if (globalData === void 0) globalData = function globalData() {};
+        this.globalData = globalData && (typeof globalData === 'function' ? globalData.call(rootVM, options) : globalData) || {};
+        rootVM.globalData = this.globalData;
+        rootVM.$mount();
+        callHook$2(rootVM, 'onLaunch', options);
+      },
+      //	Function	生命周期函数--监听小程序显示	当小程序启动，或从后台进入前台显示，会触发 onShow
+      onShow: function onShow(options) {
+        var rootVM = this.rootVM;
+        callHook$2(rootVM, 'onShow', options);
+      },
+      //	Function	生命周期函数--监听小程序隐藏	当小程序从前台进入后台，会触发 onHide
+      onHide: function onHide() {
+        var rootVM = this.rootVM;
+        callHook$2(rootVM, 'onHide');
+      },
+      //	Function	错误监听函数	当小程序发生脚本错误，或者 api 调用失败时，会触发 onError 并带上错误信息
+      onError: function onError(msg) {
+        var rootVM = this.rootVM;
+        callHook$2(rootVM, 'onError', msg);
+      },
+      //	Function	页面不存在监听函数	当小程序出现要打开的页面不存在的情况，会带上页面信息回调该函数，详见下文
+      onPageNotFound: function onPageNotFound(options) {
+        var rootVM = this.rootVM;
+        callHook$2(rootVM, 'onPageNotFound', options);
+      },
+      globalData: {}
+    });
+  };
+
+  function initMP(vm, options) {
+    var mpType = options.mpType;if (mpType === void 0) mpType = 'page';
+    var _mpPlatform = vm._mpPlatform;
+
+    /* istanbul ignore else */
+    if (mpType === 'app') {
+      app$1.init({
+        Component: vm.constructor,
+        options: options,
+        platform: _mpPlatform
+      });
+    } else if (mpType === 'page') {
+      page.init({
+        Component: vm.constructor,
+        options: options,
+        platform: _mpPlatform
+      });
+    }
+  }
+
   /*  */
 
   /**
@@ -8088,7 +8290,9 @@ try {
       var value = ref.value;
       var oldValue = ref.oldValue;
 
-      updateVnodeToMP(vnode, 'value', value);
+      if (oldValue !== value) {
+        updateVnodeToMP(vnode, HOLDER_TYPE_VARS.value, value);
+      }
     },
 
     inserted: function inserted(el, binding, vnode, oldVnode) {
@@ -8148,15 +8352,21 @@ try {
   var show = {
     bind: function bind(el, ref, vnode) {
       var value = ref.value;
+      var oldValue = ref.oldValue;
 
-      updateVnodeToMP(vnode, 'vs', !value);
+      /* istanbul ignore else */
+      if (value !== oldValue) {
+        updateVnodeToMP(vnode, HOLDER_TYPE_VARS.vshow, !value);
+      }
     },
 
     update: function update(el, ref, vnode) {
       var value = ref.value;
       var oldValue = ref.oldValue;
 
-      updateVnodeToMP(vnode, 'vs', !value);
+      if (value !== oldValue) {
+        updateVnodeToMP(vnode, HOLDER_TYPE_VARS.vshow, !value);
+      }
     },
 
     unbind: function unbind(el, binding, vnode, oldVnode, isDestroy) {
@@ -8173,8 +8383,6 @@ try {
     /*  */
 
     // import config from 'core/config'
-    // import platformComponents from './components/index'
-
     // install platform specific utils
   };Vue.config.mustUseProp = mustUseProp;
   Vue.config.isReservedTag = isReservedTag;
@@ -8184,7 +8392,6 @@ try {
 
   // install platform runtime directives & components
   extend(Vue.options.directives, platformDirectives);
-  // extend(Vue.options.components, platformComponents)
 
   // install platform patch function
   Vue.prototype.__patch__ = patch;
@@ -8193,12 +8400,17 @@ try {
   Vue.prototype.$updateMPData = updateMPData;
 
   Vue.prototype._l = aop(Vue.prototype._l, {
-    argsCount: 4,
     after: afterRenderList
   });
 
   var oInit = Vue.prototype._init;
   Vue.prototype._init = function (options) {
+    if (options === void 0) options = {};
+
+    if (!Vue.prototype._mpPlatform) {
+      Vue.prototype._mpPlatform = getMPPlatform();
+    }
+
     var $mp = options.$mp;
     var parent = options.parent;if (parent === void 0) parent = {};
     var mpType = options.mpType;if (mpType === void 0) mpType = '';
@@ -8211,12 +8423,10 @@ try {
       oInit.call(this, options);
 
       this._t = aop(this._t, {
-        argsCount: 4,
         after: afterRenderSlot
       });
 
       this._c = aop(this._c, {
-        argsCount: 6,
         before: beforeCreateElement
       });
 

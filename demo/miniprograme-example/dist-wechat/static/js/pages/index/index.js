@@ -182,27 +182,8 @@ var render = function() {
         []
       ),
       _c("button", { attrs: { _hid: 13 }, on: { tap: _vm.interceptors } }, []),
-      _c("textarea", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.responseText,
-            expression: "responseText"
-          }
-        ],
-        staticClass: "result",
-        attrs: { _hid: 16 },
-        domProps: { value: _vm.responseText },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.responseText = $event.target.value
-          }
-        }
-      })
+      _c("button", { attrs: { _hid: 16 }, on: { tap: _vm.requestCancel } }, []),
+      _c("button", { attrs: { _hid: 19 }, on: { tap: _vm.handleJump } }, [])
     ],
     1
   )
@@ -249,6 +230,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
 
 _axios2.default.defaults.adapter = _axiosMiniprogramAdapter2.default;
 exports.default = {
@@ -260,6 +243,7 @@ exports.default = {
   },
 
   methods: {
+    // 基本请求调用
     handleBase: function handleBase() {
       // 创建实例 设置baseURL
       var instance = _axios2.default.create({
@@ -296,12 +280,16 @@ exports.default = {
         console.log('axios.request POST请求带参数成功:', resp);
       });
     },
+
+    // 多个接口迸发调用后统一处理数据
     all: function all() {
       _axios2.default.all([_axios2.default.get('https://api.github.com/users/mzabriskie'), _axios2.default.get('https://api.github.com/users/mzabriskie/orgs')]).then(_axios2.default.spread(function (user, orgs) {
         console.log('接口1数据:', user.data.avatar_url, user.data.name);
         console.log('接口2数据:', orgs.data);
       }));
     },
+
+    // 错误捕获
     catchError: function catchError() {
       _axios2.default.post('https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByPost22').then(function (resp) {
         console.log('Post请求成功:', resp);
@@ -309,6 +297,8 @@ exports.default = {
         console.log('捕获到了异常：', JSON.stringify(error));
       });
     },
+
+    // 数据拦截替换
     transformResponseData: function transformResponseData() {
       var ISO_8601 = /(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})Z/;
       function formatDate(d) {
@@ -362,6 +352,31 @@ exports.default = {
 
       instance.get('/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByGet').then(function (resp) {
         console.log('经过拦截器后收到的数据:', resp);
+      });
+    },
+
+    // 请求取消
+    requestCancel: function requestCancel() {
+      var CancelToken = _axios2.default.CancelToken;
+      var cancel;
+
+      _axios2.default.get('https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByGet', {
+        cancelToken: new CancelToken(function executor(c) {
+          // An executor function receives a cancel function as a parameter
+          cancel = c;
+        })
+      }).catch(function (error) {
+        if (_axios2.default.isCancel(error)) {
+          console.log('自己取消了请求', error);
+        }
+      });
+
+      // cancel the request
+      cancel('取消请求');
+    },
+    handleJump: function handleJump() {
+      wx.navigateTo({
+        url: '../search-tip/index'
       });
     }
   }

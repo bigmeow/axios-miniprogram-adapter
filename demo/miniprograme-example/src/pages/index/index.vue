@@ -5,7 +5,9 @@
     <button @tap="catchError">捕获异常</button>
     <button @tap="transformResponseData">transformResponseData</button>
     <button @tap="interceptors">interceptors拦截器</button>
-    响应数据： <textarea class="result" v-model="responseText"></textarea>
+    <button @tap="requestCancel">requestCancel</button>
+    <button @tap="handleJump">requestCancel实际应用（联想搜索）</button>
+    请打开控制台查看响应数据(console、network)
   </view>
 </template>
 
@@ -21,6 +23,7 @@ export default {
     }
   },
   methods: {
+    // 基本请求调用
     handleBase () {
       // 创建实例 设置baseURL
       const instance = axios.create({
@@ -63,6 +66,7 @@ export default {
 
 
     },
+    // 多个接口迸发调用后统一处理数据
     all () {
       axios.all([
         axios.get('https://api.github.com/users/mzabriskie'),
@@ -72,7 +76,7 @@ export default {
         console.log('接口2数据:', orgs.data)
       }));
     },
-
+    // 错误捕获
     catchError () {
       axios.post('https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByPost22')
       .then(resp => {
@@ -81,6 +85,7 @@ export default {
         console.log('捕获到了异常：', JSON.stringify(error))
       })
     },
+    // 数据拦截替换
     transformResponseData () {
       var ISO_8601 = /(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})Z/;
       function formatDate(d) {
@@ -135,6 +140,31 @@ export default {
       instance.get('/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByGet')
       .then(resp => {
         console.log('经过拦截器后收到的数据:', resp)
+      })
+    },
+    // 请求取消
+    requestCancel () {
+      var CancelToken = axios.CancelToken;
+      var cancel
+
+      axios.get('https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByGet', {
+        cancelToken: new CancelToken(function executor(c) {
+          // An executor function receives a cancel function as a parameter
+          cancel = c
+        })
+      }).catch(error => {
+         if (axios.isCancel(error)) {
+           console.log('自己取消了请求', error)
+         }
+      })
+
+      // cancel the request
+      cancel('取消请求')
+    },
+
+    handleJump () {
+      wx.navigateTo({
+        url: '../search-tip/index'
       })
     }
   }

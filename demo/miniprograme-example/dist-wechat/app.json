@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/search-tip/index",
     "pages/index/index"
   ],
   "window": {
