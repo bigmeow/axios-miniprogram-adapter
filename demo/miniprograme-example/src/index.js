@@ -8,9 +8,8 @@ app.$mount( '#app' )
 export default {
   config: {
     pages: [
-      'pages/search-tip/index',
       'pages/index/index',
-
+      'pages/search-tip/index'
     ],
     window: {
       backgroundTextStyle: 'light',

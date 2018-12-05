@@ -305,7 +305,7 @@ app.$mount('#app');
 
 exports.default = {
   config: {
-    pages: ['pages/search-tip/index', 'pages/index/index'],
+    pages: ['pages/index/index', 'pages/search-tip/index'],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',

@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/search-tip/index",
-    "pages/index/index"
+    "pages/index/index",
+    "pages/search-tip/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
