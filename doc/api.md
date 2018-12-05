@@ -1,4 +1,4 @@
-# 文档
+## :bomb: 差异
 由于小程序特性限制，下面的配置在小程序环境下将会自动被忽略
 
 - timeout
@@ -10,7 +10,7 @@
 
 
 
-# 注意
+## :warning: 注意
 在mpvue、megalo 等vue转小程序的框架中使用时,由于这些框架修改了webpack的target配置(不修改的话默认值是web)，它们的修改代码:
 ```js
 // mpvue 的 https://github.com/mpvue/mpvue-quickstart/blob/master/template/build/webpack.base.conf.js
@@ -35,7 +35,7 @@ target: createMegaloTarget( {
 }
 ```
 而webpack配置文件的target被修改后,axios的这个配置就不起作用了,就会去加载nodejs环境的代码,从而导致编译报错
-### 解决方案
+### :bulb: 解决方案
 - 在自己的工程项目里给webpack配置文件增加下面的配置选项([参考例子第59行](https://github.com/bigmeow/axios-miniprogram-adapter/blob/master/demo/miniprograme-example/build/createBaseConfig.js)):
 ```js
 resolve: {

@@ -48,7 +48,7 @@ import utils from 'axios/lib/utils'
 
 ## :bookmark_tabs: 文档
 - 同axios官方仓库一致
-- [与官方API的差异](https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md)
+- [与官方API的差异、注意事项](https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md)
 
 ## :chestnut: Demo
 打开小程序开发者工具，选择```axios-miniprogram-adapter/demo/miniprograme-example/dist-wechat```目录作为项目根目录
