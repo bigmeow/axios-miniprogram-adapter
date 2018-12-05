@@ -51,7 +51,8 @@ import utils from 'axios/lib/utils'
 - [与官方API的差异、注意事项](https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md)
 
 ## :chestnut: Demo
-打开小程序开发者工具，选择```axios-miniprogram-adapter/demo/miniprograme-example/dist-wechat```目录作为项目根目录
+打开小程序开发者工具，选择```axios-miniprogram-adapter/demo/miniprograme-example/dist-wechat```目录作为项目根目录，示范了几个常用功能的用法:
+ ![image](./doc/example.png)
 [点击查看代码具体用法示例](https://github.com/bigmeow/axios-miniprogram-adapter/blob/master/demo/miniprograme-example/src/pages/index/index.vue)
 
 ## :gear: 更新日志
