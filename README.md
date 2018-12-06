@@ -8,7 +8,7 @@ axios的微信小程序适配器，以便于在小程序中使用axios
 
 ## :star: 特性
 
-- 微信小程序环境中放心使用axios，最大限度复用web端axios的代码
+- 支持微信、支付宝、百度小程序，放心使用axios，最大限度复用web端axios的代码
 - 支持TypeScript
 
 
@@ -54,7 +54,7 @@ import utils from 'axios/lib/utils'
 打开小程序开发者工具，选择```axios-miniprogram-adapter/demo/miniprograme-example/dist-wechat```目录作为项目根目录，示范了几个常用功能的用法:
 
 <image srC="./doc/example.png" width="300">
-  
+
 [点击查看代码具体用法示例](https://github.com/bigmeow/axios-miniprogram-adapter/blob/master/demo/miniprograme-example/src/pages/index/index.vue)
 
 ## :gear: 更新日志
