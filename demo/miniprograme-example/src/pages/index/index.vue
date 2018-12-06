@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import platform from '../../utils/platform'
 import axios from 'axios'
 import mpAdapter from 'axios-miniprogram-adapter'
 axios.defaults.adapter = mpAdapter
@@ -163,7 +164,7 @@ export default {
     },
 
     handleJump () {
-      wx.navigateTo({
+      platform.navigateTo({
         url: '../search-tip/index'
       })
     }

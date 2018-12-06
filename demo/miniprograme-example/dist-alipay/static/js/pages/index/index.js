@@ -50,9 +50,10 @@ render._withStripped = true
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var axios_miniprogram_adapter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios-miniprogram-adapter */ "./node_modules/axios-miniprogram-adapter/dist/index.esm.js");
+/* harmony import */ var _utils_platform__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/platform */ "./src/utils/platform.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var axios_miniprogram_adapter__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios-miniprogram-adapter */ "./node_modules/axios-miniprogram-adapter/dist/index.esm.js");
 //
 //
 //
@@ -69,7 +70,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.adapter = axios_miniprogram_adapter__WEBPACK_IMPORTED_MODULE_1__["default"];
+
+axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.adapter = axios_miniprogram_adapter__WEBPACK_IMPORTED_MODULE_2__["default"];
 /* harmony default export */ __webpack_exports__["default"] = ({
   mpType: 'page',
   data() {
@@ -81,7 +83,7 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.adapter = axios_miniprogra
     // 基本请求调用
     handleBase() {
       // 创建实例 设置baseURL
-      const instance = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
+      const instance = axios__WEBPACK_IMPORTED_MODULE_1___default.a.create({
         baseURL: 'https://easy-mock.com'
       });
       // 设置token
@@ -117,14 +119,14 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.adapter = axios_miniprogra
     },
     // 多个接口迸发调用后统一处理数据
     all() {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.all([axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('https://api.github.com/users/mzabriskie'), axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('https://api.github.com/users/mzabriskie/orgs')]).then(axios__WEBPACK_IMPORTED_MODULE_0___default.a.spread(function (user, orgs) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.all([axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('https://api.github.com/users/mzabriskie'), axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('https://api.github.com/users/mzabriskie/orgs')]).then(axios__WEBPACK_IMPORTED_MODULE_1___default.a.spread(function (user, orgs) {
         console.log('接口1数据:', user.data.avatar_url, user.data.name);
         console.log('接口2数据:', orgs.data);
       }));
     },
     // 错误捕获
     catchError() {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByPost22').then(resp => {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByPost22').then(resp => {
         console.log('Post请求成功:', resp);
       }).catch(error => {
         console.log('捕获到了异常：', JSON.stringify(error));
@@ -137,8 +139,8 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.adapter = axios_miniprogra
         return d.getMonth() + 1 + '/' + d.getDate() + '/' + d.getFullYear();
       }
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('https://api.github.com/users/mzabriskie', {
-        transformResponse: axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.transformResponse.concat(function (data, headers) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('https://api.github.com/users/mzabriskie', {
+        transformResponse: axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.transformResponse.concat(function (data, headers) {
           Object.keys(data).forEach(function (k) {
             if (ISO_8601.test(data[k])) {
               console.log(`字段${k}转换前：`, data[k]);
@@ -157,7 +159,7 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.adapter = axios_miniprogra
     },
     // 拦截器测试
     interceptors() {
-      const instance = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
+      const instance = axios__WEBPACK_IMPORTED_MODULE_1___default.a.create({
         baseURL: 'https://easy-mock.com'
       });
       // 请求拦截器
@@ -187,16 +189,16 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.adapter = axios_miniprogra
     },
     // 请求取消
     requestCancel() {
-      var CancelToken = axios__WEBPACK_IMPORTED_MODULE_0___default.a.CancelToken;
+      var CancelToken = axios__WEBPACK_IMPORTED_MODULE_1___default.a.CancelToken;
       var cancel;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByGet', {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByGet', {
         cancelToken: new CancelToken(function executor(c) {
           // An executor function receives a cancel function as a parameter
           cancel = c;
         })
       }).catch(error => {
-        if (axios__WEBPACK_IMPORTED_MODULE_0___default.a.isCancel(error)) {
+        if (axios__WEBPACK_IMPORTED_MODULE_1___default.a.isCancel(error)) {
           console.log('自己取消了请求', error);
         }
       });
@@ -206,7 +208,7 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.adapter = axios_miniprogra
     },
 
     handleJump() {
-      wx.navigateTo({
+      _utils_platform__WEBPACK_IMPORTED_MODULE_0__["default"].navigateTo({
         url: '../search-tip/index'
       });
     }
@@ -334,6 +336,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_megalo_target_lib_frameworks_vue_loader_template_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_template_id_1badc801_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./src/utils/platform.js":
+/*!*******************************!*\
+  !*** ./src/utils/platform.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function getPlatForm() {
+  switch (true) {
+    case typeof wx === 'object':
+      return wx;
+    case typeof swan === 'object':
+      return swan;
+    case typeof my === 'object':
+      return my;
+    default:
+      return wx;
+  }
+}
+/* harmony default export */ __webpack_exports__["default"] = (getPlatForm());
 
 /***/ })
 
