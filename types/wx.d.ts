@@ -10,24 +10,24 @@
 interface string2AnyMap {
     [key: string]: any;
   }
-  
+
   interface string2stringMap {
     [key: string]: string | null;
   }
-  
+
   type ZeroParamVoidFunc = () => void;
-  
+
   interface ReturnCallBack {
     (res: ZeroParamVoidFunc);
   }
   interface createLiveObj extends WxApiCallback {}
-  
+
   // App Types
   interface AppReferrerInfo {
     appId: string;
     extraData: any;
   }
-  
+
   interface AppLaunchShowFuncOpts {
     path: string;
     query: string2stringMap;
@@ -35,20 +35,20 @@ interface string2AnyMap {
     shareTicket: string;
     referrerInfo: AppReferrerInfo;
   }
-  
+
   type AppLaunchShowFunc = (options: AppLaunchShowFuncOpts) => void;
-  
+
   interface AppOpts {
     onLaunch?: AppLaunchShowFunc;
     onShow?: AppLaunchShowFunc;
     onHide?: ZeroParamVoidFunc;
     onError?: (msg: string) => void;
-  
+
     [key: string]: any;
   }
-  
+
   interface IApp extends AppOpts {}
-  
+
   // Page Types
   interface PageOpts<Data = {}> {
     data?: Data;
@@ -68,35 +68,35 @@ interface string2AnyMap {
     onShareAppMessage?: ZeroParamVoidFunc;
     onPageScroll?: ZeroParamVoidFunc;
     onTabItemTap?: (item: any) => void;
-  
+
     [key: string]: any;
   }
-  
+
   interface IPage<Data = {}> extends PageOpts<Data> {
     setData: (data: string2AnyMap) => void;
   }
-  
+
   // Component Types
   interface IComponent {}
-  
+
   interface WxApiCallback<Res = undefined> {
     success?: (res: Res) => void;
     fail?: (err: any) => void;
     complete?: (obj: any) => void;
   }
-  
+
   /**
    * Network APIs
    */
   // 发起请求
   type NetworkRequestData = string | object | ArrayBuffer;
-  
+
   interface NetworkRequestRes {
     data: NetworkRequestData;
     statusCode: number;
     header: string2stringMap;
   }
-  
+
   type NetworkRequestMethod = 'OPTIONS'
   | 'GET'
   | 'HEAD'
@@ -105,7 +105,7 @@ interface string2AnyMap {
   | 'DELETE'
   | 'TRACE'
   | 'CONNECT'
-  
+
   type responseType = "text" | "arraybuffer"
 
   interface NetworkRequestOpts extends WxApiCallback<NetworkRequestRes> {
@@ -116,20 +116,20 @@ interface string2AnyMap {
     dataType?: string;
     responseType?: responseType;
   }
-  
+
   interface requestTask {
     /**
      * 中断请求任务
      */
     abort: ZeroParamVoidFunc;
   }
-  
+
   // 上传
   interface uploadFileRes {
     data: string;
     statusCode: number;
   }
-  
+
   interface uploadFileOpts extends WxApiCallback<uploadFileRes> {
     url: string;
     filePath: string;
@@ -137,13 +137,13 @@ interface string2AnyMap {
     header?: object;
     formData?: object;
   }
-  
+
   interface onProgressUpdateRes {
     progress: number;
     totalBytesSent: number;
     totalBytesExpectedToWrite: number;
   }
-  
+
   interface onProgressUpdateCallback {
     (res: onProgressUpdateRes): void;
   }
@@ -157,30 +157,30 @@ interface string2AnyMap {
      */
     abort: ZeroParamVoidFunc;
   }
-  
+
   // 下载
   interface downloadRes {
     tempFilePath: string;
     statusCode: number;
   }
-  
+
   interface downloadFileOpts extends WxApiCallback<downloadRes> {
     url: string;
     header?: object;
     filePath: string;
   }
-  
+
   interface downloadTask {
     /**
      * 监听下载进度变化事件
      */
-    onProgressUpdate(res: onProgressUpdateCallback): void 
+    onProgressUpdate(res: onProgressUpdateCallback): void
     /**
      * 中断下载任务
      */
     abort: ZeroParamVoidFunc;
   }
-  
+
   // Webscoket connectSocket
   interface connectSocketOpts extends WxApiCallback {
     url: string;
@@ -188,7 +188,7 @@ interface string2AnyMap {
     method?: string;
     protocols?: string[];
   }
-  
+
   // 监听WebSocket连接打开事件。
   interface onSocketOpenRes {
     header?: object;
@@ -196,17 +196,17 @@ interface string2AnyMap {
   interface onSocketOpenCallBack {
     (res: onSocketOpenRes): void;
   }
-  
+
   interface onSocketErrorCallBack {
     (res: any): void;
   }
   // sendSocketMessage
   interface sendSocketMessageOpts extends WxApiCallback<sendSocketMessageRes> {}
-  
+
   interface sendSocketMessageRes {
     data: string | ArrayBuffer;
   }
-  
+
   //onSocketMessage
   interface onSocketMessageRes {
     data: string | ArrayBuffer;
@@ -214,74 +214,74 @@ interface string2AnyMap {
   interface onSocketMessageCallback {
     (res: onSocketMessageRes): void;
   }
-  
+
   //closeSocket
   interface closeSocketOpts extends WxApiCallback<closeSocketRes> {}
-  
+
   interface closeSocketRes {
     code?: number;
     reason?: string;
   }
-  
+
   interface onSocketCloseCallBack {
     (res: any): void;
   }
-  
+
   interface offLocalServiceDiscoveryStopCallBack {
     (res: any): void;
   }
-  
+
   interface offLocalServiceFoundCallBack {
     (res: any): void;
   }
-  
+
   interface offLocalServiceLostCallBack {
     (res: any): void;
   }
-  
+
   interface offLocalServiceResolveFailCallBack {
     (res: any): void;
   }
-  
+
   interface onLocalServiceDiscoveryStopCallBack {
     (res: any): void;
   }
-  
+
   interface onLocalServiceFoundCallBackRes {
     serviceType?: string;
     serviceName?: string;
     ip?: string;
     port?: string;
   }
-  
+
   interface onLocalServiceFoundCallBack {
     (res: onLocalServiceFoundCallBackRes): void;
   }
-  
+
   interface onLocalServiceLostCallBackRes {
     serviceType?: string;
     serviceName?: string;
   }
-  
+
   interface onLocalServiceLostCallBack {
     (res: onLocalServiceLostCallBackRes): void;
   }
-  
+
   interface onLocalServiceResolveFailCallBackRes {
     serviceType?: string;
     serviceName?: string;
   }
-  
+
   interface onLocalServiceResolveFailCallBack {
     (res: onLocalServiceResolveFailCallBackRes): void;
   }
-  
+
   interface startLocalServiceDiscoveryOpts extends WxApiCallback {
     serviceType: string;
   }
-  
+
   interface stopLocalServiceDiscoveryOpts extends WxApiCallback {}
-  
+
   interface NetworkAPIs {
     /**
      * 发起请求
@@ -332,7 +332,7 @@ interface string2AnyMap {
      */
     startLocalServiceDiscovery: (options: startLocalServiceDiscoveryOpts) => void;
     /**
-     * 
+     *
      */
     stopLocalServiceDiscovery: (options: stopLocalServiceDiscoveryOpts) => void;
     // WebSocket
@@ -344,51 +344,51 @@ interface string2AnyMap {
     closeSocket: (options: closeSocketOpts) => void;
     onSocketClose: (callback: onSocketCloseCallBack) => void;
   }
-  
+
   /**
    * SocketTask APIs
    */
   //send
   interface sendOpts extends WxApiCallback<sendRes> {}
-  
+
   interface sendRes {
     data?: string | ArrayBuffer;
   }
-  
+
   interface onOpenRes {
     header: object;
   }
-  
+
   interface onOpenCallBack {
     (res: onOpenRes): void;
   }
   //close
   interface closeOpts extends WxApiCallback<closeRes> {}
-  
+
   interface closeRes {
     code?: number;
     reason?: string;
   }
-  
+
   // onClose
   interface onCloseCallBack {
     (res: any): void;
   }
-  
+
   //onError
   interface onErrorOpts {
     errMsg?: string;
   }
-  
+
   interface onErrorCallBack {
     (res: onErrorOpts): void;
   }
-  
+
   //onMessage
   interface onMessageOpts {
     data?: string | ArrayBuffer;
   }
-  
+
   interface onMessageCallBack {
     (res: onMessageOpts): void;
   }
@@ -400,7 +400,7 @@ interface string2AnyMap {
     onError: (res: onErrorCallBack) => void;
     onMessage: (res: onMessageCallBack) => void;
   }
-  
+
   /**
    * Media APIs
    */
@@ -409,23 +409,23 @@ interface string2AnyMap {
     path: string;
     size: number;
   }
-  
+
   interface chooseImageRes {
     tempFilePaths: string[];
     tempFiles: tempFilesStruct;
   }
-  
+
   interface chooseImageOpts extends WxApiCallback<chooseImageRes> {
     count?: number;
     sizeType?: string[];
     sourceType?: string[];
   }
-  
+
   interface previewImageOpts extends WxApiCallback {
     current?: string;
     urls: string[];
   }
-  
+
   interface getImageInfoRes {
     width: number;
     height: number;
@@ -447,26 +447,26 @@ interface string2AnyMap {
      */
     type: string;
   }
-  
+
   interface getImageInfoOpts extends WxApiCallback<getImageInfoRes> {
     src: string;
   }
-  
+
   interface saveImageToPhotosAlbumRes {
     errMsg: string;
   }
-  
+
   interface saveImageToPhotosAlbumOpts extends WxApiCallback {
     filePath: string;
   }
-  
+
   // Record 录音
   interface startRecordRes {
     tempFilePath: string;
   }
-  
+
   interface startRecordOpts extends WxApiCallback<startRecordRes> {}
-  
+
   interface RecordStartOpts {
     duration?: number;
     sampleRate?: number;
@@ -482,32 +482,32 @@ interface string2AnyMap {
     frameSize?: number;
     audioSource?: string;
   }
-  
+
   interface RecordOnStopRes {
     tempFilePath: string;
   }
-  
+
   interface RecordOnStopCallBack {
     (res: RecordOnStopRes): void;
   }
-  
+
   interface onFrameRecordedRes {
     frameBuffer: ArrayBuffer;
     isLastFrame: boolean;
   }
-  
+
   interface onFrameRecordedCallBack {
     (res: onFrameRecordedRes): void;
   }
-  
+
   interface RecordOnErrorRes {
     errMsg: string;
   }
-  
+
   interface RecordOnErrorCallBack {
     (res: RecordOnErrorRes): void;
   }
-  
+
   interface getRecorderManagerOpts {
     /**
      * 开始录音
@@ -558,13 +558,13 @@ interface string2AnyMap {
      */
     onInterruptionEnd: ReturnCallBack;
   }
-  
+
   // Voice 音频
   interface playVoiceOpts extends WxApiCallback {
     filePath: string;
     duration?: number;
   }
-  
+
   interface getBackgroundAudioPlayerStateRes {
     duration: number;
     currentPosition: number;
@@ -572,20 +572,20 @@ interface string2AnyMap {
     downloadPercent: number;
     dataUrl: string;
   }
-  
+
   interface getBackgroundAudioPlayerStateOpts
     extends WxApiCallback<getBackgroundAudioPlayerStateRes> {}
-  
+
   interface playBackgroundAudioOpts extends WxApiCallback {
     dataUrl: string;
     title?: string;
     coverImgUrl?: string;
   }
-  
+
   interface seekBackgroundAudioOpts extends WxApiCallback {
     position: number;
   }
-  
+
   interface getBackgroundAudioManagerOpts {
     duration: number;
     currentTime: number;
@@ -617,7 +617,7 @@ interface string2AnyMap {
     onError: (callback: ReturnCallBack) => void;
     onWaiting: (callback: ReturnCallBack) => void;
   }
-  
+
   interface createInnerAudioContextonErrorRes {
     errMsg: any;
     errCode: any;
@@ -668,16 +668,16 @@ interface string2AnyMap {
     offSeeking: (callback: ReturnCallBack) => void;
     offSeeked: (callback: ReturnCallBack) => void;
   }
-  
+
   interface getAvailableAudioSourcesRes {
     audioSources: string[];
   }
-  
+
   interface getAvailableAudioSourcesOpts
     extends WxApiCallback<getAvailableAudioSourcesRes> {}
-  
+
   // Video 视频
-  
+
   interface chooseVideoRes {
     tempFilePath: string;
     duration: number;
@@ -685,27 +685,27 @@ interface string2AnyMap {
     height: number;
     width: number;
   }
-  
+
   interface chooseVideoOpts extends WxApiCallback<chooseImageRes> {
     sourceType?: string[];
     compressed?: boolean;
     maxDuration?: number;
   }
-  
+
   interface saveVideoToPhotosAlbumRes {
     errMsg: string;
   }
-  
+
   interface saveVideoToPhotosAlbumOpts
     extends WxApiCallback<saveImageToPhotosAlbumRes> {
     filePath: string;
   }
-  
+
   interface Videodanmu {
     text: string;
     color: string;
   }
-  
+
   interface createVideoContextOpts {
     play: ZeroParamVoidFunc;
     pause: ZeroParamVoidFunc;
@@ -720,29 +720,29 @@ interface string2AnyMap {
     showStatusBar: ZeroParamVoidFunc;
     hideStatusBar: ZeroParamVoidFunc;
   }
-  
+
   interface takePhotoObj extends WxApiCallback {
     quality?: "high" | "normal" | "low";
   }
-  
+
   interface startRecordObj extends WxApiCallback {
     timeoutCallback?: ZeroParamVoidFunc;
   }
-  
+
   interface stopRecordObj extends WxApiCallback {}
-  
+
   interface createCameraContextOpts {
     takePhoto: (options: takePhotoObj) => void;
     startRecord: (options: startRecordObj) => void;
     stopRecord: (options: stopRecordObj) => void;
   }
-  
+
   interface requestFullScreenObj extends WxApiCallback {
     direction: number;
   }
-  
+
   interface exitFullScreen extends WxApiCallback {}
-  
+
   interface createLivePlayerContextOpts {
     play: (options: createLiveObj) => void;
     stop: (options: createLiveObj) => void;
@@ -755,7 +755,7 @@ interface string2AnyMap {
     requestFullScreen: (options: requestFullScreenObj) => void;
     exitFullScreen: (options: createLiveObj) => void;
   }
-  
+
   interface createLivePusherContextOpts {
     start: (options: createLiveObj) => void;
     stop: (options: createLiveObj) => void;
@@ -765,7 +765,7 @@ interface string2AnyMap {
     snapshot: (options: createLiveObj) => void;
     toggleTorch: (options: createLiveObj) => void;
   }
-  
+
   interface LoadFontFaceDesc {
     style: any;
     weight: any;
@@ -774,18 +774,18 @@ interface string2AnyMap {
   interface loadFontFaceRes {
     status: any;
   }
-  
+
   interface loadFontFaceOpts extends WxApiCallback<loadFontFaceRes> {
     family: string;
     source: string;
     desc?: LoadFontFaceDesc;
   }
-  
+
   interface compressImageOpts extends WxApiCallback {
     src: string;
     quality?: number;
   }
-  
+
   interface MediaAPIs {
     /**
      * 从本地相册选择图片或使用相机拍照。
@@ -818,7 +818,7 @@ interface string2AnyMap {
     /**
      * 注意：1.6.0 版本开始，本接口不再维护。建议使用能力更强的 wx.createInnerAudioContext 接口
      */
-  
+
     pauseVoice: ZeroParamVoidFunc;
     /**
      * 注意：1.6.0 版本开始，本接口不再维护。建议使用能力更强的 wx.createInnerAudioContext 接口
@@ -880,66 +880,66 @@ interface string2AnyMap {
     createLivePusherContext: () => createLivePusherContextOpts;
     loadFontFace: (options: loadFontFaceOpts) => void;
   }
-  
+
   // File APIs
-  
+
   // save
   interface saveFileRes {
     savedFilePath: string;
   }
-  
+
   interface saveFileOpts extends WxApiCallback<saveFileRes> {
     tempFilePath: string;
   }
-  
+
   //getFileInfo
   interface getFileInfoRes {
     size: number;
     digest: string;
     errMsg: string;
   }
-  
+
   interface getFileInfoOpts extends WxApiCallback<getFileInfoRes> {
     filePath: string;
     digestAlgorithm?: string;
   }
-  
+
   // getSavedFileList
   interface fileListOpts {
     filePath: string;
     createTime: number;
     size: number;
   }
-  
+
   interface getSavedFileListRes {
     errMsg: string;
     fileList: fileListOpts;
   }
-  
+
   interface getSavedFileListOpts extends WxApiCallback<getSavedFileListRes> {}
-  
+
   // getSavedFileInfo
   interface getSavedFileInfoRes {
     errMsg: string;
     size: number;
     createTime: number;
   }
-  
+
   interface getSavedFileInfoOpts extends WxApiCallback<getSavedFileInfoRes> {
     filePath: string;
   }
-  
+
   // removeSavedFile
   interface removeSavedFileOpts extends WxApiCallback {
     filePath: string;
   }
-  
+
   // openDocument
   interface openDocumentOpts extends WxApiCallback {
     filePath: string;
     fileType?: string;
   }
-  
+
   /**
    * 更新于2018年9月14日
    */
@@ -947,67 +947,67 @@ interface string2AnyMap {
     dirPath: string;
     recursive: boolean;
   }
-  
+
   interface fileListObject {
     filePath: string;
     size: string;
     createTime: string;
   }
-  
+
   interface FileSystemManagerGetSavedFileListRes {
     fileList: fileListObject[];
   }
-  
+
   interface FileSystemManagerGetSavedFileListOpts
     extends WxApiCallback<FileSystemManagerGetSavedFileListRes> {}
-  
+
   interface FileSystemManagerSaveFileRes {
     savedFilePath: string;
     errMsg: string;
   }
-  
+
   interface FileSystemManagerSaveFileOpts
     extends WxApiCallback<FileSystemManagerSaveFileRes> {
     tempFilePath: string;
     filePath: string;
   }
-  
+
   interface FileSystemManagerRemoveSavedFileRes {
     errMsg: string;
   }
-  
+
   interface FileSystemManagerRemoveSavedFileOpts
     extends WxApiCallback<FileSystemManagerRemoveSavedFileRes> {
     filePath: string;
   }
-  
+
   interface copyFileRes {
     errMsg: string;
   }
-  
+
   interface copyFileOpts extends WxApiCallback<copyFileRes> {
     srcPath: string;
     destPath: string;
   }
-  
+
   interface FileSystemManagerGetFileInfoRes {
     size: number;
     errMsg: string;
   }
-  
+
   interface FileSystemManagerGetFileInfoOpts
     extends WxApiCallback<FileSystemManagerGetFileInfoRes> {
     filePath: string;
   }
-  
+
   interface accessRes {
     errMsg: string;
   }
-  
+
   interface accessOpts extends WxApiCallback<accessRes> {
     path: string;
   }
-  
+
   interface appendFileRes {
     errMsg: string;
   }
@@ -1016,81 +1016,81 @@ interface string2AnyMap {
     data: string | ArrayBuffer;
     encoding: string;
   }
-  
+
   interface readFileRes {
     data: string | ArrayBuffer;
     errMsg: string;
   }
-  
+
   interface readFileOpts extends WxApiCallback<readFileRes> {
     filePath: string;
     encoding: string;
   }
-  
+
   interface readdirRes {
     files: string[];
     errMsg: string;
   }
-  
+
   interface readdirOpts extends WxApiCallback<readdirRes> {
     dirPath: string;
   }
-  
+
   interface renameRes {
     errMsg: string;
   }
-  
+
   interface renameOpts extends WxApiCallback<renameRes> {
     oldPath: string;
     newPath: string;
   }
-  
+
   interface rmdirRes {
     errMsg: string;
   }
-  
+
   interface rmdirOpts extends WxApiCallback<rmdirRes> {
     dirPath: string;
     recursive: boolean;
   }
-  
+
   interface statRes {
     stat: Stats;
     errMsg: string;
   }
-  
+
   interface statOpts extends WxApiCallback<statRes> {
     path: string;
     recursive: boolean;
   }
-  
+
   interface unlinkRes {
     errMsg: string;
   }
-  
+
   interface unlinkOpts extends WxApiCallback<unlinkRes> {
     filePath: string;
   }
-  
+
   interface unzipRes {
     errMsg: string;
   }
-  
+
   interface unzipOpts extends WxApiCallback<unzipRes> {
     zipFilePath: string;
     targetPath: string;
   }
-  
+
   interface writeFileRes {
     errMsg: string;
   }
-  
+
   interface writeFileOpts extends WxApiCallback<writeFileRes> {
     filePath: string;
     data: string | ArrayBuffer;
     encoding: string;
   }
-  
+
   interface getFileSystemManagerOpts {
     mkdir: (opts: mkdirOpts) => void;
     getSavedFileList: (opts: FileSystemManagerGetSavedFileListOpts) => void;
@@ -1129,12 +1129,12 @@ interface string2AnyMap {
       encoding: string
     ) => void;
   }
-  
+
   interface Stats {
     isDirectory: () => boolean;
     isFile: () => boolean;
   }
-  
+
   interface FileAPIs {
     saveFile: (options: saveFileOpts) => void;
     getFileInfo: (options: getFileInfoOpts) => void;
@@ -1144,9 +1144,9 @@ interface string2AnyMap {
     openDocument: (options: openDocumentOpts) => void;
     getFileSystemManager: () => getFileSystemManagerOpts;
   }
-  
+
   // Location APIs
-  
+
   //获取位置
   // getLocation
   interface getLocationRes {
@@ -1158,21 +1158,21 @@ interface string2AnyMap {
     verticalAccuracy: number;
     horizontalAccuracy: number;
   }
-  
+
   interface getLocationOpts extends WxApiCallback<getLocationRes> {
     type?: string;
     altitude?: boolean;
   }
-  
+
   interface chooseLocationRes {
     name: string;
     address: string;
     latitude: number;
     longitude: number;
   }
-  
+
   interface chooseLocationOpts extends WxApiCallback<chooseLocationRes> {}
-  
+
   /**
    * 查看位置
    */
@@ -1183,7 +1183,7 @@ interface string2AnyMap {
     name?: string;
     address?: string;
   }
-  
+
   interface translateMarkerOpts {
     markerId: number;
     destination: { latitude: number; longitude: number };
@@ -1193,12 +1193,12 @@ interface string2AnyMap {
     animationEnd: () => void;
     fail?: (err: any) => void;
   }
-  
+
   interface includePointsOpts {
     points: any;
     padding: any;
   }
-  
+
   interface createMapContextOpts {
     /**
      * 获取当前地图中心的经纬度，返回的是 gcj02 坐标系，可以用于 wx.openLocation
@@ -1225,7 +1225,7 @@ interface string2AnyMap {
      */
     getScale: (opts: WxApiCallback) => void;
   }
-  
+
   /**
    * 位置APIs
    * updateTime: 2018-09-17
@@ -1248,7 +1248,7 @@ interface string2AnyMap {
      */
     createMapContext: (key: string) => createMapContextOpts;
   }
-  
+
   /**
    * 数据缓存 Storage APIs
    * updateTime: 2018-09-16
@@ -1257,27 +1257,27 @@ interface string2AnyMap {
     key: string;
     data: object | string;
   }
-  
+
   interface GetStorageRes {
     data: object | string;
   }
-  
+
   interface GetStorageOpts extends WxApiCallback<GetStorageRes> {
     key: string;
   }
-  
+
   interface GetStorageInfoRes {
     keys: string[];
     currentSize: number;
     limitSize: number;
   }
-  
+
   interface GetStorageInfoOpts extends WxApiCallback<GetStorageInfoRes> {}
-  
+
   type RemoveStorageOpts = GetStorageOpts;
-  
+
   interface ClearStorageOpts extends WxApiCallback {}
-  
+
   /**
    * 本地数据存储的大小限制为 10MB
    */
@@ -1323,13 +1323,13 @@ interface string2AnyMap {
      */
     clearStorageSync: () => void;
   }
-  
+
   //  Device APIs
-  
+
   /**
    * 系统信息
    */
-  
+
   // getSystemInfo
   interface getSystemInfoRes {
     brand: string;
@@ -1347,9 +1347,9 @@ interface string2AnyMap {
     fontSizeSetting: number;
     SDKVersion: any;
   }
-  
+
   interface getSystemInfoOpts extends WxApiCallback<getSystemInfoRes> {}
-  
+
   // getSystemInfoSync
   interface getSystemInfoSyncRes {
     brand: string;
@@ -1367,7 +1367,7 @@ interface string2AnyMap {
     fontSizeSetting: number;
     SDKVersion: any;
   }
-  
+
   /**
    * 网络状态
    */
@@ -1375,9 +1375,9 @@ interface string2AnyMap {
   interface getNetworkTypeRes {
     networkType: string;
   }
-  
+
   interface getNetworkTypeOpts extends WxApiCallback<getNetworkTypeRes> {}
-  
+
   // onNetworkStatusChange
   interface onNetworkStatusChangeCallBack {
     isConnected: boolean;
@@ -1386,7 +1386,7 @@ interface string2AnyMap {
   interface onNetworkStatusChangeOpts {
     (res: onNetworkStatusChangeCallBack): void;
   }
-  
+
   /**
    * 加速度计
    */
@@ -1395,11 +1395,11 @@ interface string2AnyMap {
     y: number;
     z: number;
   }
-  
+
   interface onAccelerometerChangeCallback {
     (res: onAccelerometerChangeOpts): void;
   }
-  
+
   interface startAccelerometerOpts extends WxApiCallback {
     /**
      * 基础库2.1.0开始支持。
@@ -1407,7 +1407,7 @@ interface string2AnyMap {
      */
     interval?: string;
   }
-  
+
   //罗盘
   interface onCompassChangeOpts {
     direction: number;
@@ -1415,12 +1415,12 @@ interface string2AnyMap {
   interface onCompassChangeCallBack {
     (res: onCompassChangeOpts): void;
   }
-  
+
   // 拨打电话
   interface makePhoneCallOpts extends WxApiCallback {
     phoneNumber: string;
   }
-  
+
   // 扫码
   interface scanCodeRes {
     result: string;
@@ -1428,33 +1428,33 @@ interface string2AnyMap {
     charSet: string;
     path: string;
   }
-  
+
   interface scanCodeOpts extends WxApiCallback<scanCodeRes> {
     onlyFromCamera?: boolean;
     scanType?: any[];
   }
-  
+
   // 剪贴板
   interface setClipboardDataOpts extends WxApiCallback {
     data: string;
   }
-  
+
   interface getClipboardDataRes {
     data: string;
   }
-  
+
   interface getClipboardDataOpts extends WxApiCallback<getClipboardDataRes> {}
-  
+
   // 蓝牙
   interface getBluetoothAdapterStateRes {
     discovering: boolean;
     available: boolean;
     errMsg: string;
   }
-  
+
   interface getBluetoothAdapterStateOpts
     extends WxApiCallback<getBluetoothAdapterStateRes> {}
-  
+
   interface onBluetoothAdapterStateChangeCb {
     available: boolean;
     discovering: boolean;
@@ -1462,25 +1462,25 @@ interface string2AnyMap {
   interface onBluetoothAdapterStateChangeOpts {
     (res: onBluetoothAdapterStateChangeCb): void;
   }
-  
+
   interface startBluetoothDevicesDiscoveryRes {
     errMsg: string;
   }
-  
+
   interface startBluetoothDevicesDiscoveryOpts
     extends WxApiCallback<startBluetoothDevicesDiscoveryRes> {
     services?: any[];
     allowDuplicatesKey?: boolean;
     interval?: number;
   }
-  
+
   interface stopBluetoothDevicesDiscoveryRes {
     errMsg: string;
   }
-  
+
   interface stopBluetoothDevicesDiscoveryOpts
     extends WxApiCallback<stopBluetoothDevicesDiscoveryRes> {}
-  
+
   interface devicesArray {
     [key: string]: any;
     name: string;
@@ -1491,19 +1491,19 @@ interface string2AnyMap {
     localName: string;
     serviceData: ArrayBuffer;
   }
-  
+
   interface getBluetoothDevicesRes {
     devices: devicesArray[];
     errMsg: string;
   }
-  
+
   interface getBluetoothDevicesOpts
     extends WxApiCallback<getBluetoothDevicesRes> {}
-  
+
   interface onBluetoothDeviceFoundOpts {
     devices: devicesArray[];
   }
-  
+
   interface onBluetoothDeviceFoundCallBack {
     (res: onBluetoothDeviceFoundOpts): void;
   }
@@ -1511,34 +1511,34 @@ interface string2AnyMap {
     name: string;
     deviceld: string;
   }
-  
+
   interface getConnectedBluetoothDevicesRes {
     devices: getConnectedBluetoothDevicesArray[];
     errMsg: string;
   }
-  
+
   interface getConnectedBluetoothDevicesOpts
     extends WxApiCallback<getConnectedBluetoothDevicesRes> {
     services: any[];
   }
-  
+
   interface createBLEConnectionRes {
     errMsg: string;
   }
-  
+
   interface createBLEConnectionOpts
     extends WxApiCallback<createBLEConnectionRes> {
     deviceId: string;
   }
-  
+
   interface closeBLEConnectionRes {
     errMsg: string;
   }
-  
+
   interface closeBLEConnectionOpts extends WxApiCallback<closeBLEConnectionRes> {
     deviceId: string;
   }
-  
+
   interface BLEDeviceService {
     uuid: string;
     isPrimary: boolean;
@@ -1547,17 +1547,17 @@ interface string2AnyMap {
     services: BLEDeviceService[];
     errMsg: string;
   }
-  
+
   interface getBLEDeviceServicesOpts
     extends WxApiCallback<getBLEDeviceServicesRes> {
     deviceId: string;
   }
-  
+
   interface getBLEDeviceCharacteristicsRes {
     characteristics: BLEDeviceCharacteristic[];
     errMsg: string;
   }
-  
+
   interface BLEDeviceCharacteristic {
     /**
      * 蓝牙设备特征值的uuid
@@ -1568,36 +1568,36 @@ interface string2AnyMap {
      */
     properties: BLEDeviceCharasteristicProperties;
   }
-  
+
   interface BLEDeviceCharasteristicProperties {
     read: boolean;
     write: boolean;
     notify: boolean;
     indicate: boolean;
   }
-  
+
   interface getBLEDeviceCharacteristicsOpts
     extends WxApiCallback<getBLEDeviceCharacteristicsRes> {
     deviceId: string;
     serviceId: string;
   }
-  
+
   interface readBLECharacteristicValueRes {
     errCode: number;
     errMsg: string;
   }
-  
+
   interface readBLECharacteristicValueOpts
     extends WxApiCallback<readBLECharacteristicValueRes> {
     deviceId: string;
     serviceId: string;
     characteristicId: string;
   }
-  
+
   interface writeBLECharacteristicValueRes {
     errMsg: string;
   }
-  
+
   interface writeBLECharacteristicValueOpts
     extends WxApiCallback<writeBLECharacteristicValueRes> {
     deviceId: string;
@@ -1605,11 +1605,11 @@ interface string2AnyMap {
     characteristicId: string;
     value: ArrayBuffer;
   }
-  
+
   interface notifyBLECharacteristicValueChangeRes {
     errMsg: string;
   }
-  
+
   interface notifyBLECharacteristicValueChangeOpts
     extends WxApiCallback<notifyBLECharacteristicValueChangeRes> {
     deviceId: string;
@@ -1617,44 +1617,44 @@ interface string2AnyMap {
     characteristicId: string;
     state: boolean;
   }
-  
+
   interface onBLEConnectionStateChangeOpts {
     deviceId: string;
     connected: boolean;
   }
-  
+
   interface onBLEConnectionStateChangeCallback {
     (res: onBLEConnectionStateChangeOpts): void;
   }
-  
+
   interface onBLECharacteristicValueChangeOpts {
     deviceId: string;
     serviceId: string;
     characteristicId: string;
     value: ArrayBuffer;
   }
-  
+
   interface onBLECharacteristicValueChangeCallback {
     (res: onBLECharacteristicValueChangeOpts): void;
   }
-  
+
   // iBeacon
   interface startBeaconDiscoveryRes {
     errMsg: string;
   }
-  
+
   interface startBeaconDiscoveryOpts
     extends WxApiCallback<startBeaconDiscoveryRes> {
     uuid: any[];
   }
-  
+
   interface stopBeaconDiscoveryRes {
     errMsg: string;
   }
-  
+
   interface stopBeaconDiscoveryOpts
     extends WxApiCallback<stopBeaconDiscoveryRes> {}
-  
+
   interface beaconsObject {
     [key: string]: string | number;
     uuid: string;
@@ -1664,27 +1664,27 @@ interface string2AnyMap {
     accuracy: number;
     rssi: number;
   }
-  
+
   interface getBeaconsRes {
     beacons: beaconsObject[];
     errMsg: string;
   }
-  
+
   interface getBeaconsOpts extends WxApiCallback<getBeaconsRes> {}
-  
+
   interface onBeaconUpdateOpts {
     beacons: beaconsObject[];
   }
-  
+
   interface onBeaconUpdateCallback {
     (res: onBeaconUpdateOpts): void;
   }
-  
+
   interface onBeaconServiceChangeOpts {
     avaliable: boolean;
     discovering: boolean;
   }
-  
+
   interface onBeaconServiceChangeCallBack {
     (res: onBeaconServiceChangeOpts): void;
   }
@@ -1692,26 +1692,26 @@ interface string2AnyMap {
   interface setScreenBrightnessOpts extends WxApiCallback {
     value: number;
   }
-  
+
   interface getScreenBrightnessRes {
     value: number;
   }
-  
+
   interface getScreenBrightnessOpts
     extends WxApiCallback<getScreenBrightnessRes> {}
-  
+
   interface setKeepScreenOnRes {
     errMsg: string;
   }
   interface setKeepScreenOnOpts extends WxApiCallback<setKeepScreenOnRes> {
     keepScreenOn: boolean;
   }
-  
+
   // 震动
   interface vibrateLongOpts extends WxApiCallback {}
-  
+
   interface vibrateShortOpts extends WxApiCallback {}
-  
+
   //手机联系人
   interface addPhoneContactOpts extends WxApiCallback {
     photoFilePath: string;
@@ -1747,117 +1747,117 @@ interface string2AnyMap {
     homeAddressStreet: string;
     homeAddressPostalCode: string;
   }
-  
+
   // NFC
   interface getHCEStateRes {
     errMsg: string;
     errCode: number;
   }
-  
+
   interface getHCEStateOpts extends WxApiCallback<getHCEStateRes> {}
-  
+
   interface startHCERes {
     errMsg: string;
     errCode: number;
   }
-  
+
   interface startHCEOpts extends WxApiCallback<startHCERes> {
     aid_list: any[];
   }
-  
+
   interface stopHCERes {
     errMsg: string;
     errCode: number;
   }
-  
+
   interface stopHCEOpts extends WxApiCallback<stopHCERes> {}
-  
+
   interface onHCEMessageOpts {
     messageType: number;
     data: ArrayBuffer;
     reason: number;
   }
-  
+
   interface onHCEMessageCallBack {
     (res: onHCEMessageOpts): void;
   }
-  
+
   interface sendHCEMessageRes {
     errMsg: string;
     errCode: number;
   }
-  
+
   interface sendHCEMessageOpts extends WxApiCallback<sendHCEMessageRes> {
     data: ArrayBuffer;
   }
-  
+
   // Wifi
   interface startWifiOpts extends WxApiCallback {}
-  
+
   interface stopWifiOpts extends WxApiCallback {}
-  
+
   interface connectWifiOpts extends WxApiCallback {
     SSID: string;
     BSSID: string;
     password?: string;
   }
-  
+
   interface getWifiListOpts extends WxApiCallback {}
-  
+
   interface wifiLs {
     SSID: string;
     BSSID: string;
     secure: boolean;
     signalStrength: number;
   }
-  
+
   interface onGetWifiListOpts {
     wifiList: wifiLs[];
   }
-  
+
   interface onGetWifiListCallBack {
     (res: onGetWifiListOpts): void;
   }
-  
+
   interface setWifiListArray {
     SSID: string;
     BSSID: string;
     password: string;
   }
-  
+
   interface setWifiListOpts extends WxApiCallback {
     wifiList: setWifiListArray[];
   }
-  
+
   interface wifiInfo {
     SSID: string;
     BSSID: string;
     secure: boolean;
     signalStrength: number;
   }
-  
+
   interface onWifiConnectedOpts {
     wifi: wifiInfo;
   }
-  
+
   interface onWifiConnectedCb {
     (res: onWifiConnectedOpts): void;
   }
-  
+
   interface onMemoryWarningOpts {
     level: number;
   }
-  
+
   interface onMemoryWarningCallBack {
     (res: onMemoryWarningOpts): void;
   }
-  
+
   interface getConnectedWifiRes {
     wifi: wifiInfo;
   }
-  
+
   interface getConnectedWifiOpts extends WxApiCallback<getConnectedWifiRes> {}
-  
+
   interface DeviceAPIs {
     /**
      * 获取系统信息
@@ -2117,7 +2117,7 @@ interface string2AnyMap {
      */
     getConnectedWifi: (options: getConnectedWifiOpts) => void;
   }
-  
+
   /**
    * UI APIs
    */
@@ -2129,17 +2129,17 @@ interface string2AnyMap {
     duration?: number;
     mask?: boolean;
   }
-  
+
   interface ShowLoadingOpts extends WxApiCallback {
     title: string;
     mask?: boolean;
   }
-  
+
   interface ShowModalRes {
     confirm: boolean;
     cancel: boolean;
   }
-  
+
   interface ShowModalOpts extends WxApiCallback<ShowModalRes> {
     title: string;
     content: string;
@@ -2149,101 +2149,101 @@ interface string2AnyMap {
     confirmText?: string;
     confirmColor?: string;
   }
-  
+
   interface ShowActionSheetRes {
     tapIndex: number;
   }
-  
+
   interface ShowActionSheetOpts extends WxApiCallback<ShowActionSheetRes> {
     itemList: string[];
     itemColor?: any;
   }
-  
+
   // Navigation bar 设置导航条
-  
+
   interface setTopBarTextOpts extends WxApiCallback {
     text: string;
   }
-  
+
   interface setNavigationBarTitleOpts extends WxApiCallback {
     title: string;
   }
-  
+
   interface setNavigationBarColorRes {
     errMsg: string;
   }
-  
+
   interface animationOpts {
     duration?: number;
     timingFunc?: string;
   }
-  
+
   interface setNavigationBarColorOpts
     extends WxApiCallback<setNavigationBarColorRes> {
     frontColor: string;
     backgroundColor: string;
     animation?: animationOpts;
   }
-  
+
   // TabBar 设置tabBar
-  
+
   interface setTabBarBadgeOpts extends WxApiCallback {
     index: number;
     text: string;
   }
-  
+
   interface removeTabBarBadgeOpts extends WxApiCallback {
     index: number;
   }
-  
+
   interface showTabBarRedDotOpts extends WxApiCallback {
     index: number;
   }
-  
+
   interface hideTabBarRedDotOpts extends WxApiCallback {
     index: number;
   }
-  
+
   interface setTabBarStyleOpts extends WxApiCallback {
     color?: any;
     selectedColor?: any;
     backgroundColor?: any;
     borderStyle?: string;
   }
-  
+
   interface setTabBarItemOpts extends WxApiCallback {
     index: number;
     text?: string;
     iconPath?: string;
     selectedIconPath?: string;
   }
-  
+
   interface showTabBarOpts extends WxApiCallback {
     animation?: boolean;
   }
-  
+
   interface hideTabBarOpts extends WxApiCallback {
     animation?: boolean;
   }
-  
+
   interface setBackgroundColorOpts {
     backgroundColor: string;
     backgroundColorTop: string;
     backgroundColorBottom: string;
   }
-  
+
   interface setBackgroundTextStyleOpts {
     textStyle: string;
   }
-  
+
   // navigate 导航
-  
+
   interface navigateOpts extends WxApiCallback {
     url: string;
   }
-  
+
   // animation 动画
-  
+
   interface createAnimationOpts {
     duration?: number;
     timingFunction?: string;
@@ -2252,7 +2252,7 @@ interface string2AnyMap {
   }
   // todo animation实例
   interface animationObject {}
-  
+
   interface pageScrollToOpts extends WxApiCallback {
     scrollTop?: number;
     duration?: number;
@@ -2260,12 +2260,12 @@ interface string2AnyMap {
   interface startPullDownRefreshRes {
     errMsg: string;
   }
-  
+
   interface startPullDownRefreshOpts
     extends WxApiCallback<startPullDownRefreshRes> {}
-  
+
   // WXML节点信息
-  
+
   interface createSelectorQueryOpts {
     in: any;
     select: any;
@@ -2276,14 +2276,14 @@ interface string2AnyMap {
     scrollOffset: any;
     fields: any;
   }
-  
+
   interface createIntersectionObserverAPIs {
     relativeTo: any;
     relativeToViewport: any;
     observe: any;
     disconnect: any;
   }
-  
+
   interface UIAPIs {
     /**
      * 显示消息提示框
@@ -2425,7 +2425,7 @@ interface string2AnyMap {
     createIntersectionObserver: () => createIntersectionObserverAPIs;
     nextTick: (c: Function) => void;
   }
-  
+
   interface canvasContextApi {
     setFillStyle: any;
     setStrokeStyle: any;
@@ -2473,7 +2473,7 @@ interface string2AnyMap {
     font: any;
     setTransform: any;
   }
-  
+
   /**
    * Third party APIs
    */
@@ -2482,12 +2482,12 @@ interface string2AnyMap {
     extConfig: any;
   }
   interface getExtConfigOpts extends WxApiCallback<getExtConfigRes> {}
-  
+
   interface ThirdPartyAPIs {
     getExtConfig: (options: getExtConfigOpts) => void;
     getExtConfigSync: (extConfig: any) => void;
   }
-  
+
   /**
    *  Open Interface APIs
    */
@@ -2495,17 +2495,17 @@ interface string2AnyMap {
     errMsg?: string;
     code?: string;
   }
-  
+
   interface LoginOpts extends WxApiCallback<LoginRes> {
     timeout?: number;
   }
-  
+
   interface CheckSessionOpts extends WxApiCallback {}
-  
+
   interface AuthorizeRes {
     errMsg: string;
   }
-  
+
   interface AuthorizeOpts extends WxApiCallback<AuthorizeRes> {
     scope:
       | "scope.userInfo"
@@ -2523,7 +2523,7 @@ interface string2AnyMap {
       | "wx.saveVideoToPhotosAlbum"
       | "scope.camera";
   }
-  
+
   //用户信息
   // getUserInfo
   interface userInfoOpts {
@@ -2535,7 +2535,7 @@ interface string2AnyMap {
     country: string;
     language: string;
   }
-  
+
   interface getUserInfoRes {
     userInfo: userInfoOpts;
     rawData: string;
@@ -2543,13 +2543,13 @@ interface string2AnyMap {
     encryptedData: string;
     iv: string;
   }
-  
+
   interface getUserInfoOpts extends WxApiCallback<getUserInfoRes> {
     withCredentials?: boolean;
     lang?: string;
     timeout?: number;
   }
-  
+
   // 微信支付
   interface requestPaymentOpts extends WxApiCallback {
     timeStamp: string;
@@ -2558,20 +2558,20 @@ interface string2AnyMap {
     signType: string;
     paySign: string;
   }
-  
+
   interface showShareMenuOpts extends WxApiCallback {
     withShareTicket?: boolean;
   }
-  
+
   interface updateShareMenuOpts extends WxApiCallback {
     withShareTicket?: boolean;
   }
-  
+
   interface getShareInfoOpts extends WxApiCallback {
     shareTicket: string;
     timeout?: number;
   }
-  
+
   interface chooseAddressRes {
     errMsg: string;
     userName: string;
@@ -2584,39 +2584,39 @@ interface string2AnyMap {
     telNumber: string;
   }
   interface chooseAddressOpts extends WxApiCallback<chooseAddressRes> {}
-  
+
   interface openSettingRes {
     authSetting: any;
   }
-  
+
   interface openSettingOpts extends WxApiCallback<openSettingRes> {}
-  
+
   interface getSettingRes {
     authSetting: any;
   }
-  
+
   interface getSettingOpts extends WxApiCallback<getSettingRes> {}
-  
+
   interface getWeRunDataRes {
     errMsg: string;
     encryptedData: string;
     iv: string;
   }
-  
+
   interface getWeRunDataOpts extends WxApiCallback<getWeRunDataRes> {
     timeout?: number;
   }
-  
+
   interface navigateToMiniProgramRes {
     errMsg: string;
   }
-  
+
   interface extraDataOpts {
     encrypt_card_id: string;
     outer_str: string;
     biz: string;
   }
-  
+
   interface navigateToMiniProgramOpts
     extends WxApiCallback<navigateToMiniProgramRes> {
     appId: string;
@@ -2631,7 +2631,7 @@ interface string2AnyMap {
     extends WxApiCallback<navigateBackMiniProgramRes> {
     extraData: any;
   }
-  
+
   interface chooseInvoiceTitleRes {
     type: string;
     title: string;
@@ -2642,17 +2642,17 @@ interface string2AnyMap {
     bankAccount: string;
     errMsg: string;
   }
-  
+
   interface chooseInvoiceTitleOpts extends WxApiCallback<chooseInvoiceTitleRes> {}
-  
+
   interface checkIsSupportSoterAuthenticationRes {
     supportMode: string[]; // 人脸识别（暂未支持）声纹识别（暂未支持）
     errMsg: string;
   }
-  
+
   interface checkIsSupportSoterAuthenticationOpts
     extends WxApiCallback<checkIsSupportSoterAuthenticationRes> {}
-  
+
   interface startSoterAuthenticationRes {
     errCode: number;
     authMode: string;
@@ -2660,56 +2660,56 @@ interface string2AnyMap {
     resultJSONSignature: string;
     errMsg: string;
   }
-  
+
   interface startSoterAuthenticationOpts
     extends WxApiCallback<startSoterAuthenticationRes> {
     requestAuthMode: string[];
     challenge: string;
     authContent: string;
   }
-  
+
   interface checkIsSoterEnrolledInDeviceRes {
     inEnrolled: boolean;
     errMsg: string;
   }
-  
+
   interface checkIsSoterEnrolledInDeviceOpts
     extends WxApiCallback<checkIsSoterEnrolledInDeviceRes> {
     checkAuthMode: string;
   }
-  
+
   interface cardListOpts {
     cardId: string;
     cardExt: string;
   }
-  
+
   interface addCardOpts extends WxApiCallback {
     cardList: cardListOpts[];
   }
-  
+
   interface openCardListOpts {
     cardId: string;
     code: string;
   }
-  
+
   interface openCardOpts extends WxApiCallback {
     cardList: openCardListOpts[];
   }
-  
+
   interface miniProgramObj {
     appId: string;
   }
-  
+
   interface pluginObj {
     appid: string;
     version: string;
   }
-  
+
   interface getAccountInfoSyncOpts {
     miniProgram: miniProgramObj;
     plugin: pluginObj;
   }
-  
+
   interface OpenInterfaceAPIs {
     /**
      * 调用接口wx.login() 获取临时登录凭证（code）
@@ -2811,7 +2811,7 @@ interface string2AnyMap {
       options: checkIsSoterEnrolledInDeviceOpts
     ) => void;
   }
-  
+
   /**
    * Data APIs
    */
@@ -2819,18 +2819,18 @@ interface string2AnyMap {
     eventName: string;
     data: any;
   }
-  
+
   interface DataAPIs {
     reportAnalytics: (options: reportAnalyticsOpts) => void;
   }
-  
+
   /**
    * Update APIs
    */
   interface UpdateAPIs {
     getUpdateManager: () => updateManagerAPIs;
   }
-  
+
   interface updateManagerAPIs {
     /**
      * 监听向微信后台请求检查更新结果事件。微信在小程序冷启动时自动检查更新，不需由开发者主动触发。
@@ -2849,7 +2849,7 @@ interface string2AnyMap {
      */
     applyUpdate: any;
   }
-  
+
   /**
    * Multithreading APIs
    */
@@ -2859,27 +2859,27 @@ interface string2AnyMap {
      */
     createWorker: (scriptPath: string) => workerAPIs;
   }
-  
+
   interface workerAPIs {
     postMessage: any;
     onMessage: ZeroParamVoidFunc;
     terminate: ZeroParamVoidFunc;
   }
-  
+
   interface MonitorAPIs {
     /**
      * 自定义业务数据监控上报接口。
      */
     reportMonitor: (name: string, value: number) => void;
   }
-  
+
   /**
    * Debugging APIs
    */
   interface setEnableDebugRes {
     errMsg: string;
   }
-  
+
   interface setEnableDebugOpts extends WxApiCallback<setEnableDebugRes> {
     enableDebug: boolean;
   }
@@ -2889,43 +2889,47 @@ interface string2AnyMap {
      */
     setEnableDebug: (options: setEnableDebugOpts) => void;
   }
-  
+
   interface LogManager {
     log: any;
     info: any;
     warn: any;
     debug: any;
   }
-  
+
   interface LogApis {
     /**
      * 获取日志管理器 logManager 对象。
      */
     getLogManager: () => LogManager;
   }
-  
+  type Platform = NetworkAPIs &
+  MediaAPIs &
+  FileAPIs &
+  StorageAPIs &
+  LocationAPIs &
+  DeviceAPIs &
+  UIAPIs &
+  ThirdPartyAPIs &
+  OpenInterfaceAPIs &
+  DataAPIs &
+  UpdateAPIs &
+  MultithreadingAPIs &
+  MonitorAPIs &
+  DebuggingAPIs &
+  LogApis;
   // Declares
-  declare let wx: NetworkAPIs &
-    MediaAPIs &
-    FileAPIs &
-    StorageAPIs &
-    LocationAPIs &
-    DeviceAPIs &
-    UIAPIs &
-    ThirdPartyAPIs &
-    OpenInterfaceAPIs &
-    DataAPIs &
-    UpdateAPIs &
-    MultithreadingAPIs &
-    MonitorAPIs &
-    DebuggingAPIs &
-    LogApis;
-  
+  declare let wx: Platform
+
+  declare let swan: Platform
+
+  declare let my: Platform
+
   declare let SocketTask: SocketTaskAPIs;
   // declare let nodesRef: nodesRefAPIs;
   // declare let worker: workerAPIs;
   declare let canvasContext: canvasContextApi;
-  
+
   declare function App(app: AppOpts): void;
   declare function Page(page: PageOpts): void;
   declare function getApp(): IApp;

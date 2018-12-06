@@ -1,5 +1,5 @@
 /*!
- * axios-miniprogram-adapter 0.1.1 (https://github.com/bigMeow/axios-miniprogram-adapter)
+ * axios-miniprogram-adapter 0.2.0 (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
  * Copyright 2018-2018 bigMeow. All Rights Reserved
  * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
@@ -43,6 +43,18 @@
   }
 
   var warn = console.warn;
+  function getPlatForm() {
+      switch (true) {
+          case typeof wx === 'object':
+              return wx;
+          case typeof swan === 'object':
+              return swan;
+          case typeof my === 'object':
+              return my;
+          default:
+              return wx;
+      }
+  }
   function mpAdapter(config) {
       return new Promise(function (resolve, reject) {
           var requestTask;
@@ -137,7 +149,8 @@
           if (requestData !== undefined) {
               mpRequestOption.data = requestData;
           }
-          requestTask = wx.request(mpRequestOption);
+          var platForm = getPlatForm();
+          requestTask = platForm.request(mpRequestOption);
       });
   }
 

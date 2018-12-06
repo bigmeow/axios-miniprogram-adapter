@@ -5,7 +5,18 @@ import buildURL from 'axios/lib/helpers/buildURL'
 import createError from 'axios/lib/core/createError'
 import encode from './encoder'
 const warn = console.warn
-
+function getPlatForm () {
+  switch (true) {
+    case typeof wx === 'object':
+      return wx
+    case typeof swan === 'object':
+      return swan
+    case typeof my === 'object':
+      return my
+    default:
+      return wx
+  }
+}
 export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
   return new Promise((resolve, reject) => {
     let requestTask: void | requestTask
@@ -103,7 +114,7 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
     if (requestData !== undefined) {
       mpRequestOption.data = requestData
     }
-
-    requestTask = wx.request(mpRequestOption)
+    const platForm = getPlatForm()
+    requestTask = platForm.request(mpRequestOption)
   })
 }
