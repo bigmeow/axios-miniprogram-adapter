@@ -2,10 +2,19 @@ const createMegaloTarget = require( '@megalo/target' )
 const compiler = require( '@megalo/template-compiler' )
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' )
 const VueLoaderPlugin = require( 'vue-loader/lib/plugin' )
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const { pagesEntry, getSubPackagesRoot } = require('@megalo/entry')
 const _ = require( './util' );
+const appMainFile = _.resolve('src/index.js')
+const CSS_EXT = {
+  wechat: 'wxss',
+  alipay: 'acss',
+  swan: 'css',
+};
 
 function createBaseConfig( platform = 'wechat' ) {
-  const cssExt = platform === 'alipay' ? 'acss' : 'wxss'
+  const cssExt = CSS_EXT[platform]
+
   return {
     mode: 'development',
 
@@ -19,9 +28,8 @@ function createBaseConfig( platform = 'wechat' ) {
     } ),
 
     entry: {
-      'app': _.resolve( 'src/index.js' ),
-      'pages/index/index': _.resolve( 'src/pages/index/index.js' ),
-      'pages/search-tip/index': _.resolve( 'src/pages/search-tip/index.js' )
+      'app': appMainFile,
+      ...pagesEntry(appMainFile)
     },
 
     output: {
@@ -43,6 +51,9 @@ function createBaseConfig( platform = 'wechat' ) {
             chunks: 'all'
           }
         }
+      },
+      runtimeChunk: {
+        name: 'runtime'
       }
     },
 
@@ -52,12 +63,12 @@ function createBaseConfig( platform = 'wechat' ) {
     resolve: {
       extensions: ['.vue', '.js', '.json'],
       alias: {
-        // 'vue': _.resolve('../megalo/dist/megalo.mp.esm'),
+        // 'vue': _.resolve('../../megalo-workspace/megalo/dist/megalo.mp.esm'),
         'vue': 'megalo',
         '@': _.resolve('src')
       },
       // https://webpack.docschina.org/configuration/resolve/#resolve-aliasfields
-      aliasFields: ['browser'],
+      aliasFields: ['browser']
     },
 
     module: {
@@ -68,17 +79,14 @@ function createBaseConfig( platform = 'wechat' ) {
           use: [
             {
               loader: 'vue-loader',
-              options: {
-                a: 1,
-                cacheIdentifier: 'x'
-              }
+              options: {}
             }
           ]
         },
 
         {
           test: /\.js$/,
-          use: 'babel-loader'
+          use: 'babel-loader',
         },
 
         {
@@ -105,6 +113,11 @@ function createBaseConfig( platform = 'wechat' ) {
       new MiniCssExtractPlugin( {
         filename: `./static/css/[name].${cssExt}`,
       } ),
+      new CopyWebpackPlugin( [ {
+        context: `src/native/${platform}/`,
+        from: `**/*`,
+        to: _.resolve( `dist-${platform}/native` )
+      } ], {} )
     ]
   }
 }

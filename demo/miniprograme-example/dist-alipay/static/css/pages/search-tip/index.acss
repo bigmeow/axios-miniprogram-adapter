@@ -1,0 +1,8 @@
+
+.search {
+  border: 1px solid #000;
+  border-radius: 4px;
+  margin: 20px;
+  padding: 0 20rpx;
+}
+

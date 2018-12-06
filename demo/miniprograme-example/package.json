@@ -4,24 +4,29 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --config ./build/createBaseConfig -w",
+    "build:wechat": "webpack --config ./build/webpack.config.wechat.js",
+    "build:alipay": "webpack --config ./build/webpack.config.alipay.js",
+    "build:swan": "webpack --config ./build/webpack.config.swan.js",
     "dev:wechat": "webpack --config ./build/webpack.config.wechat.js -w",
     "dev:alipay": "webpack --config ./build/webpack.config.alipay.js -w",
+    "dev:swan": "webpack --config ./build/webpack.config.swan.js -w",
     "brk:wechat": "node --inspect-brk ./node_modules/webpack/bin/webpack.js --config ./build/webpack.config.wechat.js",
     "brk:alipay": "node --inspect-brk ./node_modules/webpack/bin/webpack.js --config ./build/webpack.config.alipay.js",
+    "brk:swan": "node --inspect-brk ./node_modules/webpack/bin/webpack.js --config ./build/webpack.config.swan.js",
     "demo:dev-server": "webpack-dev-server",
-    "link": "npm link @megalo/template-compiler && npm link @megalo/target"
+    "link": "npm link @megalo/template-compiler && npm link @megalo/target && npm link megalo"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@megalo/target": "*",
-    "@megalo/template-compiler": "*",
-    "babel-core": "6",
-    "babel-loader": "^7.1.5",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-0": "^6.24.1",
+    "@megalo/entry": "^0.1.1",
+    "@megalo/target": "^0.4.10",
+    "@megalo/template-compiler": "^0.5.4",
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/runtime": "^7.2.0",
+    "babel-loader": "^8.0.4",
     "copy-webpack-plugin": "^4.5.2",
     "css-loader": "^1.0.0",
     "html-webpack-plugin": "^3.2.0",
@@ -40,8 +45,8 @@
   "dependencies": {
     "@megalo/vhtml-plugin": "^0.1.0",
     "axios": "^0.18.0",
-    "axios-miniprogram-adapter": "^0.1.1",
-    "megalo": "^0.5.3",
+    "axios-miniprogram-adapter": "https://github.com/bigmeow/axios-miniprogram-adapter.git",
+    "megalo": "^0.5.4",
     "octoparse": "^0.2.0"
   }
 }

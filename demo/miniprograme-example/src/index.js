@@ -16,6 +16,16 @@ export default {
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black'
+    },
+    _alipay: {
+      window: {
+        navigationBarTitleText: 'Alipay'
+      }
+    },
+    _swan: {
+      window: {
+        navigationBarTitleText: 'Baidu'
+      }
     }
   }
 }

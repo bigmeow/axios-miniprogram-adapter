@@ -2,24 +2,44 @@
 # yarn lockfile v1
 
 
-"@megalo/target@*":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@megalo/target/-/target-0.2.2.tgz#8cf27544e44dd57b7c595908c52ba4cc9af9d7a2"
-  integrity sha512-BQXxD5lAcDhxFzHcb84gqfjkfFEwIX3oLYqHM6cHGlu052i4ieX3m7N+rpjiV7PeEp09x3xdGNGveHJLQwZghg==
+"@megalo/entry@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@megalo/entry/-/entry-0.1.1.tgz#812f755c0778139a8e8d7974f2ae78d78a1c0089"
+  integrity sha512-a6HnThHq5+uCE+46cZAEPlbVXgbhPt96teWWwijgReGwWSphyjYmQP5wNcews5G8M4pODx+VaTkmmqT2Vxq5TA==
   dependencies:
-    "@megalo/template-compiler" "^0.0.1"
+    json5 "^2.1.0"
+
+"@megalo/regular-template-compiler@^0.1.0":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@megalo/regular-template-compiler/-/regular-template-compiler-0.1.1.tgz#7f87da5174562c8a903de481ba6aae669edc795c"
+  integrity sha512-l6zcWjvhOymFeAf7o0IoChUFGBJj4Kz4HHNP3toWEALJMznmL0r4EtHHzxpQkxrPYRPVblCKwzj1A2w/dN0KlQ==
+  dependencies:
+    html-minifier "^3.5.21"
+    loader-utils "^1.1.0"
+    lodash.clonedeep "^4.5.0"
+    nanoid "^1.0.2"
+    prettier "^1.13.4"
+    regularjs "^0.6.0"
+    vue-template-compiler "2.5.17"
+
+"@megalo/target@^0.4.10":
+  version "0.4.10"
+  resolved "https://registry.yarnpkg.com/@megalo/target/-/target-0.4.10.tgz#a562f73bac084ea155b1dac3dfc13ef5060b9ad6"
+  integrity sha512-MAg3Y97GbM/s2/t0Kzp4JVzea6mtSUxfRmt9e/c+s2J5ZVDYgkyufKRAgLm9U6JveMJlKgRxmlKBe4Axa3fMfQ==
+  dependencies:
+    "@megalo/regular-template-compiler" "^0.1.0"
+    "@megalo/template-compiler" "*"
     "@vue/component-compiler-utils" "^2.1.2"
-    babel-core "^6.26.3"
     babel-generator "^6.26.1"
     babelon "^1.0.5"
     copy-webpack-plugin "^4.5.2"
     hash-sum "^1.0.2"
     loader-utils "^1.1.0"
+    lodash.merge "^4.6.1"
     postcss "^7.0.2"
     postcss-selector-parser "^5.0.0-rc.3"
     querystring "^0.2.0"
-    tapable "^1.0.0"
-    webpack-sources "^1.1.0"
+    semver "^5.6.0"
 
 "@megalo/template-compiler@*":
   version "0.3.0"
@@ -29,10 +49,10 @@
     de-indent "^1.0.2"
     he "^1.1.0"
 
-"@megalo/template-compiler@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@megalo/template-compiler/-/template-compiler-0.0.1.tgz#2e7f639a6bfdf14d688da345aee768f12603ec61"
-  integrity sha512-lZBYKEsCGO8TCmnce4Ul0HtcBX5FkTlSdEGk4KGjuqh6ietYfDqnozkSCTraamVKV7FTKBimvew7UyMIqK+lhA==
+"@megalo/template-compiler@^0.5.4":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@megalo/template-compiler/-/template-compiler-0.5.4.tgz#4ae94608f64c2441adc9553fe092338e5c3bd927"
+  integrity sha512-kwZfT+A/OaNdBlKay0QI8XoLk11J0xdOTYppRrVR+rGZ2tboYN8DPF604iU0zLbL/YdwJde49mO5w+FbceZpcg==
   dependencies:
     de-indent "^1.0.2"
     he "^1.1.0"
@@ -457,10 +477,9 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
   integrity sha512-ReZxvNHIOv88FlT7rxcXIIC0fPt4KZqZbOlivyWtXLt8ESx84zd3kMC6iK5jVeS2qt+g7ftS7ye4fi06X5rtRQ==
 
-axios-miniprogram-adapter@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/axios-miniprogram-adapter/-/axios-miniprogram-adapter-0.1.1.tgz#6c2ae3015fb2c3de8b8bfa1b9d68f0c809dc1ddf"
-  integrity sha512-Sf4yF5l7dEt56ijGMQFew7eOAvpw5mNntJXZX/rUlG5YbsPeTcVLpMypcyk/dCClK+F+E5nwBpYQ2+B+mqnhhQ==
+"axios-miniprogram-adapter@https://github.com/bigmeow/axios-miniprogram-adapter.git":
+  version "0.2.0"
+  resolved "https://github.com/bigmeow/axios-miniprogram-adapter.git#d44e00ef52752a38e29e91337b4dcd213e852a72"
   dependencies:
     axios "^0.18.0"
 
@@ -481,7 +500,7 @@ babel-code-frame@^6.26.0:
     esutils "^2.0.2"
     js-tokens "^3.0.2"
 
-babel-core@6, babel-core@^6.26.0, babel-core@^6.26.3, babel-core@^6.7.2:
+babel-core@6, babel-core@^6.26.0, babel-core@^6.7.2:
   version "6.26.3"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-6.26.3.tgz#b2e2f09e342d0f0c88e2f02e067794125e75c207"
   integrity sha512-6jyFLuDmeidKmUEb3NM+/yawG0M2bDZ9Z1qbZP59cyHLz8kYGKYwpJP0UwUKKUiTRNvxfLesJnTedqczP7cTDA==
@@ -1020,6 +1039,13 @@ babel-plugin-transform-regenerator@^6.22.0:
   integrity sha1-4HA2lvveJ/Cj78rPi03KL3s6jy8=
   dependencies:
     regenerator-transform "^0.10.0"
+
+babel-plugin-transform-runtime@^6.23.0:
+  version "6.23.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-runtime/-/babel-plugin-transform-runtime-6.23.0.tgz#88490d446502ea9b8e7efb0fe09ec4d99479b1ee"
+  integrity sha1-iEkNRGUC6puOfvsP4J7E2ZR5se4=
+  dependencies:
+    babel-runtime "^6.22.0"
 
 babel-plugin-transform-strict-mode@^6.24.1, babel-plugin-transform-strict-mode@^6.6.5:
   version "6.24.1"
@@ -3049,7 +3075,7 @@ html-entities@^1.2.0:
   resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.2.1.tgz#0df29351f0721163515dfb9e5543e5f6eed5162f"
   integrity sha1-DfKTUfByEWNRXfueVUPl9u7VFi8=
 
-html-minifier@^3.2.3:
+html-minifier@^3.2.3, html-minifier@^3.5.21:
   version "3.5.21"
   resolved "https://registry.yarnpkg.com/html-minifier/-/html-minifier-3.5.21.tgz#d0040e054730e354db008463593194015212d20c"
   integrity sha512-LKUKwuJDhxNa3uf/LPR/KVjm/l3rBqtYeCOAekvG8F1vItxMUpueGd94i/asDDr8/1u7InxzFA5EeGjhhG5mMA==
@@ -3591,6 +3617,13 @@ json5@^0.5.0, json5@^0.5.1:
   resolved "https://registry.yarnpkg.com/json5/-/json5-0.5.1.tgz#1eade7acc012034ad84e2396767ead9fa5495821"
   integrity sha1-Hq3nrMASA0rYTiOWdn6tn6VJWCE=
 
+json5@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/json5/-/json5-2.1.0.tgz#e7a0c62c48285c628d20a10b85c89bb807c32850"
+  integrity sha512-8Mh9h6xViijj36g7Dxi+Y4S6hNGV96vcJZr/SrlHh1LR/pEn/8j/+qIBbs44YKl69Lrfctp4QD+AdWLTMqEZAQ==
+  dependencies:
+    minimist "^1.2.0"
+
 jsprim@^1.2.2:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/jsprim/-/jsprim-1.4.1.tgz#313e66bc1e5cc06e438bc1b7499c2e5c56acb6a2"
@@ -3761,6 +3794,11 @@ lodash._root@^3.0.0:
   resolved "https://registry.yarnpkg.com/lodash._root/-/lodash._root-3.0.1.tgz#fba1c4524c19ee9a5f8136b4609f017cf4ded692"
   integrity sha1-+6HEUkwZ7ppfgTa0YJ8BfPTe1pI=
 
+lodash.clonedeep@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
+  integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
+
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
@@ -3791,6 +3829,11 @@ lodash.keys@^3.0.0:
     lodash._getnative "^3.0.0"
     lodash.isarguments "^3.0.0"
     lodash.isarray "^3.0.0"
+
+lodash.merge@^4.6.1:
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
+  integrity sha512-AOYza4+Hf5z1/0Hztxpm2/xiPZgi/cjMqdnKTUWTBSKchJlxXXuUSxCCl8rJlf4g6yww/j6mA8nC8Hw/EZWxKQ==
 
 lodash.restparam@^3.0.0:
   version "3.6.1"
@@ -4148,6 +4191,11 @@ nan@^2.9.2:
   version "2.11.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.1.tgz#90e22bccb8ca57ea4cd37cc83d3819b52eea6766"
   integrity sha512-iji6k87OSXa0CcrLl9z+ZiYSuR2o+c0bGuNmXdrhTQTakxytAFsC56SArGYoiHlJlFoHSnvmhpceZJaXkVuOtA==
+
+nanoid@^1.0.2:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-1.3.4.tgz#ad89f62c9d1f4fd69710d4a90953d2893d2d31f4"
+  integrity sha512-4ug4BsuHxiVHoRUe1ud6rUFT3WUMmjXt1W0quL0CviZQANdan7D8kqN5/maw53hmAApY/jfzMRkC57BNNs60ZQ==
 
 nanomatch@^1.2.9:
   version "1.2.13"
@@ -4797,6 +4845,11 @@ prettier@1.13.7:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.13.7.tgz#850f3b8af784a49a6ea2d2eaa7ed1428a34b7281"
   integrity sha512-KIU72UmYPGk4MujZGYMFwinB7lOf2LsDNGSOC8ufevsrPLISrZbNJlWstRi3m0AMuszbH+EFSQ/r6w56RSPK6w==
 
+prettier@^1.13.4:
+  version "1.15.3"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.15.3.tgz#1feaac5bdd181237b54dbe65d874e02a1472786a"
+  integrity sha512-gAU9AGAPMaKb3NNSUUuhhFAS7SCO4ALTN4nRIn6PJ075Qd28Yn2Ig2ahEJWdJwJmlEBTUfC7mMUSFy8MwsOCfg==
+
 pretty-error@^2.0.2:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/pretty-error/-/pretty-error-2.1.1.tgz#5f4f87c8f91e5ae3f3ba87ab4cf5e03b1a17f1a3"
@@ -5070,6 +5123,11 @@ regjsparser@^0.1.4:
   dependencies:
     jsesc "~0.5.0"
 
+regularjs@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/regularjs/-/regularjs-0.6.0.tgz#71b3d6f99cba49a70c8663abda59042a3fcba0c7"
+  integrity sha512-FfIdorp73a4om5CEOUuCxsQaABiu7384PYPt1e3Ih20Z8+OqALcOxfjwERhf8tpracYFDARjHq0qfBrPrgDaSg==
+
 relateurl@0.2.x:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
@@ -5269,7 +5327,7 @@ semver@^4.1.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-4.3.6.tgz#300bc6e0e86374f7ba61068b5b1ecd57fc6532da"
   integrity sha1-MAvG4OhjdPe6YQaLWx7NV/xlMto=
 
-semver@^5.3.0, semver@^5.5.0:
+semver@^5.3.0, semver@^5.5.0, semver@^5.6.0:
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.6.0.tgz#7e74256fbaa49c75aa7c7a205cc22799cac80004"
   integrity sha512-RS9R6R35NYgQn++fkDWaOmqGoj4Ek9gGs+DPxNUZKuwE183xjJroKvyo1IzVFeXvUrvmALy6FWD5xrdJT25gMg==
@@ -6077,7 +6135,7 @@ vue-style-loader@^4.1.0, vue-style-loader@^4.1.1:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
-vue-template-compiler@^2.5.17:
+vue-template-compiler@2.5.17, vue-template-compiler@^2.5.17:
   version "2.5.17"
   resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.5.17.tgz#52a4a078c327deb937482a509ae85c06f346c3cb"
   integrity sha512-63uI4syCwtGR5IJvZM0LN5tVsahrelomHtCxvRkZPJ/Tf3ADm1U1wG6KWycK3qCfqR+ygM5vewUvmJ0REAYksg==

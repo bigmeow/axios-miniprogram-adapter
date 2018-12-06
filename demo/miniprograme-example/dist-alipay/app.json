@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/search-tip/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "titleBarColor": "#fff",
+    "defaultTitle": "Alipay",
+    "navigationBarTextStyle": "black"
+  }
+}

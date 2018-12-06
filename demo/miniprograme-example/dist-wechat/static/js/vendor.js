@@ -4,40 +4,30 @@
 /*!******************************************************************!*\
   !*** ./node_modules/axios-miniprogram-adapter/dist/index.esm.js ***!
   \******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _utils = __webpack_require__(/*! axios/lib/utils */ "./node_modules/axios/lib/utils.js");
-
-var _utils2 = _interopRequireDefault(_utils);
-
-var _settle = __webpack_require__(/*! axios/lib/core/settle */ "./node_modules/axios/lib/core/settle.js");
-
-var _settle2 = _interopRequireDefault(_settle);
-
-var _buildURL = __webpack_require__(/*! axios/lib/helpers/buildURL */ "./node_modules/axios/lib/helpers/buildURL.js");
-
-var _buildURL2 = _interopRequireDefault(_buildURL);
-
-var _createError = __webpack_require__(/*! axios/lib/core/createError */ "./node_modules/axios/lib/core/createError.js");
-
-var _createError2 = _interopRequireDefault(_createError);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios_lib_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios/lib/utils */ "./node_modules/axios/lib/utils.js");
+/* harmony import */ var axios_lib_utils__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios_lib_utils__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios_lib_core_settle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios/lib/core/settle */ "./node_modules/axios/lib/core/settle.js");
+/* harmony import */ var axios_lib_core_settle__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios_lib_core_settle__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var axios_lib_helpers_buildURL__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios/lib/helpers/buildURL */ "./node_modules/axios/lib/helpers/buildURL.js");
+/* harmony import */ var axios_lib_helpers_buildURL__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios_lib_helpers_buildURL__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var axios_lib_core_createError__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios/lib/core/createError */ "./node_modules/axios/lib/core/createError.js");
+/* harmony import */ var axios_lib_core_createError__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios_lib_core_createError__WEBPACK_IMPORTED_MODULE_3__);
 /*!
- * axios-miniprogram-adapter 0.1.1 (https://github.com/bigMeow/axios-miniprogram-adapter)
+ * axios-miniprogram-adapter 0.2.0 (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
  * Copyright 2018-2018 bigMeow. All Rights Reserved
  * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
  */
+
+
+
+
+
 
 var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 // encoder
@@ -66,6 +56,18 @@ function encoder(input) {
 }
 
 var warn = console.warn;
+function getPlatForm() {
+    switch (true) {
+        case typeof wx === 'object':
+            return wx;
+        case typeof swan === 'object':
+            return swan;
+        case typeof my === 'object':
+            return my;
+        default:
+            return wx;
+    }
+}
 function mpAdapter(config) {
     return new Promise(function (resolve, reject) {
         var requestTask;
@@ -74,9 +76,9 @@ function mpAdapter(config) {
         // miniprogram network request config
         var mpRequestOption = {
             method: config.method,
-            url: (0, _buildURL2.default)(config.url, config.params, config.paramsSerializer),
+            url: axios_lib_helpers_buildURL__WEBPACK_IMPORTED_MODULE_2___default()(config.url, config.params, config.paramsSerializer),
             // Listen for success
-            success: function success(mpResponse) {
+            success: function (mpResponse) {
                 var statusText = '';
                 if (mpResponse.statusCode === 200) {
                     statusText = 'OK';
@@ -91,22 +93,22 @@ function mpAdapter(config) {
                     config: config,
                     request: mpRequestOption
                 };
-                (0, _settle2.default)(resolve, reject, response);
+                axios_lib_core_settle__WEBPACK_IMPORTED_MODULE_1___default()(resolve, reject, response);
             },
             // Handle request Exception
-            fail: function fail(error) {
+            fail: function (error) {
                 if (error.errMsg.indexOf('request:fail abort') !== -1) {
                     // Handle request cancellation (as opposed to a manual cancellation)
-                    reject((0, _createError2.default)('Request aborted', config, 'ECONNABORTED', ''));
+                    reject(axios_lib_core_createError__WEBPACK_IMPORTED_MODULE_3___default()('Request aborted', config, 'ECONNABORTED', ''));
                 } else if (error.errMsg.indexOf('timeout') !== -1) {
                     // timeout
-                    reject((0, _createError2.default)('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', ''));
+                    reject(axios_lib_core_createError__WEBPACK_IMPORTED_MODULE_3___default()('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', ''));
                 } else {
                     // NetWordError
-                    reject((0, _createError2.default)('Network Error', config, null, ''));
+                    reject(axios_lib_core_createError__WEBPACK_IMPORTED_MODULE_3___default()('Network Error', config, null, ''));
                 }
             },
-            complete: function complete() {
+            complete: function () {
                 requestTask = undefined;
             }
         };
@@ -122,7 +124,7 @@ function mpAdapter(config) {
             warn('The "timeout" option is not supported by miniprogram. For more information about usage see "https://developers.weixin.qq.com/miniprogram/dev/framework/config.html#全局配置"');
         }
         // Add headers to the request
-        _utils2.default.forEach(requestHeaders, function setRequestHeader(val, key) {
+        axios_lib_utils__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(requestHeaders, function setRequestHeader(val, key) {
             var _header = key.toLowerCase();
             if (typeof requestData === 'undefined' && _header === 'content-type' || _header === 'referer') {
                 // Remove Content-Type if data is undefined
@@ -156,11 +158,12 @@ function mpAdapter(config) {
         if (requestData !== undefined) {
             mpRequestOption.data = requestData;
         }
-        requestTask = wx.request(mpRequestOption);
+        var platForm = getPlatForm();
+        requestTask = platForm.request(mpRequestOption);
     });
 }
 
-exports.default = mpAdapter;
+/* harmony default export */ __webpack_exports__["default"] = (mpAdapter);
 
 /***/ }),
 
@@ -170,9 +173,6 @@ exports.default = mpAdapter;
   \*************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
 
 module.exports = __webpack_require__(/*! ./lib/axios */ "./node_modules/axios/lib/axios.js");
 
@@ -1457,8 +1457,6 @@ module.exports = function spread(callback) {
 "use strict";
 
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var bind = __webpack_require__(/*! ./helpers/bind */ "./node_modules/axios/lib/helpers/bind.js");
 var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/is-buffer/index.js");
 
@@ -1551,7 +1549,7 @@ function isUndefined(val) {
  * @returns {boolean} True if value is an Object, otherwise false
  */
 function isObject(val) {
-  return val !== null && (typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object';
+  return val !== null && typeof val === 'object';
 }
 
 /**
@@ -1663,7 +1661,7 @@ function forEach(obj, fn) {
   }
 
   // Force an array if not already something iterable
-  if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) !== 'object') {
+  if (typeof obj !== 'object') {
     /*eslint no-param-reassign:0*/
     obj = [obj];
   }
@@ -1703,7 +1701,7 @@ function forEach(obj, fn) {
 function merge() /* obj1, obj2, obj3, ... */{
   var result = {};
   function assignValue(val, key) {
-    if (_typeof(result[key]) === 'object' && (typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object') {
+    if (typeof result[key] === 'object' && typeof val === 'object') {
       result[key] = merge(result[key], val);
     } else {
       result[key] = val;
@@ -1765,10 +1763,7 @@ module.exports = {
   !*** ./node_modules/is-buffer/index.js ***!
   \*****************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
+/***/ (function(module, exports) {
 
 /*!
  * Determine if an object is a Buffer
@@ -1801,11 +1796,6 @@ function isSlowBuffer(obj) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 // fix env
 try {
   if (!global) global = {};
@@ -1818,12 +1808,8 @@ try {
 } catch (e) {}
 
 (function (global, factory) {
-  ( false ? undefined : _typeof(exports)) === 'object' && typeof module !== 'undefined' ? module.exports = factory() :  true ? !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
-				__WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)) : undefined;
-})(undefined, function () {
+   true ? module.exports = factory() : undefined;
+})(this, function () {
   'use strict';
 
   /*  */
@@ -1854,7 +1840,7 @@ try {
   function isPrimitive(value) {
     return typeof value === 'string' || typeof value === 'number' ||
     // $flow-disable-line
-    (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'symbol' || typeof value === 'boolean';
+    typeof value === 'symbol' || typeof value === 'boolean';
   }
 
   /**
@@ -1863,7 +1849,7 @@ try {
    * is a JSON-compliant type.
    */
   function isObject(obj) {
-    return obj !== null && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object';
+    return obj !== null && typeof obj === 'object';
   }
 
   /**
@@ -1899,7 +1885,7 @@ try {
    * Convert a value to a string that is actually rendered.
    */
   function toString(val) {
-    return val == null ? '' : (typeof val === 'undefined' ? 'undefined' : _typeof(val)) === 'object' ? JSON.stringify(val, null, 2) : String(val);
+    return val == null ? '' : typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val);
   }
 
   /**
@@ -2065,14 +2051,14 @@ try {
   /**
    * Always return false.
    */
-  var no = function no(a, b, c) {
+  var no = function (a, b, c) {
     return false;
   };
 
   /**
    * Return same value
    */
-  var identity = function identity(_) {
+  var identity = function (_) {
     return _;
   };
 
@@ -2315,7 +2301,7 @@ try {
   // this needs to be lazy-evaled because vue may be required before
   // vue-server-renderer can set VUE_ENV
   var _isServer;
-  var isServerRendering = function isServerRendering() {
+  var isServerRendering = function () {
     if (_isServer === undefined) {
       /* istanbul ignore if */
       if (!inBrowser && !inWeex && typeof global !== 'undefined') {
@@ -2460,7 +2446,7 @@ try {
 
   Object.defineProperties(VNode.prototype, prototypeAccessors);
 
-  var createEmptyVNode = function createEmptyVNode(text) {
+  var createEmptyVNode = function (text) {
     if (text === void 0) text = '';
 
     var node = new VNode();
@@ -2509,9 +2495,9 @@ try {
     def(arrayMethods, method, function mutator() {
       var args = [],
           len = arguments.length;
-      while (len--) {
-        args[len] = arguments[len];
-      }var result = original.apply(this, args);
+      while (len--) args[len] = arguments[len];
+
+      var result = original.apply(this, args);
       var ob = this.__ob__;
       var inserted;
       switch (method) {
@@ -2915,7 +2901,7 @@ try {
   /**
    * Default strategy.
    */
-  var defaultStrat = function defaultStrat(parentVal, childVal) {
+  var defaultStrat = function (parentVal, childVal) {
     return childVal === undefined ? parentVal : childVal;
   };
 
@@ -3210,7 +3196,7 @@ try {
   // events triggered in the same loop is by using MessageChannel.
   /* istanbul ignore if */
   if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
-    macroTimerFunc = function macroTimerFunc() {
+    macroTimerFunc = function () {
       setImmediate(flushCallbacks);
     };
   } else if (typeof MessageChannel !== 'undefined' && (isNative(MessageChannel) ||
@@ -3219,12 +3205,12 @@ try {
     var channel = new MessageChannel();
     var port = channel.port2;
     channel.port1.onmessage = flushCallbacks;
-    macroTimerFunc = function macroTimerFunc() {
+    macroTimerFunc = function () {
       port.postMessage(1);
     };
   } else {
     /* istanbul ignore next */
-    macroTimerFunc = function macroTimerFunc() {
+    macroTimerFunc = function () {
       setTimeout(flushCallbacks, 0);
     };
   }
@@ -3233,7 +3219,7 @@ try {
   /* istanbul ignore next, $flow-disable-line */
   if (typeof Promise !== 'undefined' && isNative(Promise)) {
     var p = Promise.resolve();
-    microTimerFunc = function microTimerFunc() {
+    microTimerFunc = function () {
       p.then(flushCallbacks);
       // in problematic UIWebViews, Promise.then doesn't completely break, but
       // it can get stuck in a weird state where callbacks are pushed into the
@@ -3585,7 +3571,7 @@ try {
       var contexts = factory.contexts = [context];
       var sync = true;
 
-      var forceRender = function forceRender() {
+      var forceRender = function () {
         for (var i = 0, l = contexts.length; i < l; i++) {
           contexts[i].$forceUpdate();
         }
@@ -3984,7 +3970,7 @@ try {
     var updateComponent;
     /* istanbul ignore if */
     {
-      updateComponent = function updateComponent() {
+      updateComponent = function () {
         vm._update(vm._render(), hydrating);
       };
     }
@@ -4483,7 +4469,7 @@ try {
     if (!isRoot) {
       toggleObserving(false);
     }
-    var loop = function loop(key) {
+    var loop = function (key) {
       keys.push(key);
       var value = validateProp(key, propsOptions, propsData, vm);
       /* istanbul ignore else */
@@ -4498,9 +4484,8 @@ try {
       }
     };
 
-    for (var key in propsOptions) {
-      loop(key);
-    }toggleObserving(true);
+    for (var key in propsOptions) loop(key);
+    toggleObserving(true);
   }
 
   function initData(vm) {
@@ -4819,7 +4804,7 @@ try {
           value = toObject(value);
         }
         var hash;
-        var loop = function loop(key) {
+        var loop = function (key) {
           if (key === 'class' || key === 'style' || isReservedAttribute(key)) {
             hash = data;
           } else {
@@ -4838,9 +4823,7 @@ try {
           }
         };
 
-        for (var key in value) {
-          loop(key);
-        }
+        for (var key in value) loop(key);
       }
     }
     return data;
@@ -6000,7 +5983,7 @@ try {
     // 上次执行时间点
     var previous = 0;
     // 延迟执行函数
-    var later = function later() {
+    var later = function () {
       // 若设定了开始边界不执行选项，上次执行时间始终为0
       previous = options.leading === false ? 0 : +new Date();
       timeout = null;
@@ -6052,9 +6035,9 @@ try {
     return function () {
       var args = [],
           len = arguments.length;
-      while (len--) {
-        args[len] = arguments[len];
-      }var self = this;
+      while (len--) args[len] = arguments[len];
+
+      var self = this;
 
       if (before) {
         before.call.apply(before, [self, args].concat(args));
@@ -6144,7 +6127,7 @@ try {
     slot: 'slot'
   };
 
-  var notEmpty = function notEmpty(e) {
+  var notEmpty = function (e) {
     return !!e;
   };
 
@@ -6183,8 +6166,8 @@ try {
   }
 
   function deepEqual(a, b) {
-    var aType = typeof a === 'undefined' ? 'undefined' : _typeof(a);
-    var bType = typeof b === 'undefined' ? 'undefined' : _typeof(b);
+    var aType = typeof a;
+    var bType = typeof b;
     if (aType !== 'object' || bType !== 'object' || aType !== bType) {
       return a === b || a === '' && b === undefined || a === undefined && b === '';
     } else {
@@ -7536,7 +7519,7 @@ try {
     }
 
     if (dirsWithInsert.length) {
-      var callInsert = function callInsert() {
+      var callInsert = function () {
         for (var i = 0; i < dirsWithInsert.length; i++) {
           callHook$1(dirsWithInsert[i], 'inserted', vnode, oldVnode);
         }
@@ -8212,7 +8195,7 @@ try {
 
         var rootVM = this.rootVM = initRootVM(this, opt, options.query);
         var ref = rootVM.$options;
-        var globalData = ref.globalData;if (globalData === void 0) globalData = function globalData() {};
+        var globalData = ref.globalData;if (globalData === void 0) globalData = function () {};
         this.globalData = globalData && (typeof globalData === 'function' ? globalData.call(rootVM, options) : globalData) || {};
         rootVM.globalData = this.globalData;
         rootVM.$mount();
