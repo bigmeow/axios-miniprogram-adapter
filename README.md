@@ -11,6 +11,36 @@ axios的小程序适配器，支持在各个平台小程序中使用axios
 - 支持微信、支付宝、钉钉、百度小程序，放心使用axios，最大限度复用web端axios的代码
 - 支持TypeScript
 
+<table>
+    <tbody>
+    <tr>
+        <td align="center" valign="middle">
+            <a href="https://developers.weixin.qq.com/miniprogram/dev/api/wx.request.html" target="_blank">
+                <img src="./doc/wechat.png" alt="微信小程序">
+                <div>微信小程序</div>
+            </a>
+        </td>
+        <td align="center" valign="middle">
+            <a href="https://docs.alipay.com/mini/api/network" target="_blank">
+                <img src="./doc/alipay.png" alt="支付宝小程序">
+                <div>支付宝小程序</div>
+            </a>
+        </td>
+        <td align="center" valign="middle">
+            <a href="https://docs.alipay.com/mini/multi-platform/common" target="_blank">
+                <img src="./doc/dingding.png" alt="钉钉小程序">
+                <div>钉钉小程序</div>
+            </a>
+        </td>
+        <td align="center" valign="middle">
+            <a href="https://smartprogram.baidu.com/docs/develop/api/net_request/#request/" target="_blank">
+                <img src="./doc/baidu.png" alt="百度小程序">
+                <div>百度小程序</div>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 ## :open_file_folder: 目录介绍
 
