@@ -1,6 +1,6 @@
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bigmeow/axios-miniprogram-adapter/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/bigmeow/axios-miniprogram-adapter.svg?branch=master)](https://travis-ci.org/bigMeow/axios-miniprogram-adapter)
-[![npm](https://img.shields.io/badge/npm-0.2.0-orange.svg)](https://www.npmjs.com/package/axios-miniprogram-adapter)
+[![npm](https://img.shields.io/badge/npm-0.2.1-orange.svg)](https://www.npmjs.com/package/axios-miniprogram-adapter)
 [![NPM downloads](http://img.shields.io/npm/dm/axios-miniprogram-adapter.svg?style=flat-square)](http://www.npmtrends.com/axios-miniprogram-adapter)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/bigMeow/axios-miniprogram-adapter.svg)](http://isitmaintained.com/project/bigMeow/axios-miniprogram-adapter "Percentage of issues still open")
 

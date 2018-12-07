@@ -1,6 +1,6 @@
 {
   "name": "axios-miniprogram-adapter",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Axios adapter for miniprogram",
   "main": "dist/index.js",
   "jsnext:main": "dist/index.esm.js",
