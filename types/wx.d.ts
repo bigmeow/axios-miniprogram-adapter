@@ -94,7 +94,12 @@ interface string2AnyMap {
   interface NetworkRequestRes {
     data: NetworkRequestData;
     statusCode: number;
+
     header: string2stringMap;
+    /** 状态码（支付宝、钉钉独有） */
+    status: number;
+    /** 响应头（支付宝、钉钉独有） */
+    headers: string2stringMap
   }
 
   type NetworkRequestMethod = 'OPTIONS'
@@ -283,6 +288,10 @@ interface string2AnyMap {
   interface stopLocalServiceDiscoveryOpts extends WxApiCallback {}
 
   interface NetworkAPIs {
+    /**
+     * 发起请求(支付宝、钉钉独有))
+     */
+    httpRequest: (options: NetworkRequestOpts) => requestTask;
     /**
      * 发起请求
      */

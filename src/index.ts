@@ -1,23 +1,13 @@
-import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios'
+import { AxiosRequestConfig, AxiosPromise } from 'axios'
 import utils from 'axios/lib/utils'
 import settle from 'axios/lib/core/settle'
 import buildURL from 'axios/lib/helpers/buildURL'
-import createError from 'axios/lib/core/createError'
-import encode from './encoder'
+import encode from './utils/encoder'
+import { getRequest, transformError, transformResponse } from './utils/platForm'
+
 const warn = console.warn
-function getPlatForm () {
-  switch (true) {
-    case typeof wx === 'object':
-      return wx
-    case typeof swan === 'object':
-      return swan
-    case typeof my === 'object':
-      return my
-    default:
-      return wx
-  }
-}
 export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
+  const request = getRequest()
   return new Promise((resolve, reject) => {
     let requestTask: void | requestTask
     let requestData = config.data
@@ -28,36 +18,12 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
       url: buildURL(config.url, config.params, config.paramsSerializer),
       // Listen for success
       success: (mpResponse: NetworkRequestRes) => {
-        let statusText = ''
-        if (mpResponse.statusCode === 200) {
-          statusText = 'OK'
-        } else if (mpResponse.statusCode === 400) {
-          statusText = 'Bad Request'
-        }
-
-        const response: AxiosResponse = {
-          data: mpResponse.data,
-          status: mpResponse.statusCode,
-          statusText: statusText,
-          headers: mpResponse.header,
-          config: config,
-          request: mpRequestOption
-        }
-
+        const response = transformResponse(mpResponse, config, mpRequestOption)
         settle(resolve, reject, response)
       },
       // Handle request Exception
       fail: (error) => {
-        if (error.errMsg.indexOf('request:fail abort') !== -1) {
-          // Handle request cancellation (as opposed to a manual cancellation)
-          reject(createError('Request aborted', config, 'ECONNABORTED', ''))
-        } else if (error.errMsg.indexOf('timeout') !== -1) {
-          // timeout
-          reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', ''))
-        } else {
-          // NetWordError
-          reject(createError('Network Error', config, null, ''))
-        }
+        transformError(error, reject, config)
       },
       complete () {
         requestTask = undefined
@@ -114,7 +80,6 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
     if (requestData !== undefined) {
       mpRequestOption.data = requestData
     }
-    const platForm = getPlatForm()
-    requestTask = platForm.request(mpRequestOption)
+    requestTask = request(mpRequestOption)
   })
 }

@@ -40,20 +40,97 @@ function encoder(input) {
     return output;
 }
 
-var warn = console.warn;
-function getPlatForm() {
+var platFormName = 'wechat';
+/**
+ * 获取各个平台的请求函数
+ */
+function getRequest() {
     switch (true) {
         case typeof wx === 'object':
-            return wx;
+            platFormName = 'wechat';
+            return wx.request.bind(wx);
         case typeof swan === 'object':
-            return swan;
+            platFormName = 'baidu';
+            return swan.request.bind(wx);
         case typeof my === 'object':
-            return my;
+            platFormName = 'alipay';
+            return my.httpRequest.bind(my);
         default:
-            return wx;
+            return wx.request.bind(wx);
     }
 }
+/**
+ * 处理各平台返回的响应数据，抹平差异
+ * @param mpResponse
+ * @param config axios处理过的请求配置对象
+ * @param request 小程序的调用发起请求时，传递给小程序api的实际配置
+ */
+function transformResponse(mpResponse, config, mpRequestOption) {
+    var headers = mpResponse.header || mpResponse.headers;
+    var status = mpResponse.statusCode || mpResponse.status;
+    var statusText = '';
+    if (status === 200) {
+        statusText = 'OK';
+    }
+    else if (status === 400) {
+        statusText = 'Bad Request';
+    }
+    var response = {
+        data: mpResponse.data,
+        status: status,
+        statusText: statusText,
+        headers: headers,
+        config: config,
+        request: mpRequestOption
+    };
+    return response;
+}
+/**
+ * 处理各平台返回的错误信息，抹平差异
+ * @param error 小程序api返回的错误对象
+ * @param reject 上层的promise reject 函数
+ * @param config
+ */
+function transformError(error, reject, config) {
+    switch (platFormName) {
+        case 'wechat':
+            if (error.errMsg.indexOf('request:fail abort') !== -1) {
+                // Handle request cancellation (as opposed to a manual cancellation)
+                reject(createError('Request aborted', config, 'ECONNABORTED', ''));
+            }
+            else if (error.errMsg.indexOf('timeout') !== -1) {
+                // timeout
+                reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', ''));
+            }
+            else {
+                // NetWordError
+                reject(createError('Network Error', config, null, ''));
+            }
+            break;
+        case 'alipay':
+            // https://docs.alipay.com/mini/api/network
+            if ([14, 19].includes(error.error)) {
+                reject(createError('Request aborted', config, 'ECONNABORTED', ''));
+            }
+            else if ([13].includes(error.error)) {
+                // timeout
+                reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', ''));
+            }
+            else {
+                // NetWordError
+                reject(createError('Network Error', config, null, ''));
+            }
+            break;
+        case 'baidu':
+            // TODO error.errCode
+            reject(createError('Network Error', config, null, ''));
+            break;
+    }
+}
+
+var warn = console.warn;
 function mpAdapter(config) {
+    var request = getRequest();
     return new Promise(function (resolve, reject) {
         var requestTask;
         var requestData = config.data;
@@ -64,37 +141,12 @@ function mpAdapter(config) {
             url: buildURL(config.url, config.params, config.paramsSerializer),
             // Listen for success
             success: function (mpResponse) {
-                var statusText = '';
-                if (mpResponse.statusCode === 200) {
-                    statusText = 'OK';
-                }
-                else if (mpResponse.statusCode === 400) {
-                    statusText = 'Bad Request';
-                }
-                var response = {
-                    data: mpResponse.data,
-                    status: mpResponse.statusCode,
-                    statusText: statusText,
-                    headers: mpResponse.header,
-                    config: config,
-                    request: mpRequestOption
-                };
+                var response = transformResponse(mpResponse, config, mpRequestOption);
                 settle(resolve, reject, response);
             },
             // Handle request Exception
             fail: function (error) {
-                if (error.errMsg.indexOf('request:fail abort') !== -1) {
-                    // Handle request cancellation (as opposed to a manual cancellation)
-                    reject(createError('Request aborted', config, 'ECONNABORTED', ''));
-                }
-                else if (error.errMsg.indexOf('timeout') !== -1) {
-                    // timeout
-                    reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', ''));
-                }
-                else {
-                    // NetWordError
-                    reject(createError('Network Error', config, null, ''));
-                }
+                transformError(error, reject, config);
             },
             complete: function () {
                 requestTask = undefined;
@@ -147,8 +199,7 @@ function mpAdapter(config) {
         if (requestData !== undefined) {
             mpRequestOption.data = requestData;
         }
-        var platForm = getPlatForm();
-        requestTask = platForm.request(mpRequestOption);
+        requestTask = request(mpRequestOption);
     });
 }
 
