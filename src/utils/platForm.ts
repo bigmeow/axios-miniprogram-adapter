@@ -13,7 +13,7 @@ export function getRequest (): NetworkAPIs['request'] {
       return wx.request.bind(wx)
     case typeof swan === 'object':
       platFormName = 'baidu'
-      return swan.request.bind(wx)
+      return swan.request.bind(swan)
     case typeof my === 'object':
       platFormName = 'alipay'
       return my.httpRequest.bind(my)
