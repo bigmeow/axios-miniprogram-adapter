@@ -1,0 +1,2 @@
+<import src="../../components/index$09c6a065.swan" />
+<template is="index$09c6a065" data="{{{ ...$root['0'], $root }}}"/>

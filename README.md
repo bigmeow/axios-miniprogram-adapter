@@ -4,11 +4,11 @@
 [![NPM downloads](http://img.shields.io/npm/dm/axios-miniprogram-adapter.svg?style=flat-square)](http://www.npmtrends.com/axios-miniprogram-adapter)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/bigMeow/axios-miniprogram-adapter.svg)](http://isitmaintained.com/project/bigMeow/axios-miniprogram-adapter "Percentage of issues still open")
 
-axios的微信小程序适配器，以便于在小程序中使用axios
+axios的小程序适配器，支持在各个平台小程序中使用axios
 
 ## :star: 特性
 
-- 支持微信、支付宝、百度小程序，放心使用axios，最大限度复用web端axios的代码
+- 支持微信、支付宝、钉钉、百度小程序，放心使用axios，最大限度复用web端axios的代码
 - 支持TypeScript
 
 
@@ -51,7 +51,12 @@ import utils from 'axios/lib/utils'
 - [与官方API的差异、注意事项](https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md)
 
 ## :chestnut: Demo
-打开小程序开发者工具，选择```axios-miniprogram-adapter/demo/miniprograme-example/dist-wechat```目录作为项目根目录，示范了几个常用功能的用法:
+打开小程序开发者工具，根据不同平台，选择各自的目录作为项目根目录：
+- 微信```axios-miniprogram-adapter/demo/miniprograme-example/dist-wechat```
+- 支付宝、钉钉```axios-miniprogram-adapter/demo/miniprograme-example/dist-alipay```
+- 百度 ```axios-miniprogram-adapter/demo/miniprograme-example/dist-swan```
+
+该demo示范了几个常用功能的用法:
 
 <image srC="./doc/example.png" width="300">
 
