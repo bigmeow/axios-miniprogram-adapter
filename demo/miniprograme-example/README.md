@@ -21,6 +21,10 @@ npm run dev:alipay
 ```bash
 npm run dev:swan
 ```
+## 注意，demo里请求用到了下列域名，如需在真机上运行，请将其加入安全域名设置
+- suggest.taobao.com
+- api.github.com
+- easy-mock.com
 
 ## issue
 
