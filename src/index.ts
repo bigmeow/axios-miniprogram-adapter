@@ -12,9 +12,11 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
     let requestTask: void | requestTask
     let requestData = config.data
     let requestHeaders = config.headers
+    // baidu miniprogram only support upperCase
+    let requestMethod = (config.method && config.method.toUpperCase()) || 'GET'
     // miniprogram network request config
     const mpRequestOption: NetworkRequestOpts = {
-      method: config.method as NetworkRequestMethod,
+      method: requestMethod as NetworkRequestMethod,
       url: buildURL(config.url, config.params, config.paramsSerializer),
       // Listen for success
       success: (mpResponse: NetworkRequestRes) => {

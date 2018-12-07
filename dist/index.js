@@ -135,9 +135,11 @@ function mpAdapter(config) {
         var requestTask;
         var requestData = config.data;
         var requestHeaders = config.headers;
+        // baidu miniprogram only support upperCase
+        var requestMethod = (config.method && config.method.toUpperCase()) || 'GET';
         // miniprogram network request config
         var mpRequestOption = {
-            method: config.method,
+            method: requestMethod,
             url: buildURL(config.url, config.params, config.paramsSerializer),
             // Listen for success
             success: function (mpResponse) {
