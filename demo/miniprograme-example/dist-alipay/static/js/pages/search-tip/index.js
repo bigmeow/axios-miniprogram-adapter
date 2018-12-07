@@ -44,15 +44,21 @@ var render = function() {
         _vm.searchLinkResult,
         function(linkItem, linkItem_i1, linkItem_i2) {
           var _fid = linkItem_i2 !== undefined ? linkItem_i2 : linkItem_i1
-          return _c(
-            "view",
-            {
-              key: linkItem[1],
-              staticClass: "link-item",
-              attrs: { _hid: 4, _fid: _fid, _fk: "linkItem[1]" }
-            },
-            [_vm._v(_vm._s(linkItem[0]), 5, _fid)]
+          return _vm._ri(
+            !!_vm.searchLinkResult,
+            4,
+            linkItem_i2 !== undefined ? linkItem_i2 : linkItem_i1
           )
+            ? _c(
+                "view",
+                {
+                  key: linkItem[1],
+                  staticClass: "link-item",
+                  attrs: { _hid: 4, _fid: _fid, _fk: "linkItem[1]" }
+                },
+                [_vm._v(_vm._s(linkItem[0]), 5, _fid)]
+              )
+            : _vm._e()
         },
         4,
         _vm._self
@@ -90,46 +96,53 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 
-
 axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.adapter = axios_miniprogram_adapter__WEBPACK_IMPORTED_MODULE_1__["default"];
-const CancelToken = axios__WEBPACK_IMPORTED_MODULE_0___default.a.CancelToken;
+var CancelToken = axios__WEBPACK_IMPORTED_MODULE_0___default.a.CancelToken;
 /* harmony default export */ __webpack_exports__["default"] = ({
   mpType: 'page',
-  data() {
+  data: function data() {
     return {
-      searchKey: '', // 搜索关键词
-      searchLinkResult: [], // 搜索联想结果
+      searchKey: '',
+      // 搜索关键词
+      searchLinkResult: [],
+      // 搜索联想结果 搜索结果的数据结构： [  ["123沙发", "63159"], ["123童装", "2370592"]   ]
       cancel: undefined // 取消函数
+
     };
   },
   watch: {
-    searchKey(newWords) {
+    searchKey: function searchKey(newWords) {
       // TODO 这里还可以做函数节流优化，减少发起请求的频次
       this.searchAPI(newWords);
     }
   },
   methods: {
-    searchAPI(keyWords) {
+    searchAPI: function searchAPI(keyWords) {
+      var _this = this;
+
       if (this.cancel) {
         // 当用户打字速度太快时，我们每敲一个字符就调用一次搜索，没有必要，客户端也来不及渲染旧的数据又被新的数据覆盖了；
         // 所以在这里做一次优化，如果上一次搜索的请求还没收到响应，又要开始新的请求了，那么就主动取消上一次的搜索请求，重新发起新的请求
         this.cancel('主动取消上一个搜索接口的调用');
       }
+
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('https://suggest.taobao.com/sug', {
-        cancelToken: new CancelToken(c => this.cancel = c),
+        cancelToken: new CancelToken(function (c) {
+          return _this.cancel = c;
+        }),
         params: {
           q: keyWords,
           code: 'utf-8',
           area: 'c2c'
         }
-      }).then(res => {
-        this.searchLinkResult = res.data.result;
-        // console.log('请求结果', res)
-      }).catch(error => {
+      }).then(function (res) {
+        _this.searchLinkResult = res.data.result; // console.log('请求结果', res)
+      }).catch(function (error) {
         if (axios__WEBPACK_IMPORTED_MODULE_0___default.a.isCancel(error)) {
           console.log('主动取消了请求原因：', error);
           return;
         }
+
         console.log('其他错误', error);
       });
     }
@@ -164,7 +177,9 @@ var _index = _interopRequireDefault(__webpack_require__(/*! ./index */ "./src/pa
 var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/megalo/dist/megalo.mp.esm.js"));
 
 function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
+  return obj && obj.__esModule ? obj : {
+    default: obj
+  };
 }
 
 _index.default.mpType = "page";

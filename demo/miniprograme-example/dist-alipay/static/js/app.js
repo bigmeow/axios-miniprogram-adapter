@@ -37,10 +37,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   mpType: 'app',
-  onLaunch() {}
+  onLaunch: function onLaunch() {}
 });
 
 /***/ }),
@@ -129,7 +128,9 @@ var _App = _interopRequireDefault(__webpack_require__(/*! ./App */ "./src/App.vu
 var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/megalo/dist/megalo.mp.esm.js"));
 
 function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
+  return obj && obj.__esModule ? obj : {
+    default: obj
+  };
 }
 
 _App.default.mpType = "app";

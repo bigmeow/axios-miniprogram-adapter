@@ -1,8 +1,8 @@
 <template>
-  <view>
+  <view class="">
     <input v-model="searchKey" class="search" type="search" placeholder="淘宝一下，你就知道" />
     <view class="linklist">
-      <view class="link-item" v-for="linkItem in searchLinkResult" :key="linkItem[1]">{{linkItem[0]}}</view>
+      <view class="link-item" v-if="searchLinkResult" v-for="linkItem in searchLinkResult" :key="linkItem[1]">{{linkItem[0]}}</view>
     </view>
   </view>
 </template>
@@ -17,7 +17,7 @@ export default {
   data () {
     return {
       searchKey: '', // 搜索关键词
-      searchLinkResult: [], // 搜索联想结果
+      searchLinkResult: [], // 搜索联想结果 搜索结果的数据结构： [  ["123沙发", "63159"], ["123童装", "2370592"]   ]
       cancel: undefined // 取消函数
     }
   },

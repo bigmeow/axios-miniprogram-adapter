@@ -70,42 +70,38 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.adapter = axios_miniprogram_adapter__WEBPACK_IMPORTED_MODULE_2__["default"];
 /* harmony default export */ __webpack_exports__["default"] = ({
   mpType: 'page',
-  data() {
+  data: function data() {
     return {
       responseText: ''
     };
   },
   methods: {
     // 基本请求调用
-    handleBase() {
+    handleBase: function handleBase() {
       // 创建实例 设置baseURL
-      const instance = axios__WEBPACK_IMPORTED_MODULE_1___default.a.create({
+      var instance = axios__WEBPACK_IMPORTED_MODULE_1___default.a.create({
         baseURL: 'https://easy-mock.com'
-      });
-      // 设置token
+      }); // 设置token
+
       instance.defaults.headers.common['Authorization'] = 'I am a token';
-      instance.get('/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByGet').then(resp => {
+      instance.get('/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByGet').then(function (resp) {
         console.log('GET请求成功:', resp);
       });
-
-      instance.post('/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByPost').then(resp => {
+      instance.post('/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByPost').then(function (resp) {
         console.log('Post请求成功:', resp);
       });
-
       instance.request({
         url: 'https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByGet',
         params: {
           name: '帅锅get Params',
           age: '18'
         }
-      }).then(resp => {
+      }).then(function (resp) {
         console.log('axios.request GET请求带参数成功:', resp);
       });
-
       instance.request({
         url: 'https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByPost',
         method: 'POST',
@@ -113,28 +109,29 @@ axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.adapter = axios_miniprogra
           name: '帅锅post Data',
           age: '18'
         }
-      }).then(resp => {
+      }).then(function (resp) {
         console.log('axios.request POST请求带参数成功:', resp);
       });
     },
     // 多个接口迸发调用后统一处理数据
-    all() {
+    all: function all() {
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.all([axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('https://api.github.com/users/mzabriskie'), axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('https://api.github.com/users/mzabriskie/orgs')]).then(axios__WEBPACK_IMPORTED_MODULE_1___default.a.spread(function (user, orgs) {
         console.log('接口1数据:', user.data.avatar_url, user.data.name);
         console.log('接口2数据:', orgs.data);
       }));
     },
     // 错误捕获
-    catchError() {
-      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByPost22').then(resp => {
+    catchError: function catchError() {
+      axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByPost22').then(function (resp) {
         console.log('Post请求成功:', resp);
-      }).catch(error => {
+      }).catch(function (error) {
         console.log('捕获到了异常：', JSON.stringify(error));
       });
     },
     // 数据拦截替换
-    transformResponseData() {
+    transformResponseData: function transformResponseData() {
       var ISO_8601 = /(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})Z/;
+
       function formatDate(d) {
         return d.getMonth() + 1 + '/' + d.getDate() + '/' + d.getFullYear();
       }
@@ -143,9 +140,9 @@ axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.adapter = axios_miniprogra
         transformResponse: axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.transformResponse.concat(function (data, headers) {
           Object.keys(data).forEach(function (k) {
             if (ISO_8601.test(data[k])) {
-              console.log(`字段${k}转换前：`, data[k]);
+              console.log("\u5B57\u6BB5".concat(k, "\u8F6C\u6362\u524D\uFF1A"), data[k]);
               data[k] = new Date(Date.parse(data[k]));
-              console.log(`字段${k}转换后：`, data[k]);
+              console.log("\u5B57\u6BB5".concat(k, "\u8F6C\u6362\u540E\uFF1A"), data[k]);
             }
           });
           return data;
@@ -158,11 +155,11 @@ axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.adapter = axios_miniprogra
       });
     },
     // 拦截器测试
-    interceptors() {
-      const instance = axios__WEBPACK_IMPORTED_MODULE_1___default.a.create({
+    interceptors: function interceptors() {
+      var instance = axios__WEBPACK_IMPORTED_MODULE_1___default.a.create({
         baseURL: 'https://easy-mock.com'
-      });
-      // 请求拦截器
+      }); // 请求拦截器
+
       instance.interceptors.request.use(function (config) {
         // 发送请求之前你可以在这里对config做一些羞羞的事情
         console.log('请求被拦截到了，加点料', config);
@@ -171,43 +168,38 @@ axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.adapter = axios_miniprogra
       }, function (error) {
         // Do something with request error
         return Promise.reject(error);
-      });
+      }); // 添加一个响应拦截器
 
-      // 添加一个响应拦截器
       instance.interceptors.response.use(function (response) {
-        console.log('拦截到响应数据了，我过滤下,过滤前的数据：', response);
-        // Do something with response data
+        console.log('拦截到响应数据了，我过滤下,过滤前的数据：', response); // Do something with response data
+
         return response.data;
       }, function (error) {
         // Do something with response error
         return Promise.reject(error);
       });
-
-      instance.get('/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByGet').then(resp => {
+      instance.get('/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByGet').then(function (resp) {
         console.log('经过拦截器后收到的数据:', resp);
       });
     },
     // 请求取消
-    requestCancel() {
+    requestCancel: function requestCancel() {
       var CancelToken = axios__WEBPACK_IMPORTED_MODULE_1___default.a.CancelToken;
       var cancel;
-
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('https://easy-mock.com/mock/5be12b95f7aed41684f2daea/axiosTest/getPersonByGet', {
         cancelToken: new CancelToken(function executor(c) {
           // An executor function receives a cancel function as a parameter
           cancel = c;
         })
-      }).catch(error => {
+      }).catch(function (error) {
         if (axios__WEBPACK_IMPORTED_MODULE_1___default.a.isCancel(error)) {
           console.log('自己取消了请求', error);
         }
-      });
+      }); // cancel the request
 
-      // cancel the request
       cancel('取消请求');
     },
-
-    handleJump() {
+    handleJump: function handleJump() {
       _utils_platform__WEBPACK_IMPORTED_MODULE_0__["default"].navigateTo({
         url: '../search-tip/index'
       });
@@ -243,7 +235,9 @@ var _index = _interopRequireDefault(__webpack_require__(/*! ./index */ "./src/pa
 var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/megalo/dist/megalo.mp.esm.js"));
 
 function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
+  return obj && obj.__esModule ? obj : {
+    default: obj
+  };
 }
 
 _index.default.mpType = "page";
@@ -348,18 +342,24 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function getPlatForm() {
   switch (true) {
-    case typeof wx === 'object':
+    case (typeof wx === "undefined" ? "undefined" : _typeof(wx)) === 'object':
       return wx;
-    case typeof swan === 'object':
+
+    case (typeof swan === "undefined" ? "undefined" : _typeof(swan)) === 'object':
       return swan;
-    case typeof my === 'object':
+
+    case (typeof my === "undefined" ? "undefined" : _typeof(my)) === 'object':
       return my;
+
     default:
       return wx;
   }
 }
+
 /* harmony default export */ __webpack_exports__["default"] = (getPlatForm());
 
 /***/ })
