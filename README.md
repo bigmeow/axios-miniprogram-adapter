@@ -56,13 +56,13 @@ axios的小程序适配器，支持在各个平台小程序中使用axios
 ```
 
 ## :rocket: 使用者指南
+### 1.如果你是webpack等环境
+
 通过npm下载安装代码
 
 ```bash
-$ npm install --save axios-miniprogram-adapter
+$ npm i axios axios-miniprogram-adapter
 ```
-
-如果你是webpack等环境
 
 ```js
 import axios from 'axios'
@@ -70,11 +70,39 @@ import mpAdapter from 'axios-miniprogram-adapter'
 axios.defaults.adapter = mpAdapter
 ```
 
-如果你没有使用任何脚手架工具，直接使用小程序开发工具自带的[```构建npm```](https://developers.weixin.qq.com/miniprogram/dev/devtools/npm.html)，那么很遗憾你暂时不能使用本库，因为小程序自带的npm不支持解析node_modules中的库再有外部依赖：例如本库中依赖了```axios```库的某些工具包，在源码中有下面的代码：
+### 2.如果你没有使用任何脚手架工具
+直接使用小程序开发工具自带的[```构建npm```](https://developers.weixin.qq.com/miniprogram/dev/devtools/npm.html)，请按下面几个步骤引入：
+- 确保项目目录下有package.json文件，已有的跳过这一步
+``` bash
+$ npm init
+```
+- 安装
+``` base
+$ npm i axios axios-miniprogram-adapter
+```
+- 在小程序开发者工具找到并点击`工具` - `构建npm`，构建完成后你的项目目录会多出一个`miniprogram_npm`目录
+
+- 代码引入使用
+```js
+import axios from 'axios'
+import mpAdapter from 'axios-miniprogram-adapter'
+axios.defaults.adapter = mpAdapter
+```
+
+### 3.如果你没有使用任何脚手架工具且npm也不用(不推荐)
+直接拷贝编译后的[axios](https://github.com/axios/axios/tree/master/dist)、[axios-miniprogram-adapter](https://github.com/bigmeow/axios-miniprogram-adapter/tree/master/dist/miniprogram)到项目中:
+```js
+import axios from '你的目录/axios.js'
+import mpAdapter from '你的目录/axios-miniprogram-adapter.js'
+axios.defaults.adapter = mpAdapter
+```
+
+### 三种方式区别
+小程序自带的npm不支持解析node_modules中的库再有外部依赖：例如本库中依赖了```axios```库的某些工具包，在源码中有下面的代码：
 ```js
 import utils from 'axios/lib/utils'
 ```
-在小程序开发工具中会报错，找不到此依赖。当然，我也有解决办法，可以将依赖打包到一起，但是那样会让本库显得臃肿，本来100多行代码的事情，打包后增加到500多行，基于此，强烈推荐你使用类似于webpack的脚手架工具开发
+在小程序开发工具中会报错，找不到此依赖。为此，我将依赖打包到一起，这样带来的问题是库的体积多了2kb，基于此，强烈推荐你使用类似于webpack的脚手架工具开发
 
 ## :bookmark_tabs: 文档
 - 同axios官方仓库一致
