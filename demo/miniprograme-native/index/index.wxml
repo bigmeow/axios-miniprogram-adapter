@@ -1,0 +1,8 @@
+<view class="intro">
+  <button bindtap="handleBase">基本</button>
+  <button bindtap="all">promise All</button>
+  <button bindtap="catchError">捕获异常</button>
+  <button bindtap="transformResponseData">transformResponseData</button>
+  <button bindtap="interceptors">interceptors拦截器</button>
+  <button bindtap="requestCancel">requestCancel</button>
+</view>

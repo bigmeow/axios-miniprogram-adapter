@@ -11,7 +11,7 @@ const isProd = process.env.NODE_ENV === 'production'
 export default {
   input: 'src/index.ts',
   output: {
-    file: isProd ? 'dist/miniprogram/index.aio.all.min.js' : 'dist/index.aio.js',
+    file: isProd ? 'dist/miniprogram/index.js' : 'dist/index.aio.js',
     format: 'umd',
     // 如果不同时使用 export 与 export default 可打开legacy
     // legacy: true,

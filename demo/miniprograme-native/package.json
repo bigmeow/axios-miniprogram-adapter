@@ -1,0 +1,15 @@
+{
+  "name": "miniprograme-native",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "axios-miniprogram-adapter": "https://github.com/bigmeow/axios-miniprogram-adapter.git"
+  }
+}

@@ -1,11 +1,11 @@
 {
   "name": "axios-miniprogram-adapter",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Axios adapter for miniprogram",
   "main": "dist/index.js",
   "jsnext:main": "dist/index.esm.js",
   "module": "dist/index.esm.js",
-  "miniprogram_npm": "dist/miniprogram",
+  "miniprogram": "dist/miniprogram",
   "sideEffects": false,
   "scripts": {
     "rename": "node rename.js",
