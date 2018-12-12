@@ -80,7 +80,7 @@ $ npm init
 ``` base
 $ npm i axios axios-miniprogram-adapter
 ```
-- 在小程序开发者工具找到并点击`工具` - `构建npm`，构建完成后你的项目目录会多出一个`miniprogram_npm`目录
+- 在小程序开发者工具中依次找到并点击`工具`->`构建npm`，构建完成后你的项目目录会多出一个`miniprogram_npm`目录
 
 - 代码引入使用
 ```js
@@ -88,6 +88,8 @@ import axios from 'axios'
 import mpAdapter from 'axios-miniprogram-adapter'
 axios.defaults.adapter = mpAdapter
 ```
+
+这里有一个代码片段demo可直接供你使用:[https://developers.weixin.qq.com/s/oIqQtBml7F4N](https://developers.weixin.qq.com/s/oIqQtBml7F4N),DEMO源码[点这里](https://github.com/bigmeow/axios-miniprogram-adapter/tree/master/demo/miniprograme-native)也可查看
 
 ### 3.如果你没有使用任何脚手架工具且npm也不用(不推荐)
 直接拷贝编译后的[axios](https://github.com/axios/axios/tree/master/dist)、[axios-miniprogram-adapter](https://github.com/bigmeow/axios-miniprogram-adapter/tree/master/dist/miniprogram)到项目中:
