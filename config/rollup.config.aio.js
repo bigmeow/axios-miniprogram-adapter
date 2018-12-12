@@ -11,14 +11,14 @@ const isProd = process.env.NODE_ENV === 'production'
 export default {
   input: 'src/index.ts',
   output: {
-    file: isProd ? 'dist/index.aio.min.js' : 'dist/index.aio.js',
+    file: isProd ? 'dist/miniprogram/index.aio.all.min.js' : 'dist/index.aio.js',
     format: 'umd',
     // 如果不同时使用 export 与 export default 可打开legacy
     // legacy: true,
     name: common.name,
     banner: common.banner
   },
-  external: common.external,
+  external: isProd ? [] : common.external,
   plugins: [
     nodeResolve({
       main: true,
