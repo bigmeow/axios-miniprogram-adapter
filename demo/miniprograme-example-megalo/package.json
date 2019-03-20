@@ -26,7 +26,8 @@
     "@megalo/entry": "^0.1.2",
     "@megalo/eslint-config-standard": "^1.0.0-alpha.1",
     "@megalo/target": "0.5.7",
-    "@megalo/template-compiler": "^0.8.0",
+    "@megalo/template-compiler": "^0.9.0",
+    "eslint": "^5.15.3",
     "less": "^3.8.1",
     "less-loader": "^4.1.0"
   },
