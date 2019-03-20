@@ -1,0 +1,38 @@
+{
+  "name": "axios",
+  "version": "1.0.0",
+  "description": "a megalo project",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "build:wechat": "megalo-cli-service build",
+    "build:alipay": "megalo-cli-service build --platform alipay",
+    "build:swan": "megalo-cli-service build --platform swan",
+    "dev:alipay": "megalo-cli-service serve --platform alipay",
+    "dev:swan": "megalo-cli-service serve --platform swan",
+    "dev:wechat": "megalo-cli-service serve",
+    "lint": "eslint --fix src/**/*.vue"
+  },
+  "author": "bigMeow <running@vip.163.com>",
+  "license": "ISC",
+  "babel": {
+    "presets": [
+      "@megalo/app"
+    ]
+  },
+  "devDependencies": {
+    "@megalo/babel-preset-app": "^1.0.0-alpha.1",
+    "@megalo/cli-service": "^1.0.0-alpha.10",
+    "@megalo/entry": "^0.1.2",
+    "@megalo/eslint-config-standard": "^1.0.0-alpha.1",
+    "@megalo/target": "0.5.7",
+    "@megalo/template-compiler": "^0.8.0",
+    "less": "^3.8.1",
+    "less-loader": "^4.1.0"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "axios-miniprogram-adapter": "^0.2.2",
+    "megalo": "^0.9.0"
+  }
+}
