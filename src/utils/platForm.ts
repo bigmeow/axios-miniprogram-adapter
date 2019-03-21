@@ -16,7 +16,7 @@ export function getRequest (): NetworkAPIs['request'] {
       return swan.request.bind(swan)
     case typeof my === 'object':
       platFormName = 'alipay'
-      return my.httpRequest.bind(my)
+      return (my.request || my.httpRequest).bind(my)
     default:
       return wx.request.bind(wx)
   }

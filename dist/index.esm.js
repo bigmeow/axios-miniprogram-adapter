@@ -1,5 +1,5 @@
 /*!
- * axios-miniprogram-adapter 0.2.3 (https://github.com/bigMeow/axios-miniprogram-adapter)
+ * axios-miniprogram-adapter 0.2.4 (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
  * Copyright 2018-2019 bigMeow. All Rights Reserved
  * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
@@ -50,7 +50,7 @@ function getRequest() {
             return swan.request.bind(swan);
         case typeof my === 'object':
             platFormName = 'alipay';
-            return my.httpRequest.bind(my);
+            return (my.request || my.httpRequest).bind(my);
         default:
             return wx.request.bind(wx);
     }
