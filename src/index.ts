@@ -6,6 +6,13 @@ import encode from './utils/encoder'
 import { getRequest, transformError, transformResponse } from './utils/platForm'
 
 const warn = console.warn
+const isJSONstr = str => {
+  try {
+    return typeof str === 'string' && str.length && (str = JSON.parse(str)) && Object.prototype.toString.call(str) === '[object Object]'
+  } catch (error) {
+    return false
+  }
+}
 export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
   const request = getRequest()
   return new Promise((resolve, reject) => {
@@ -50,13 +57,6 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
         // Remove Content-Type if data is undefined
         // And the miniprogram document said that '设置请求的 header，header 中不能设置 Referer'
         delete requestHeaders[key]
-      } else if (typeof requestData === 'string' && _header === 'content-type' && val === 'application/x-www-form-urlencoded') {
-        // Wechat miniprograme document:对于 POST 方法且 header['content-type'] 为 application/x-www-form-urlencoded 的数据，小程序会将数据转换成 query string （encodeURIComponent(k)=encodeURIComponent(v)&encodeURIComponent(k)=encodeURIComponent(v)...
-        // Specialized processing of wechat,jsut pass the object parameters
-        try {
-          requestData = JSON.parse(requestData)
-        } catch (error) {
-        }
       }
     })
     mpRequestOption.header = requestHeaders
@@ -78,7 +78,10 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
         requestTask = undefined
       })
     }
-
+    // Converting JSON strings to objects is handed over to the MiniPrograme
+    if (isJSONstr(requestData)) {
+      requestData = JSON.parse(requestData)
+    }
     if (requestData !== undefined) {
       mpRequestOption.data = requestData
     }

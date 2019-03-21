@@ -1,7 +1,7 @@
 /*!
- * axios-miniprogram-adapter 0.2.2 (https://github.com/bigMeow/axios-miniprogram-adapter)
+ * axios-miniprogram-adapter 0.2.3 (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
- * Copyright 2018-2018 bigMeow. All Rights Reserved
+ * Copyright 2018-2019 bigMeow. All Rights Reserved
  * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
  */
 
@@ -131,6 +131,14 @@
   }
 
   var warn = console.warn;
+  var isJSONstr = function (str) {
+      try {
+          return typeof str === 'string' && str.length && (str = JSON.parse(str)) && Object.prototype.toString.call(str) === '[object Object]';
+      }
+      catch (error) {
+          return false;
+      }
+  };
   function mpAdapter(config) {
       var request = getRequest();
       return new Promise(function (resolve, reject) {
@@ -173,15 +181,6 @@
                   // And the miniprogram document said that '设置请求的 header，header 中不能设置 Referer'
                   delete requestHeaders[key];
               }
-              else if (typeof requestData === 'string' && _header === 'content-type' && val === 'application/x-www-form-urlencoded') {
-                  // Wechat miniprograme document:对于 POST 方法且 header['content-type'] 为 application/x-www-form-urlencoded 的数据，小程序会将数据转换成 query string （encodeURIComponent(k)=encodeURIComponent(v)&encodeURIComponent(k)=encodeURIComponent(v)...
-                  // Specialized processing of wechat,jsut pass the object parameters
-                  try {
-                      requestData = JSON.parse(requestData);
-                  }
-                  catch (error) {
-                  }
-              }
           });
           mpRequestOption.header = requestHeaders;
           // Add responseType to request if needed
@@ -199,6 +198,10 @@
                   // Clean up request
                   requestTask = undefined;
               });
+          }
+          // Converting JSON strings to objects is handed over to the MiniPrograme
+          if (isJSONstr(requestData)) {
+              requestData = JSON.parse(requestData);
           }
           if (requestData !== undefined) {
               mpRequestOption.data = requestData;
