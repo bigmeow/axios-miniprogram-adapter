@@ -29,11 +29,12 @@
     "@megalo/template-compiler": "^0.9.0",
     "eslint": "^5.15.3",
     "less": "^3.8.1",
-    "less-loader": "^4.1.0"
+    "less-loader": "^4.1.0",
+    "octoparse": "^0.3.2"
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "axios-miniprogram-adapter": "^0.2.2",
+    "axios-miniprogram-adapter": "^0.2.3",
     "megalo": "^0.9.0"
   }
 }
