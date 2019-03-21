@@ -18,7 +18,7 @@
     "build": "npm run clean && npm run build:self && npm run build:esm && npm run build:aio && npm run build:aio.all",
     "test": "npm run lint && npm run build && mocha",
     "mocha": "mocha",
-    "release": "npm test && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags"
+    "release": "git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags"
   },
   "author": "bigMeow(lizong9527@gmail.com)",
   "license": "MIT",
