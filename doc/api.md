@@ -46,3 +46,7 @@ resolve: {
 这样axios被webpack编译时就不会去加载nodejs而是浏览器端的ajax代码，在小程序中用不上这段代码，大概会增加2kb的包体积大小，不过目前没有办法解决，除非axios官方修改打包策略
 
 未修改webpack的target配置 的忽略此项
+
+
+如果您使用1.x版本的megalo cli 创建的项目，请参照这里进行修改:https://github.com/bigmeow/axios-miniprogram-adapter/blob/master/demo/miniprograme-example-megalo/megalo.config.js
+
