@@ -20,6 +20,7 @@ function getCompiler (opt) {
 
 const external = [
   'axios/lib/helpers/buildURL',
+  'axios/lib/core/buildFullPath',
   'axios/lib/utils',
   'axios/lib/core/settle',
   'axios/lib/core/createError'

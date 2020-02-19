@@ -2,6 +2,7 @@ import { AxiosRequestConfig, AxiosPromise } from 'axios'
 import utils from 'axios/lib/utils'
 import settle from 'axios/lib/core/settle'
 import buildURL from 'axios/lib/helpers/buildURL'
+import buildFullPath from 'axios/lib/core/buildFullPath'
 import encode from './utils/encoder'
 import { getRequest, transformError, transformResponse } from './utils/platForm'
 
@@ -24,7 +25,7 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
     // miniprogram network request config
     const mpRequestOption: NetworkRequestOpts = {
       method: requestMethod as NetworkRequestMethod,
-      url: buildURL(config.url, config.params, config.paramsSerializer),
+      url: buildURL(buildFullPath(config.baseURL, config.url), config.params, config.paramsSerializer),
       // Listen for success
       success: (mpResponse: NetworkRequestRes) => {
         const response = transformResponse(mpResponse, config, mpRequestOption)
