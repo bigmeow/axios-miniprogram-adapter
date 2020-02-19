@@ -1,19 +1,20 @@
 /*!
  * axios-miniprogram-adapter 0.2.4 (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
- * Copyright 2018-2019 bigMeow. All Rights Reserved
+ * Copyright 2018-2020 bigMeow. All Rights Reserved
  * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
  */
 
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('axios/lib/utils'), require('axios/lib/core/settle'), require('axios/lib/helpers/buildURL'), require('axios/lib/core/createError')) :
-  typeof define === 'function' && define.amd ? define(['axios/lib/utils', 'axios/lib/core/settle', 'axios/lib/helpers/buildURL', 'axios/lib/core/createError'], factory) :
-  (global['axios-miniprogram-adapter'] = factory(global.utils,global.settle,global.buildURL,global.createError));
-}(this, (function (utils,settle,buildURL,createError) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('axios/lib/utils'), require('axios/lib/core/settle'), require('axios/lib/helpers/buildURL'), require('axios/lib/core/buildFullPath'), require('axios/lib/core/createError')) :
+  typeof define === 'function' && define.amd ? define(['axios/lib/utils', 'axios/lib/core/settle', 'axios/lib/helpers/buildURL', 'axios/lib/core/buildFullPath', 'axios/lib/core/createError'], factory) :
+  (global['axios-miniprogram-adapter'] = factory(global.utils,global.settle,global.buildURL,global.buildFullPath,global.createError));
+}(this, (function (utils,settle,buildURL,buildFullPath,createError) { 'use strict';
 
   utils = utils && utils.hasOwnProperty('default') ? utils['default'] : utils;
   settle = settle && settle.hasOwnProperty('default') ? settle['default'] : settle;
   buildURL = buildURL && buildURL.hasOwnProperty('default') ? buildURL['default'] : buildURL;
+  buildFullPath = buildFullPath && buildFullPath.hasOwnProperty('default') ? buildFullPath['default'] : buildFullPath;
   createError = createError && createError.hasOwnProperty('default') ? createError['default'] : createError;
 
   var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
@@ -150,7 +151,7 @@
           // miniprogram network request config
           var mpRequestOption = {
               method: requestMethod,
-              url: buildURL(config.url, config.params, config.paramsSerializer),
+              url: buildURL(buildFullPath(config.baseURL, config.url), config.params, config.paramsSerializer),
               // Listen for success
               success: function (mpResponse) {
                   var response = transformResponse(mpResponse, config, mpRequestOption);

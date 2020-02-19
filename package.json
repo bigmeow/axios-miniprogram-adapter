@@ -1,6 +1,6 @@
 {
   "name": "axios-miniprogram-adapter",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "Axios adapter for miniprogram",
   "main": "dist/index.js",
   "jsnext:main": "dist/index.esm.js",
@@ -44,17 +44,18 @@
     "eslint": "^5.9.0",
     "eslint-plugin-vue": "^5.0.0-beta.5",
     "expect.js": "^0.3.1",
+    "miniprogram-api-typings": "^2.10.1-1",
     "mocha": "^5.2.0",
     "rimraf": "2.6.2",
     "rollup": "^0.67.0",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^3.0.3",
-    "tslib": "^1.9.3",
-    "typescript": "^3.1.6",
     "rollup-plugin-typescript2": "^0.18.0",
-    "rollup-plugin-uglify": "^6.0.0"
+    "rollup-plugin-uglify": "^6.0.0",
+    "tslib": "^1.9.3",
+    "typescript": "^3.1.6"
   },
   "dependencies": {
-    "axios": "^0.18.0"
+    "axios": "^0.19.2"
   }
 }

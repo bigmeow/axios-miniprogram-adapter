@@ -1,13 +1,14 @@
 /*!
  * axios-miniprogram-adapter 0.2.4 (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
- * Copyright 2018-2019 bigMeow. All Rights Reserved
+ * Copyright 2018-2020 bigMeow. All Rights Reserved
  * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
  */
 
 import utils from 'axios/lib/utils';
 import settle from 'axios/lib/core/settle';
 import buildURL from 'axios/lib/helpers/buildURL';
+import buildFullPath from 'axios/lib/core/buildFullPath';
 import createError from 'axios/lib/core/createError';
 
 var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
@@ -144,7 +145,7 @@ function mpAdapter(config) {
         // miniprogram network request config
         var mpRequestOption = {
             method: requestMethod,
-            url: buildURL(config.url, config.params, config.paramsSerializer),
+            url: buildURL(buildFullPath(config.baseURL, config.url), config.params, config.paramsSerializer),
             // Listen for success
             success: function (mpResponse) {
                 var response = transformResponse(mpResponse, config, mpRequestOption);

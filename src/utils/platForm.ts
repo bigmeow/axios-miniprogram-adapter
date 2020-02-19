@@ -6,7 +6,7 @@ let platFormName: 'wechat' | 'alipay' | 'baidu' = 'wechat'
 /**
  * 获取各个平台的请求函数
  */
-export function getRequest (): NetworkAPIs['request'] {
+export function getRequest (): (option: WechatMiniprogram.RequestOption) => WechatMiniprogram.RequestTask {
   switch (true) {
     case typeof wx === 'object':
       platFormName = 'wechat'
@@ -28,7 +28,7 @@ export function getRequest (): NetworkAPIs['request'] {
  * @param config axios处理过的请求配置对象
  * @param request 小程序的调用发起请求时，传递给小程序api的实际配置
  */
-export function transformResponse (mpResponse: NetworkRequestRes, config: AxiosRequestConfig, mpRequestOption: NetworkRequestOpts): AxiosResponse {
+export function transformResponse (mpResponse: MpResponse, config: AxiosRequestConfig, mpRequestOption: WechatMiniprogram.RequestOption): AxiosResponse {
   const headers = mpResponse.header || mpResponse.headers
   const status = mpResponse.statusCode || mpResponse.status
 

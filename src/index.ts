@@ -17,17 +17,24 @@ const isJSONstr = str => {
 export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
   const request = getRequest()
   return new Promise((resolve, reject) => {
-    let requestTask: void | requestTask
+    let requestTask: void | WechatMiniprogram.RequestTask
     let requestData = config.data
     let requestHeaders = config.headers
     // baidu miniprogram only support upperCase
     let requestMethod = (config.method && config.method.toUpperCase()) || 'GET'
     // miniprogram network request config
-    const mpRequestOption: NetworkRequestOpts = {
-      method: requestMethod as NetworkRequestMethod,
+    const mpRequestOption: WechatMiniprogram.RequestOption = {
+      method: requestMethod as | 'OPTIONS'
+      | 'GET'
+      | 'HEAD'
+      | 'POST'
+      | 'PUT'
+      | 'DELETE'
+      | 'TRACE'
+      | 'CONNECT',
       url: buildURL(buildFullPath(config.baseURL, config.url), config.params, config.paramsSerializer),
       // Listen for success
-      success: (mpResponse: NetworkRequestRes) => {
+      success: (mpResponse: any) => {
         const response = transformResponse(mpResponse, config, mpRequestOption)
         settle(resolve, reject, response)
       },
@@ -64,7 +71,7 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
 
     // Add responseType to request if needed
     if (config.responseType) {
-      mpRequestOption.responseType = config.responseType as responseType
+      mpRequestOption.responseType = config.responseType as 'text' | 'arraybuffer'
     }
 
     if (config.cancelToken) {
