@@ -42,6 +42,10 @@ axios的小程序适配器，支持在各个平台小程序中使用axios
     </tbody>
 </table>
 
+## 催更、钉钉交流群：
+
+<img width="200" alt="钉钉交流群" src="https://image-static.segmentfault.com/428/097/4280971404-5e8c793fa8d8f_articlex" />
+
 ## :open_file_folder: 目录介绍
 
 ```
