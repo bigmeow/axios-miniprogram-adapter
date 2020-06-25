@@ -68,6 +68,8 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
       }
     })
     mpRequestOption.header = requestHeaders
+    // 兼容支付宝小程序：https://opendocs.alipay.com/mini/api/owycmh#%E5%85%A5%E5%8F%82
+    mpRequestOption.headers = requestHeaders
 
     // Add responseType to request if needed
     if (config.responseType) {
