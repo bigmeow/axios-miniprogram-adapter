@@ -1,13 +1,19 @@
 import createError from 'axios/lib/core/createError'
 import { AxiosResponse, AxiosRequestConfig } from 'axios'
 
-let platFormName: 'wechat' | 'alipay' | 'baidu' = 'wechat'
+let platFormName: 'wechat' | 'alipay' | 'baidu' | 'toutiao' = 'wechat'
 
 /**
  * 获取各个平台的请求函数
  */
 export function getRequest (): (option: WechatMiniprogram.RequestOption) => WechatMiniprogram.RequestTask {
   switch (true) {
+    // NOTE: Feishu must come before WeChat as there is also `wx` in some environments in Feishu.
+    case typeof tt === 'object':
+      // Toutiao has 2 kinds of mini-programs: 头条小程序 and 飞书小程序. Thankfully, the interfaces
+      // of the request API are the same, but the condition might not hold true in the future.
+      platFormName = 'toutiao'
+      return tt.request.bind(tt);
     case typeof wx === 'object':
       platFormName = 'wechat'
       return wx.request.bind(wx)
@@ -81,6 +87,10 @@ export function transformError (error:any, reject, config) {
         // NetWordError
         reject(createError('Network Error', config, null, ''))
       }
+      break
+    // Can't find reference to error messages on Feishu, leave it for now.
+    case 'toutiao':
+      reject(createError('Network Error', config, null, ''))
       break
     case 'baidu':
       // TODO error.errCode
