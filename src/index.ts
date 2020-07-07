@@ -4,7 +4,7 @@ import settle from 'axios/lib/core/settle'
 import buildURL from 'axios/lib/helpers/buildURL'
 import buildFullPath from 'axios/lib/core/buildFullPath'
 import encode from './utils/encoder'
-import { getRequest, transformError, transformResponse } from './utils/platForm'
+import { getRequest, transformError, transformResponse, transformConfig } from './utils/platForm'
 
 const warn = console.warn
 const isJSONstr = str => {
@@ -93,6 +93,6 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
     if (requestData !== undefined) {
       mpRequestOption.data = requestData
     }
-    requestTask = request(mpRequestOption)
+    requestTask = request(transformConfig(mpRequestOption))
   })
 }

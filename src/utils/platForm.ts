@@ -15,6 +15,14 @@ export function getRequest (): (option: WechatMiniprogram.RequestOption) => Wech
       platFormName = 'baidu'
       return swan.request.bind(swan)
     case typeof my === 'object':
+      /**
+       * remark:
+       * 支付宝客户端已不再维护 my.httpRequest，建议使用 my.request。另外，钉钉客户端尚不支持 my.request。若在钉钉客户端开发小程序，则需要使用 my.httpRequest。
+       * my.httpRequest的请求头默认值为{'content-type': 'application/x-www-form-urlencoded'}。
+       * my.request的请求头默认值为{'content-type': 'application/json'}。
+       * TODO: 区分支付宝和钉钉环境
+       * 还有个 dd.httpRequest   WFK!!! https://ding-doc.dingtalk.com/doc#/dev/httprequest
+       */
       platFormName = 'alipay'
       return (my.request || my.httpRequest).bind(my)
     default:
@@ -87,4 +95,16 @@ export function transformError (error:any, reject, config) {
       reject(createError('Network Error', config, null, ''))
       break
   }
+}
+
+/**
+ * 将axios的请求配置，转换成各个平台都支持的请求config
+ * @param config
+ */
+export function transformConfig (config: MpRequestConfig): any {
+  if (platFormName === 'alipay') {
+    config.headers = config.header
+    delete config.header
+  }
+  return config
 }
