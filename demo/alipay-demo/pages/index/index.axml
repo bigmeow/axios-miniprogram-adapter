@@ -1,0 +1,31 @@
+
+<view>
+  注意打开调试工具，查看console 和 network来测试
+  <button type="primary" class="btn" onTap="handleRequestByGet">
+    普通get请求
+  </button>
+
+  <button type="primary" class="btn" onTap="handleRequestByPOST">
+    普通POST请求
+  </button>
+
+  <button type="primary" class="btn" onTap="handleRequestByGetParams">
+    get请求带参数
+  </button>
+
+  <button type="primary" class="btn" onTap="handleRequestByPOSTParams">
+    普通POST请求带参数
+  </button>
+
+  <button type="primary" class="btn" onTap="handleRequestByHeaders">
+    自定义请求头参数
+  </button>
+
+  <button type="primary" class="btn" onTap="handleRequestByContentType">
+    content-type 修改
+  </button>
+
+  
+
+  
+</view>

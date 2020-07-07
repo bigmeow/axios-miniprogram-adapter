@@ -1,0 +1,10 @@
+.btn {
+  display: block;
+  width: 80%;
+  margin: 10px auto;
+  border-radius: 8px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
