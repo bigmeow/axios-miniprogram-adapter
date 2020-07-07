@@ -1,1 +1,231 @@
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):e["axios-miniprogram-adapter"]=t()}(this,function(){"use strict";var t=Object.prototype.toString;function i(e){return"[object Array]"===t.call(e)}function r(e){return void 0===e}function n(e){return null!==e&&"object"==typeof e}function o(e){return"[object Function]"===t.call(e)}function a(e,t){if(null!=e)if("object"!=typeof e&&(e=[e]),i(e))for(var r=0,n=e.length;r<n;r++)t.call(null,e[r],r,e);else for(var o in e)Object.prototype.hasOwnProperty.call(e,o)&&t.call(null,e[o],o,e)}var l={isArray:i,isArrayBuffer:function(e){return"[object ArrayBuffer]"===t.call(e)},isBuffer:function(e){return null!==e&&!r(e)&&null!==e.constructor&&!r(e.constructor)&&"function"==typeof e.constructor.isBuffer&&e.constructor.isBuffer(e)},isFormData:function(e){return"undefined"!=typeof FormData&&e instanceof FormData},isArrayBufferView:function(e){return"undefined"!=typeof ArrayBuffer&&ArrayBuffer.isView?ArrayBuffer.isView(e):e&&e.buffer&&e.buffer instanceof ArrayBuffer},isString:function(e){return"string"==typeof e},isNumber:function(e){return"number"==typeof e},isObject:n,isUndefined:r,isDate:function(e){return"[object Date]"===t.call(e)},isFile:function(e){return"[object File]"===t.call(e)},isBlob:function(e){return"[object Blob]"===t.call(e)},isFunction:o,isStream:function(e){return n(e)&&o(e.pipe)},isURLSearchParams:function(e){return"undefined"!=typeof URLSearchParams&&e instanceof URLSearchParams},isStandardBrowserEnv:function(){return("undefined"==typeof navigator||"ReactNative"!==navigator.product&&"NativeScript"!==navigator.product&&"NS"!==navigator.product)&&("undefined"!=typeof window&&"undefined"!=typeof document)},forEach:a,merge:function r(){var n={};function e(e,t){"object"==typeof n[t]&&"object"==typeof e?n[t]=r(n[t],e):n[t]=e}for(var t=0,o=arguments.length;t<o;t++)a(arguments[t],e);return n},deepMerge:function r(){var n={};function e(e,t){"object"==typeof n[t]&&"object"==typeof e?n[t]=r(n[t],e):n[t]="object"==typeof e?r({},e):e}for(var t=0,o=arguments.length;t<o;t++)a(arguments[t],e);return n},extend:function(o,e,i){return a(e,function(e,t){var r,n;o[t]=i&&"function"==typeof e?(r=e,n=i,function(){for(var e=new Array(arguments.length),t=0;t<e.length;t++)e[t]=arguments[t];return r.apply(n,e)}):e}),o},trim:function(e){return e.replace(/^\s*/,"").replace(/\s*$/,"")}},b=function(e,t,r,n,o){var i,a,u,c,s,f=new Error(e);return a=t,u=r,c=n,s=o,(i=f).config=a,u&&(i.code=u),i.request=c,i.response=s,i.isAxiosError=!0,i.toJSON=function(){return{message:this.message,name:this.name,description:this.description,number:this.number,fileName:this.fileName,lineNumber:this.lineNumber,columnNumber:this.columnNumber,stack:this.stack,config:this.config,code:this.code}},i};function y(e){return encodeURIComponent(e).replace(/%40/gi,"@").replace(/%3A/gi,":").replace(/%24/g,"$").replace(/%2C/gi,",").replace(/%20/g,"+").replace(/%5B/gi,"[").replace(/%5D/gi,"]")}var g="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";var v="wechat";var w=console.warn;return function(h){var f=function(){switch(!0){case"object"==typeof wx:return v="wechat",wx.request.bind(wx);case"object"==typeof swan:return v="baidu",swan.request.bind(swan);case"object"==typeof my:return v="alipay",(my.request||my.httpRequest).bind(my);default:return wx.request.bind(wx)}}();return new Promise(function(d,p){var t,e,r,n,o,i=h.data,a=h.headers,m={method:h.method&&h.method.toUpperCase()||"GET",url:function(e,t,r){if(!t)return e;var n;if(r)n=r(t);else if(l.isURLSearchParams(t))n=t.toString();else{var o=[];l.forEach(t,function(e,t){null!=e&&(l.isArray(e)?t+="[]":e=[e],l.forEach(e,function(e){l.isDate(e)?e=e.toISOString():l.isObject(e)&&(e=JSON.stringify(e)),o.push(y(t)+"="+y(e))}))}),n=o.join("&")}if(n){var i=e.indexOf("#");-1!==i&&(e=e.slice(0,i)),e+=(-1===e.indexOf("?")?"?":"&")+n}return e}((e=h.baseURL,r=h.url,e&&!/^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(r)?(n=e,(o=r)?n.replace(/\/+$/,"")+"/"+o.replace(/^\/+/,""):n):r),h.params,h.paramsSerializer),success:function(e){var t,r,n,o,i,a,u,c,s,f,l=(r=h,n=m,o=(t=e).header||t.headers,i=t.statusCode||t.status,a="",200===i?a="OK":400===i&&(a="Bad Request"),{data:t.data,status:i,statusText:a,headers:o,config:r,request:n});u=d,c=p,!(f=(s=l).config.validateStatus)||f(s.status)?u(s):c(b("Request failed with status code "+s.status,s.config,null,s.request,s))},fail:function(e){!function(e,t,r){switch(v){case"wechat":-1!==e.errMsg.indexOf("request:fail abort")?t(b("Request aborted",r,"ECONNABORTED","")):-1!==e.errMsg.indexOf("timeout")?t(b("timeout of "+r.timeout+"ms exceeded",r,"ECONNABORTED","")):t(b("Network Error",r,null,""));break;case"alipay":[14,19].includes(e.error)?t(b("Request aborted",r,"ECONNABORTED","")):[13].includes(e.error)?t(b("timeout of "+r.timeout+"ms exceeded",r,"ECONNABORTED","")):t(b("Network Error",r,null,""));break;case"baidu":t(b("Network Error",r,null,""))}}(e,p,h)},complete:function(){t=void 0}};if(h.auth){var u=[h.auth.username||"",h.auth.password||""],c=u[0],s=u[1];a.Authorization="Basic "+function(e){for(var t,r,n=String(e),o=0,i=g,a="";n.charAt(0|o)||(i="=",o%1);a+=i.charAt(63&t>>8-o%1*8)){if(255<(r=n.charCodeAt(o+=.75)))throw new Error("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");t=t<<8|r}return a}(c+":"+s)}0!==h.timeout&&w('The "timeout" option is not supported by miniprogram. For more information about usage see "https://developers.weixin.qq.com/miniprogram/dev/framework/config.html#全局配置"'),l.forEach(a,function(e,t){var r=t.toLowerCase();(void 0===i&&"content-type"===r||"referer"===r)&&delete a[t]}),m.header=a,h.responseType&&(m.responseType=h.responseType),h.cancelToken&&h.cancelToken.promise.then(function(e){t&&(t.abort(),p(e),t=void 0)}),function(e){try{return"string"==typeof e&&e.length&&(e=JSON.parse(e))&&"[object Object]"===Object.prototype.toString.call(e)}catch(e){return!1}}(i)&&(i=JSON.parse(i)),void 0!==i&&(m.data=i),t=f(m)})}});
+/*!
+ * axios-miniprogram-adapter 0.3.1 (https://github.com/bigMeow/axios-miniprogram-adapter)
+ * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
+ * Copyright 2018-2020 bigMeow. All Rights Reserved
+ * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
+ */
+
+'use strict';
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var utils = _interopDefault(require('axios/lib/utils'));
+var settle = _interopDefault(require('axios/lib/core/settle'));
+var buildURL = _interopDefault(require('axios/lib/helpers/buildURL'));
+var buildFullPath = _interopDefault(require('axios/lib/core/buildFullPath'));
+var createError = _interopDefault(require('axios/lib/core/createError'));
+
+var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+// encoder
+function encoder(input) {
+    var str = String(input);
+    // initialize result and counter
+    var block;
+    var charCode;
+    var idx = 0;
+    var map = chars;
+    var output = '';
+    for (; 
+    // if the next str index does not exist:
+    //   change the mapping table to "="
+    //   check if d has no fractional digits
+    str.charAt(idx | 0) || (map = '=', idx % 1); 
+    // "8 - idx % 1 * 8" generates the sequence 2, 4, 6, 8
+    output += map.charAt(63 & block >> 8 - idx % 1 * 8)) {
+        charCode = str.charCodeAt(idx += 3 / 4);
+        if (charCode > 0xFF) {
+            throw new Error("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");
+        }
+        block = block << 8 | charCode;
+    }
+    return output;
+}
+
+var platFormName = 'wechat';
+/**
+ * 获取各个平台的请求函数
+ */
+function getRequest() {
+    switch (true) {
+        case typeof wx === 'object':
+            platFormName = 'wechat';
+            return wx.request.bind(wx);
+        case typeof swan === 'object':
+            platFormName = 'baidu';
+            return swan.request.bind(swan);
+        case typeof my === 'object':
+            /**
+             * remark:
+             * 支付宝客户端已不再维护 my.httpRequest，建议使用 my.request。另外，钉钉客户端尚不支持 my.request。若在钉钉客户端开发小程序，则需要使用 my.httpRequest。
+             * my.httpRequest的请求头默认值为{'content-type': 'application/x-www-form-urlencoded'}。
+             * my.request的请求头默认值为{'content-type': 'application/json'}。
+             * TODO: 区分支付宝和钉钉环境
+             * 还有个 dd.httpRequest   WFK!!! https://ding-doc.dingtalk.com/doc#/dev/httprequest
+             */
+            platFormName = 'alipay';
+            return (my.request || my.httpRequest).bind(my);
+        default:
+            return wx.request.bind(wx);
+    }
+}
+/**
+ * 处理各平台返回的响应数据，抹平差异
+ * @param mpResponse
+ * @param config axios处理过的请求配置对象
+ * @param request 小程序的调用发起请求时，传递给小程序api的实际配置
+ */
+function transformResponse(mpResponse, config, mpRequestOption) {
+    var headers = mpResponse.header || mpResponse.headers;
+    var status = mpResponse.statusCode || mpResponse.status;
+    var statusText = '';
+    if (status === 200) {
+        statusText = 'OK';
+    }
+    else if (status === 400) {
+        statusText = 'Bad Request';
+    }
+    var response = {
+        data: mpResponse.data,
+        status: status,
+        statusText: statusText,
+        headers: headers,
+        config: config,
+        request: mpRequestOption
+    };
+    return response;
+}
+/**
+ * 处理各平台返回的错误信息，抹平差异
+ * @param error 小程序api返回的错误对象
+ * @param reject 上层的promise reject 函数
+ * @param config
+ */
+function transformError(error, reject, config) {
+    switch (platFormName) {
+        case 'wechat':
+            if (error.errMsg.indexOf('request:fail abort') !== -1) {
+                // Handle request cancellation (as opposed to a manual cancellation)
+                reject(createError('Request aborted', config, 'ECONNABORTED', ''));
+            }
+            else if (error.errMsg.indexOf('timeout') !== -1) {
+                // timeout
+                reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', ''));
+            }
+            else {
+                // NetWordError
+                reject(createError('Network Error', config, null, ''));
+            }
+            break;
+        case 'alipay':
+            // https://docs.alipay.com/mini/api/network
+            if ([14, 19].includes(error.error)) {
+                reject(createError('Request aborted', config, 'ECONNABORTED', ''));
+            }
+            else if ([13].includes(error.error)) {
+                // timeout
+                reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', ''));
+            }
+            else {
+                // NetWordError
+                reject(createError('Network Error', config, null, ''));
+            }
+            break;
+        case 'baidu':
+            // TODO error.errCode
+            reject(createError('Network Error', config, null, ''));
+            break;
+    }
+}
+/**
+ * 将axios的请求配置，转换成各个平台都支持的请求config
+ * @param config
+ */
+function transformConfig(config) {
+    if (platFormName === 'alipay') {
+        config.headers = config.header;
+        delete config.header;
+    }
+    return config;
+}
+
+var warn = console.warn;
+var isJSONstr = function (str) {
+    try {
+        return typeof str === 'string' && str.length && (str = JSON.parse(str)) && Object.prototype.toString.call(str) === '[object Object]';
+    }
+    catch (error) {
+        return false;
+    }
+};
+function mpAdapter(config) {
+    var request = getRequest();
+    return new Promise(function (resolve, reject) {
+        var requestTask;
+        var requestData = config.data;
+        var requestHeaders = config.headers;
+        // baidu miniprogram only support upperCase
+        var requestMethod = (config.method && config.method.toUpperCase()) || 'GET';
+        // miniprogram network request config
+        var mpRequestOption = {
+            method: requestMethod,
+            url: buildURL(buildFullPath(config.baseURL, config.url), config.params, config.paramsSerializer),
+            // Listen for success
+            success: function (mpResponse) {
+                var response = transformResponse(mpResponse, config, mpRequestOption);
+                settle(resolve, reject, response);
+            },
+            // Handle request Exception
+            fail: function (error) {
+                transformError(error, reject, config);
+            },
+            complete: function () {
+                requestTask = undefined;
+            }
+        };
+        // HTTP basic authentication
+        if (config.auth) {
+            var _a = [config.auth.username || '', config.auth.password || ''], username = _a[0], password = _a[1];
+            requestHeaders.Authorization = 'Basic ' + encoder(username + ':' + password);
+        }
+        // Set the request timeout
+        if (config.timeout !== 0) {
+            warn('The "timeout" option is not supported by miniprogram. For more information about usage see "https://developers.weixin.qq.com/miniprogram/dev/framework/config.html#全局配置"');
+        }
+        // Add headers to the request
+        utils.forEach(requestHeaders, function setRequestHeader(val, key) {
+            var _header = key.toLowerCase();
+            if ((typeof requestData === 'undefined' && _header === 'content-type') || _header === 'referer') {
+                // Remove Content-Type if data is undefined
+                // And the miniprogram document said that '设置请求的 header，header 中不能设置 Referer'
+                delete requestHeaders[key];
+            }
+        });
+        mpRequestOption.header = requestHeaders;
+        // Add responseType to request if needed
+        if (config.responseType) {
+            mpRequestOption.responseType = config.responseType;
+        }
+        if (config.cancelToken) {
+            // Handle cancellation
+            config.cancelToken.promise.then(function onCanceled(cancel) {
+                if (!requestTask) {
+                    return;
+                }
+                requestTask.abort();
+                reject(cancel);
+                // Clean up request
+                requestTask = undefined;
+            });
+        }
+        // Converting JSON strings to objects is handed over to the MiniPrograme
+        if (isJSONstr(requestData)) {
+            requestData = JSON.parse(requestData);
+        }
+        if (requestData !== undefined) {
+            mpRequestOption.data = requestData;
+        }
+        requestTask = request(transformConfig(mpRequestOption));
+    });
+}
+
+module.exports = mpAdapter;

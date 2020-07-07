@@ -1,5 +1,5 @@
 /*!
- * axios-miniprogram-adapter 0.2.4 (https://github.com/bigMeow/axios-miniprogram-adapter)
+ * axios-miniprogram-adapter 0.3.1 (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
  * Copyright 2018-2020 bigMeow. All Rights Reserved
  * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
@@ -8,14 +8,14 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('axios/lib/utils'), require('axios/lib/core/settle'), require('axios/lib/helpers/buildURL'), require('axios/lib/core/buildFullPath'), require('axios/lib/core/createError')) :
   typeof define === 'function' && define.amd ? define(['axios/lib/utils', 'axios/lib/core/settle', 'axios/lib/helpers/buildURL', 'axios/lib/core/buildFullPath', 'axios/lib/core/createError'], factory) :
-  (global['axios-miniprogram-adapter'] = factory(global.utils,global.settle,global.buildURL,global.buildFullPath,global.createError));
-}(this, (function (utils,settle,buildURL,buildFullPath,createError) { 'use strict';
+  (global = global || self, global['axios-miniprogram-adapter'] = factory(global.utils, global.settle, global.buildURL, global.buildFullPath, global.createError));
+}(this, (function (utils, settle, buildURL, buildFullPath, createError) { 'use strict';
 
-  utils = utils && utils.hasOwnProperty('default') ? utils['default'] : utils;
-  settle = settle && settle.hasOwnProperty('default') ? settle['default'] : settle;
-  buildURL = buildURL && buildURL.hasOwnProperty('default') ? buildURL['default'] : buildURL;
-  buildFullPath = buildFullPath && buildFullPath.hasOwnProperty('default') ? buildFullPath['default'] : buildFullPath;
-  createError = createError && createError.hasOwnProperty('default') ? createError['default'] : createError;
+  utils = utils && Object.prototype.hasOwnProperty.call(utils, 'default') ? utils['default'] : utils;
+  settle = settle && Object.prototype.hasOwnProperty.call(settle, 'default') ? settle['default'] : settle;
+  buildURL = buildURL && Object.prototype.hasOwnProperty.call(buildURL, 'default') ? buildURL['default'] : buildURL;
+  buildFullPath = buildFullPath && Object.prototype.hasOwnProperty.call(buildFullPath, 'default') ? buildFullPath['default'] : buildFullPath;
+  createError = createError && Object.prototype.hasOwnProperty.call(createError, 'default') ? createError['default'] : createError;
 
   var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
   // encoder
@@ -56,6 +56,14 @@
               platFormName = 'baidu';
               return swan.request.bind(swan);
           case typeof my === 'object':
+              /**
+               * remark:
+               * 支付宝客户端已不再维护 my.httpRequest，建议使用 my.request。另外，钉钉客户端尚不支持 my.request。若在钉钉客户端开发小程序，则需要使用 my.httpRequest。
+               * my.httpRequest的请求头默认值为{'content-type': 'application/x-www-form-urlencoded'}。
+               * my.request的请求头默认值为{'content-type': 'application/json'}。
+               * TODO: 区分支付宝和钉钉环境
+               * 还有个 dd.httpRequest   WFK!!! https://ding-doc.dingtalk.com/doc#/dev/httprequest
+               */
               platFormName = 'alipay';
               return (my.request || my.httpRequest).bind(my);
           default:
@@ -129,6 +137,17 @@
               reject(createError('Network Error', config, null, ''));
               break;
       }
+  }
+  /**
+   * 将axios的请求配置，转换成各个平台都支持的请求config
+   * @param config
+   */
+  function transformConfig(config) {
+      if (platFormName === 'alipay') {
+          config.headers = config.header;
+          delete config.header;
+      }
+      return config;
   }
 
   var warn = console.warn;
@@ -207,7 +226,7 @@
           if (requestData !== undefined) {
               mpRequestOption.data = requestData;
           }
-          requestTask = request(mpRequestOption);
+          requestTask = request(transformConfig(mpRequestOption));
       });
   }
 

@@ -1,5 +1,5 @@
 /*!
- * axios-miniprogram-adapter 0.2.4 (https://github.com/bigMeow/axios-miniprogram-adapter)
+ * axios-miniprogram-adapter 0.3.1 (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
  * Copyright 2018-2020 bigMeow. All Rights Reserved
  * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
@@ -54,6 +54,14 @@ function getRequest() {
             platFormName = 'baidu';
             return swan.request.bind(swan);
         case typeof my === 'object':
+            /**
+             * remark:
+             * 支付宝客户端已不再维护 my.httpRequest，建议使用 my.request。另外，钉钉客户端尚不支持 my.request。若在钉钉客户端开发小程序，则需要使用 my.httpRequest。
+             * my.httpRequest的请求头默认值为{'content-type': 'application/x-www-form-urlencoded'}。
+             * my.request的请求头默认值为{'content-type': 'application/json'}。
+             * TODO: 区分支付宝和钉钉环境
+             * 还有个 dd.httpRequest   WFK!!! https://ding-doc.dingtalk.com/doc#/dev/httprequest
+             */
             platFormName = 'alipay';
             return (my.request || my.httpRequest).bind(my);
         default:
@@ -127,6 +135,17 @@ function transformError(error, reject, config) {
             reject(createError('Network Error', config, null, ''));
             break;
     }
+}
+/**
+ * 将axios的请求配置，转换成各个平台都支持的请求config
+ * @param config
+ */
+function transformConfig(config) {
+    if (platFormName === 'alipay') {
+        config.headers = config.header;
+        delete config.header;
+    }
+    return config;
 }
 
 var warn = console.warn;
@@ -205,7 +224,7 @@ function mpAdapter(config) {
         if (requestData !== undefined) {
             mpRequestOption.data = requestData;
         }
-        requestTask = request(mpRequestOption);
+        requestTask = request(transformConfig(mpRequestOption));
     });
 }
 
