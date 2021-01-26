@@ -53,7 +53,8 @@ export function transformResponse (mpResponse: MpResponse, config: AxiosRequestC
     statusText,
     headers,
     config,
-    request: mpRequestOption
+    request: mpRequestOption,
+    originResponse: mpResponse
   }
   return response
 }
