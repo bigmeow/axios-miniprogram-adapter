@@ -7,7 +7,6 @@
         "es2015",
         "es2015.promise"
       ],
-      "declarationDir": ".",
       "strict": true,
       "noImplicitAny": false,
       "noUnusedLocals": true,
@@ -17,7 +16,8 @@
       "strictPropertyInitialization": false,
       "baseUrl": ".",
       "types": [
-        "node"
+        "node",
+        "miniprogram-api-typings"
       ],
       "allowSyntheticDefaultImports": true,
       "experimentalDecorators": true,

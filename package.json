@@ -1,6 +1,6 @@
 {
   "name": "axios-miniprogram-adapter",
-  "version": "0.2.4",
+  "version": "0.3.2",
   "description": "Axios adapter for miniprogram",
   "main": "dist/index.js",
   "jsnext:main": "dist/index.esm.js",
@@ -14,8 +14,8 @@
     "build:self": "rollup -c config/rollup.config.js",
     "build:esm": "rollup -c config/rollup.config.esm.js",
     "build:aio": "rollup -c config/rollup.config.aio.js",
-    "build:aio.all": "cross-env NODE_ENV=production npm run build:aio",
-    "build": "npm run clean && npm run build:self && npm run build:esm && npm run build:aio && npm run build:aio.all",
+    "build:self.all": "cross-env NODE_ENV=production npm run build:self",
+    "build": "npm run clean && npm run build:self && npm run build:esm && npm run build:aio && npm run build:self.all",
     "test": "npm run lint && npm run build && mocha",
     "mocha": "mocha",
     "release": "git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags"
@@ -37,6 +37,8 @@
     "微信小程序"
   ],
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^13.0.0",
+    "@rollup/plugin-node-resolve": "^8.1.0",
     "@vue/eslint-config-standard": "^4.0.0",
     "@vue/eslint-config-typescript": "^3.1.1",
     "cdkit": "^1.1.0",
@@ -44,17 +46,16 @@
     "eslint": "^5.9.0",
     "eslint-plugin-vue": "^5.0.0-beta.5",
     "expect.js": "^0.3.1",
+    "miniprogram-api-typings": "^2.10.1-1",
     "mocha": "^5.2.0",
     "rimraf": "2.6.2",
-    "rollup": "^0.67.0",
-    "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-node-resolve": "^3.0.3",
+    "rollup": "^2.20.0",
+    "rollup-plugin-sourcemaps": "^0.6.2",
+    "rollup-plugin-typescript2": "^0.27.1",
     "tslib": "^1.9.3",
-    "typescript": "^3.1.6",
-    "rollup-plugin-typescript2": "^0.18.0",
-    "rollup-plugin-uglify": "^6.0.0"
+    "typescript": "^3.1.6"
   },
   "dependencies": {
-    "axios": "^0.18.0"
+    "axios": "^0.19.2"
   }
 }

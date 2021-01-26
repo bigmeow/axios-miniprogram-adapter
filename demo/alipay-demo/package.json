@@ -1,5 +1,5 @@
 {
-  "name": "miniprograme-native",
+  "name": "alipay-axios-demo",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.1",
-    "axios-miniprogram-adapter": "https://github.com/bigmeow/axios-miniprogram-adapter.git"
+    "axios": "^0.19.2",
+    "axios-miniprogram-adapter": "^0.3.0"
   }
 }

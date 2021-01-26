@@ -2,8 +2,9 @@ import { AxiosRequestConfig, AxiosPromise } from 'axios'
 import utils from 'axios/lib/utils'
 import settle from 'axios/lib/core/settle'
 import buildURL from 'axios/lib/helpers/buildURL'
+import buildFullPath from 'axios/lib/core/buildFullPath'
 import encode from './utils/encoder'
-import { getRequest, transformError, transformResponse } from './utils/platForm'
+import { getRequest, transformError, transformResponse, transformConfig } from './utils/platForm'
 
 const warn = console.warn
 const isJSONstr = str => {
@@ -16,17 +17,24 @@ const isJSONstr = str => {
 export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
   const request = getRequest()
   return new Promise((resolve, reject) => {
-    let requestTask: void | requestTask
+    let requestTask: void | WechatMiniprogram.RequestTask
     let requestData = config.data
     let requestHeaders = config.headers
     // baidu miniprogram only support upperCase
     let requestMethod = (config.method && config.method.toUpperCase()) || 'GET'
     // miniprogram network request config
-    const mpRequestOption: NetworkRequestOpts = {
-      method: requestMethod as NetworkRequestMethod,
-      url: buildURL(config.url, config.params, config.paramsSerializer),
+    const mpRequestOption: WechatMiniprogram.RequestOption = {
+      method: requestMethod as | 'OPTIONS'
+      | 'GET'
+      | 'HEAD'
+      | 'POST'
+      | 'PUT'
+      | 'DELETE'
+      | 'TRACE'
+      | 'CONNECT',
+      url: buildURL(buildFullPath(config.baseURL, config.url), config.params, config.paramsSerializer),
       // Listen for success
-      success: (mpResponse: NetworkRequestRes) => {
+      success: (mpResponse: any) => {
         const response = transformResponse(mpResponse, config, mpRequestOption)
         settle(resolve, reject, response)
       },
@@ -63,7 +71,7 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
 
     // Add responseType to request if needed
     if (config.responseType) {
-      mpRequestOption.responseType = config.responseType as responseType
+      mpRequestOption.responseType = config.responseType as 'text' | 'arraybuffer'
     }
 
     if (config.cancelToken) {
@@ -85,6 +93,6 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
     if (requestData !== undefined) {
       mpRequestOption.data = requestData
     }
-    requestTask = request(mpRequestOption)
+    requestTask = request(transformConfig(mpRequestOption))
   })
 }
