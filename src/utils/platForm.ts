@@ -81,13 +81,13 @@ export function transformError (error:any, reject, config) {
     case 'alipay':
       // https://docs.alipay.com/mini/api/network
       if ([14, 19].includes(error.error)) {
-        reject(createError('Request aborted', config, 'ECONNABORTED', ''))
+        reject(createError('Request aborted', config, 'ECONNABORTED', '', error))
       } else if ([13].includes(error.error)) {
         // timeout
-        reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', ''))
+        reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', '', error))
       } else {
         // NetWordError
-        reject(createError('Network Error', config, null, ''))
+        reject(createError('Network Error', config, null, '', error))
       }
       break
     case 'baidu':
