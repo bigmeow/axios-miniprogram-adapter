@@ -55,7 +55,7 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
 
     // Set the request timeout
     if (config.timeout !== 0) {
-      warn('The "timeout" option is not supported by miniprogram. For more information about usage see "https://developers.weixin.qq.com/miniprogram/dev/framework/config.html#全局配置"')
+      mpRequestOption.timeout = config.timeout
     }
 
     // Add headers to the request
