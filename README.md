@@ -38,6 +38,12 @@ axios的小程序适配器，支持在各个平台小程序中使用axios
                 <div>百度小程序</div>
             </a>
         </td>
+ <td align="center" valign="middle">
+            <a href="https://smartprogram.baidu.com/docs/develop/api/net_request/#request/" target="_blank">
+                <img src="./doc/totiao.png.png" alt="百度小程序" width="60">
+                <div>百度小程序</div>
+            </a>
+        </td>
     </tr>
     </tbody>
 </table>
