@@ -1,4 +1,5 @@
 require('./specs/wxAdapter.spec')
+require('./specs/ttAdapter.spec')
 // var expect = require('expect.js');
 // var axios = require('axios');
 // var wxEnv = require('./wx-env-fake')
