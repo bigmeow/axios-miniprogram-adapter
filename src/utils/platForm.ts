@@ -1,7 +1,7 @@
 import createError from 'axios/lib/core/createError'
 import { AxiosResponse, AxiosRequestConfig } from 'axios'
 
-let platFormName: 'wechat' | 'alipay' | 'baidu' = 'wechat'
+let platFormName: 'wechat' | 'alipay' | 'baidu' | 'toutiao' = 'wechat'
 
 /**
  * 获取各个平台的请求函数
@@ -14,6 +14,9 @@ export function getRequest (): (option: WechatMiniprogram.RequestOption) => Wech
     case typeof swan === 'object':
       platFormName = 'baidu'
       return swan.request.bind(swan)
+    case typeof tt === 'object':
+      platFormName = 'toutiao'
+      return tt.request.bind(tt)
     case typeof my === 'object':
       /**
        * remark:
@@ -64,9 +67,10 @@ export function transformResponse (mpResponse: MpResponse, config: AxiosRequestC
  * @param reject 上层的promise reject 函数
  * @param config
  */
-export function transformError (error:any, reject, config) {
+export function transformError (error: any, reject, config) {
   switch (platFormName) {
     case 'wechat':
+    case 'toutiao':
       if (error.errMsg.indexOf('request:fail abort') !== -1) {
         // Handle request cancellation (as opposed to a manual cancellation)
         reject(createError('Request aborted', config, 'ECONNABORTED', ''))

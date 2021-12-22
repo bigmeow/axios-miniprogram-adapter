@@ -1,7 +1,7 @@
 /*!
- * axios-miniprogram-adapter 0.3.1 (https://github.com/bigMeow/axios-miniprogram-adapter)
+ * axios-miniprogram-adapter 0.3.2 (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
- * Copyright 2018-2020 bigMeow. All Rights Reserved
+ * Copyright 2018-2021 bigMeow. All Rights Reserved
  * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
  */
 
@@ -49,6 +49,9 @@ function getRequest() {
         case typeof swan === 'object':
             platFormName = 'baidu';
             return swan.request.bind(swan);
+        case typeof tt === 'object':
+            platFormName = 'toutiao';
+            return tt.request.bind(tt);
         case typeof my === 'object':
             /**
              * remark:
@@ -99,6 +102,7 @@ function transformResponse(mpResponse, config, mpRequestOption) {
 function transformError(error, reject, config) {
     switch (platFormName) {
         case 'wechat':
+        case 'toutiao':
             if (error.errMsg.indexOf('request:fail abort') !== -1) {
                 // Handle request cancellation (as opposed to a manual cancellation)
                 reject(createError('Request aborted', config, 'ECONNABORTED', ''));
@@ -115,15 +119,15 @@ function transformError(error, reject, config) {
         case 'alipay':
             // https://docs.alipay.com/mini/api/network
             if ([14, 19].includes(error.error)) {
-                reject(createError('Request aborted', config, 'ECONNABORTED', ''));
+                reject(createError('Request aborted', config, 'ECONNABORTED', '', error));
             }
             else if ([13].includes(error.error)) {
                 // timeout
-                reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', ''));
+                reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', '', error));
             }
             else {
                 // NetWordError
-                reject(createError('Network Error', config, null, ''));
+                reject(createError('Network Error', config, null, '', error));
             }
             break;
         case 'baidu':
