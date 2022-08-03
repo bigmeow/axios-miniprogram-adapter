@@ -1,7 +1,7 @@
 /*!
- * axios-miniprogram-adapter 0.3.1 (https://github.com/bigMeow/axios-miniprogram-adapter)
+ * axios-miniprogram-adapter 1.0.0 (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
- * Copyright 2018-2020 bigMeow. All Rights Reserved
+ * Copyright 2018-2022 bigMeow. All Rights Reserved
  * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
  */
 
@@ -572,28 +572,31 @@ function encoder(input) {
     return output;
 }
 
-var platFormName = 'wechat';
+var platFormName = "wechat" /* 微信 */;
 /**
  * 获取各个平台的请求函数
  */
 function getRequest() {
     switch (true) {
         case typeof wx === 'object':
-            platFormName = 'wechat';
+            platFormName = "wechat" /* 微信 */;
             return wx.request.bind(wx);
         case typeof swan === 'object':
-            platFormName = 'baidu';
+            platFormName = "baidu" /* 百度 */;
             return swan.request.bind(swan);
+        case typeof dd === 'object':
+            platFormName = "dd" /* 钉钉 */;
+            // https://open.dingtalk.com/document/orgapp-client/send-network-requests
+            return dd.httpRequest.bind(dd);
         case typeof my === 'object':
             /**
              * remark:
              * 支付宝客户端已不再维护 my.httpRequest，建议使用 my.request。另外，钉钉客户端尚不支持 my.request。若在钉钉客户端开发小程序，则需要使用 my.httpRequest。
              * my.httpRequest的请求头默认值为{'content-type': 'application/x-www-form-urlencoded'}。
              * my.request的请求头默认值为{'content-type': 'application/json'}。
-             * TODO: 区分支付宝和钉钉环境
-             * 还有个 dd.httpRequest   WFK!!! https://ding-doc.dingtalk.com/doc#/dev/httprequest
+             * 还有个 dd.httpRequest
              */
-            platFormName = 'alipay';
+            platFormName = "alipay" /* 支付宝 */;
             return (my.request || my.httpRequest).bind(my);
         default:
             return wx.request.bind(wx);
@@ -633,7 +636,7 @@ function transformResponse(mpResponse, config, mpRequestOption) {
  */
 function transformError(error, reject, config) {
     switch (platFormName) {
-        case 'wechat':
+        case "wechat" /* 微信 */:
             if (error.errMsg.indexOf('request:fail abort') !== -1) {
                 // Handle request cancellation (as opposed to a manual cancellation)
                 reject(createError('Request aborted', config, 'ECONNABORTED', ''));
@@ -647,21 +650,22 @@ function transformError(error, reject, config) {
                 reject(createError('Network Error', config, null, ''));
             }
             break;
-        case 'alipay':
+        case "dd" /* 钉钉 */:
+        case "alipay" /* 支付宝 */:
             // https://docs.alipay.com/mini/api/network
             if ([14, 19].includes(error.error)) {
-                reject(createError('Request aborted', config, 'ECONNABORTED', ''));
+                reject(createError('Request aborted', config, 'ECONNABORTED', '', error));
             }
             else if ([13].includes(error.error)) {
                 // timeout
-                reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', ''));
+                reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', '', error));
             }
             else {
                 // NetWordError
-                reject(createError('Network Error', config, null, ''));
+                reject(createError('Network Error', config, null, '', error));
             }
             break;
-        case 'baidu':
+        case "baidu" /* 百度 */:
             // TODO error.errCode
             reject(createError('Network Error', config, null, ''));
             break;
@@ -672,14 +676,18 @@ function transformError(error, reject, config) {
  * @param config
  */
 function transformConfig(config) {
-    if (platFormName === 'alipay') {
+    var _a;
+    if (["alipay" /* 支付宝 */, "dd" /* 钉钉 */].includes(platFormName)) {
         config.headers = config.header;
         delete config.header;
+        if ("dd" /* 钉钉 */ === platFormName && ((_a = config.headers) === null || _a === void 0 ? void 0 : _a["Content-Type"]) === "application/json" && Object.prototype.toString.call(config.data) === '[object Object]') {
+            // Content-Type为application/json时，data参数只支持json字符串，需要手动调用JSON.stringify进行序列化
+            config.data = JSON.stringify(config.data);
+        }
     }
     return config;
 }
 
-var warn = console.warn;
 var isJSONstr = function (str) {
     try {
         return typeof str === 'string' && str.length && (str = JSON.parse(str)) && Object.prototype.toString.call(str) === '[object Object]';
@@ -700,6 +708,7 @@ function mpAdapter(config) {
         var mpRequestOption = {
             method: requestMethod,
             url: buildURL(buildFullPath(config.baseURL, config.url), config.params, config.paramsSerializer),
+            timeout: config.timeout,
             // Listen for success
             success: function (mpResponse) {
                 var response = transformResponse(mpResponse, config, mpRequestOption);
@@ -717,10 +726,6 @@ function mpAdapter(config) {
         if (config.auth) {
             var _a = [config.auth.username || '', config.auth.password || ''], username = _a[0], password = _a[1];
             requestHeaders.Authorization = 'Basic ' + encoder(username + ':' + password);
-        }
-        // Set the request timeout
-        if (config.timeout !== 0) {
-            warn('The "timeout" option is not supported by miniprogram. For more information about usage see "https://developers.weixin.qq.com/miniprogram/dev/framework/config.html#全局配置"');
         }
         // Add headers to the request
         utils.forEach(requestHeaders, function setRequestHeader(val, key) {
@@ -761,4 +766,3 @@ function mpAdapter(config) {
 
 module.exports = mpAdapter;
 module.exports.default = mpAdapter;
-//# sourceMappingURL=index.js.map

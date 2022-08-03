@@ -12,3 +12,5 @@
   declare let swan:  any
   
   declare let my:  any
+
+  declare let dd: any

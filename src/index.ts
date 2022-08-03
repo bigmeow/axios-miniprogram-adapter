@@ -6,7 +6,6 @@ import buildFullPath from 'axios/lib/core/buildFullPath'
 import encode from './utils/encoder'
 import { getRequest, transformError, transformResponse, transformConfig } from './utils/platForm'
 
-const warn = console.warn
 const isJSONstr = str => {
   try {
     return typeof str === 'string' && str.length && (str = JSON.parse(str)) && Object.prototype.toString.call(str) === '[object Object]'
@@ -33,6 +32,7 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
       | 'TRACE'
       | 'CONNECT',
       url: buildURL(buildFullPath(config.baseURL, config.url), config.params, config.paramsSerializer),
+      timeout: config.timeout,
       // Listen for success
       success: (mpResponse: any) => {
         const response = transformResponse(mpResponse, config, mpRequestOption)
@@ -51,11 +51,6 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
     if (config.auth) {
       const [username, password] = [config.auth.username || '', config.auth.password || '']
       requestHeaders.Authorization = 'Basic ' + encode(username + ':' + password)
-    }
-
-    // Set the request timeout
-    if (config.timeout !== 0) {
-      warn('The "timeout" option is not supported by miniprogram. For more information about usage see "https://developers.weixin.qq.com/miniprogram/dev/framework/config.html#全局配置"')
     }
 
     // Add headers to the request
