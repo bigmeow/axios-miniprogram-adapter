@@ -31,9 +31,9 @@ export function getRequest (): (option: WechatMiniprogram.RequestOption) => Wech
        * 支付宝客户端已不再维护 my.httpRequest，建议使用 my.request。另外，钉钉客户端尚不支持 my.request。若在钉钉客户端开发小程序，则需要使用 my.httpRequest。
        * my.httpRequest的请求头默认值为{'content-type': 'application/x-www-form-urlencoded'}。
        * my.request的请求头默认值为{'content-type': 'application/json'}。
-       * 还有个 dd.httpRequest  
+       * 还有个 dd.httpRequest
        */
-      platFormName  = EnumPlatForm.支付宝
+      platFormName = EnumPlatForm.支付宝
       return (my.request || my.httpRequest).bind(my)
     default:
       return wx.request.bind(wx)
@@ -101,7 +101,7 @@ export function transformError (error:any, reject, config) {
         reject(createError('Network Error', config, null, '', error))
       }
       break
-     case EnumPlatForm.百度:
+    case EnumPlatForm.百度:
       // TODO error.errCode
       reject(createError('Network Error', config, null, ''))
       break
@@ -116,7 +116,7 @@ export function transformConfig (config: MpRequestConfig): any {
   if ([EnumPlatForm.支付宝, EnumPlatForm.钉钉].includes(platFormName)) {
     config.headers = config.header
     delete config.header
-    if (EnumPlatForm.钉钉 === platFormName && config.headers?.["Content-Type"] === "application/json" && Object.prototype.toString.call(config.data) === '[object Object]' ) {
+    if (EnumPlatForm.钉钉 === platFormName && config.method !== "GET" && config.headers?.['Content-Type'] === 'application/json' && Object.prototype.toString.call(config.data) === '[object Object]') {
       // Content-Type为application/json时，data参数只支持json字符串，需要手动调用JSON.stringify进行序列化
       config.data = JSON.stringify(config.data)
     }

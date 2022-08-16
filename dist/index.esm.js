@@ -1,5 +1,5 @@
 /*!
- * axios-miniprogram-adapter 1.0.0 (https://github.com/bigMeow/axios-miniprogram-adapter)
+ * axios-miniprogram-adapter 0.3.4 (https://github.com/bigMeow/axios-miniprogram-adapter)
  * API https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/doc/api.md
  * Copyright 2018-2022 bigMeow. All Rights Reserved
  * Licensed under MIT (https://github.com/bigMeow/axios-miniprogram-adapter/blob/master/LICENSE)
@@ -145,7 +145,7 @@ function transformConfig(config) {
     if (["alipay" /* 支付宝 */, "dd" /* 钉钉 */].includes(platFormName)) {
         config.headers = config.header;
         delete config.header;
-        if ("dd" /* 钉钉 */ === platFormName && ((_a = config.headers) === null || _a === void 0 ? void 0 : _a["Content-Type"]) === "application/json" && Object.prototype.toString.call(config.data) === '[object Object]') {
+        if ("dd" /* 钉钉 */ === platFormName && config.method !== "GET" && ((_a = config.headers) === null || _a === void 0 ? void 0 : _a['Content-Type']) === 'application/json' && Object.prototype.toString.call(config.data) === '[object Object]') {
             // Content-Type为application/json时，data参数只支持json字符串，需要手动调用JSON.stringify进行序列化
             config.data = JSON.stringify(config.data);
         }
