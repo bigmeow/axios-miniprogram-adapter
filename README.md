@@ -72,6 +72,8 @@ $ npm i axios axios-miniprogram-adapter
 import axios from 'axios'
 import mpAdapter from 'axios-miniprogram-adapter'
 axios.defaults.adapter = mpAdapter
+// or with extra config transformer
+axios.defaults.adapter = config => mpAdapter(config, { transformRequestOption: requestOption => { /* modify requestOption here */ return requestOption } })
 ```
 
 ### 2.如果你没有使用任何脚手架工具

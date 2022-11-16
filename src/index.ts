@@ -13,7 +13,11 @@ const isJSONstr = str => {
     return false
   }
 }
-export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
+export default function mpAdapter(config: AxiosRequestConfig, {
+  transformRequestOption = requestOption => requestOption
+}: {
+  transformRequestOption?: (requestOption: any) => any
+} = {}): AxiosPromise {
   const request = getRequest()
   return new Promise((resolve, reject) => {
     let requestTask: void | WechatMiniprogram.RequestTask
@@ -88,6 +92,6 @@ export default function mpAdapter (config: AxiosRequestConfig) :AxiosPromise {
     if (requestData !== undefined) {
       mpRequestOption.data = requestData
     }
-    requestTask = request(transformConfig(mpRequestOption))
+    requestTask = request(transformRequestOption(transformConfig(mpRequestOption)))
   })
 }
