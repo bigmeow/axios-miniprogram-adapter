@@ -4,7 +4,9 @@
 [![NPM downloads](http://img.shields.io/npm/dm/axios-miniprogram-adapter.svg?style=flat-square)](http://www.npmtrends.com/axios-miniprogram-adapter)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/bigMeow/axios-miniprogram-adapter.svg)](http://isitmaintained.com/project/bigMeow/axios-miniprogram-adapter "Percentage of issues still open")
 
-axios的小程序适配器，支持在各个平台小程序中使用axios
+axios的小程序适配器，支持在各个平台小程序中使用axios.
+
+Taro 适配器请点击[这里](https://github.com/bigmeow/taro-platform/tree/master/packages/axios-taro-adapter)
 
 ## :star: 特性
 
@@ -44,7 +46,7 @@ axios的小程序适配器，支持在各个平台小程序中使用axios
 
 ## 催更、钉钉交流群：
 
-<img width="200" alt="钉钉交流群" src="https://image-static.segmentfault.com/428/097/4280971404-5e8c793fa8d8f_articlex" />
+
 
 ## :open_file_folder: 目录介绍
 
