@@ -13,7 +13,7 @@ const isJSONstr = str => {
     return false
   }
 }
-export default function mpAdapter(config: AxiosRequestConfig, {
+export default function mpAdapter (config: AxiosRequestConfig, {
   transformRequestOption = requestOption => requestOption
 }: {
   transformRequestOption?: (requestOption: any) => any

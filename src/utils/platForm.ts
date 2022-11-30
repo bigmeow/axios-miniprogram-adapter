@@ -116,7 +116,7 @@ export function transformConfig (config: MpRequestConfig): any {
   if ([EnumPlatForm.支付宝, EnumPlatForm.钉钉].includes(platFormName)) {
     config.headers = config.header
     delete config.header
-    if (EnumPlatForm.钉钉 === platFormName && config.method !== "GET" && config.headers?.['Content-Type'] === 'application/json' && Object.prototype.toString.call(config.data) === '[object Object]') {
+    if (EnumPlatForm.钉钉 === platFormName && config.method !== 'GET' && config.headers?.['Content-Type'] === 'application/json' && Object.prototype.toString.call(config.data) === '[object Object]') {
       // Content-Type为application/json时，data参数只支持json字符串，需要手动调用JSON.stringify进行序列化
       config.data = JSON.stringify(config.data)
     }
